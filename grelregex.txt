@@ -1,0 +1,139 @@
+Find things that start with text that might not be dates:
+
+^(?!jan)(?!feb)(?!mar)(?!apr)(?!may)(?!june)(?!july)(?!aug)(?!sept)(?!oct)(?!nov)(?!dec)(?!ca[.]?)(?!circa)(?!c[.])(?![n][.][d])(?!undat)(?!no\sdate)(?!spring)(?!winter)(?!fall)(?!autumn)(?!sum)(?!early)(?!late)(?!l\d)(?!bulk)(?!approx)(?!pre)(?!between)(?!mid)(?!post)[A-Za-z]
+
+
+Find yyyy/yyyy:
+
+^\d{4}[/]\d{4}$
+
+
+begins with a month:
+(^(january)|^(february)|^(march)|^(april)|^(may)|^(june)|^(july)|^(august)|^(september)|^(october)|^(november)|^(december))
+
+Month day, year:
+(^(january)|^(february)|^(march)|^(april)|^(may)|^(june)|^(july)|^(august)|^(september)|^(october)|^(november)|^(december))\s\d{1,2}\,\s\d{4}$
+
+
+
+replace alpha month with numeric month:
+value.replace('January', '01').replace('February','02').replace('March', '03').replace('April', '04').replace('May', '05').replace('June', '06').replace('July','07').replace('August', '08').replace('September','09').replace('October', '10').replace('November','11').replace('December', '12')
+
+
+month anywhere:
+((january)|(february)|(march)|(april)|(may)|(june)|(july)|(august)|(september)|(october)|(november)|(december))
+
+
+use to match for does not contain (replace hede with whatever):
+^((?!hede).)*$
+
+
+
+cells['begyear'].value + '-' + cells['begmon'].value + '-' + cells['begday'].value + '/' + cells['endyear'].value + '-' + cells['endmon'].value + '-' + cells['endday'].value
+
+
+abbreviated month:
+((jan)|(feb)|(mar)|(apr)|(may)|(june)|(jul)|(aug)|(sept)|(oct)|(nov)|(dec))
+
+ca yyyy:
+^c\.?a.?\s\d+{4}$
+
+^c\.?a?\.?\s\d{4}s?$
+
+
+value.replace(value, substring(value, 0, 3) + "1/" + substring(value, 0, 3) + "9")
+
+value.replace(/^\d{1}$/, '0' + value)
+
+
+value.replace(/\b[Jj]an\.?\b/, 'January').replace(/\b[Ff]eb\.?\b/, 'February').replace(/\b[Mm]ar\.?\b/, 'March').replace(/\b[Aa]pr\.?\b/, 'April').replace(/\b[Jj]un\.?\b/, 'June').replace(/\b[Jj]ul\.?\b/, 'July').replace(/\b[Aa]ug\.?\b/, 'August').replace(/\b[Ss]ept\.?\b/, 'September').replace(/\b[Oo]ct\.?\b/, 'October').replace(/\b[Nn]ov\.?\b/, 'November').replace(/\b[Dd]ec\.?\b/, 'December')
+
+
+
+
+
+818 linear feet, 25 linear feet (visual materials)
+
+search 
+
+d/d/y
+d/y
+m/y-m/y
+d/d/y-d/d/y
+d\y2-d/y2
+
+yyyy undated
+
+
+
+alphamonth year
+
+d3-?
+
+y alphamon - y alphamon
+
+circa year
+
+y alphamon
+
+alphamon-alphamon year
+alphamon year - alphamon year ,?
+
+early/late
+
+just alphamon
+
+alphamonyear (nospace)
+
+
+
+'19' + cells['beg 2'].value + '-' + cells['beg 1'].value + '/' + '19' + cells['end 2'].value + '-' + cells['end 1'].value
+
+^\d{1,2}\/\d{2}\-\d{1,2}\/\d{2}$    -- some things are month/year-month/year, some are month/day-day/year. watch out for kalmbach
+
+
+
+
+string = j. m. e. title title title.
+initials = re.compile('\w{1}\.\s\w{1}\.')
+
+if initials.match(string):
+    string = re.sub('\.\s(?=\w{1}\.)', '', string)
+    string = re.sub('\.(?=\s\w+[^\.])', '' string)
+    print string
+
+
+
+value.replace(/^/,'19')
+
+cells['beg2'].value + '-' + cells['beg1'].value + '/' + cells['end2'].value + '-' + cells['end1'].value
+
+cells['end2'].value + '-' + cells['beg1'].value + '-' + cells['beg2'].value + '/' + cells['end2'].value + '-' + cells['beg1'].value + '-' + cells['end1'].value
+
+
+
+
+
+ACCESSIONS
+
+cells['accession_number_1'].cross('accessions_BEAL','accession_number_1').cells['AccDescription'].value[0]
+
+
+if(value !='null',"Separations Type: " + cells['accession_number_1'].cross('accessions_BEAL','accession_number_1').cells['Separations::Type'].value[0] + '\n','')
+if(value != 'null',"Separations Volume: " + cells['accession_number_1'].cross('accessions_BEAL','accession_number_1').cells['Separations::Volume'].value[0] + '\n','')
+if(value!='null','Separations Description: ' + cells['accession_number_1'].cross('accessions_BEAL','accession_number_1').cells['Separations::Description'].value[0] + '\n','')
+
+
+
+if(cells['accession_number_1'].cross('accessions_BEAL','accession_number_1').cells['Separations::Volume'].value[0] != null, value + '\n' + "Separations Volume: " + cells['accession_number_1'].cross('accessions_BEAL','accession_number_1').cells['Separations::Volume'].value[0], value)
+
+
+
+if(cells['accession_number_1'].cross('accessions_BEAL','accession_number_1').cells['Gift_Agreement::Status'].value[0] == 'sent', cells['accession_number_1'].cross('accessions_BEAL','accession_number_1').cells['Gift_Agreement::Status'].value[0],'')
+
+
+if(and(cells['accession_number_1'].cross('accessions_BEAL','accession_number_1').cells['Contacts::OrganizationOrUnit'].value[0] != null, value == null), cells['accession_number_1'].cross('accessions_BEAL','accession_number_1').cells['Contacts::OrganizationOrUnit'].value[0], value)
+
+
+
+if(and(cells['accession_number_1'].cross('accessions_BEAL','accession_number_1if(and(cells['accession_number_1'].cross('accessions_BEAL','accession_number_1').cells['Contacts::FirstName'].value[0], cells['accession_number_1'].cross('accessions_BEAL','accession_number_1').cells['Contacts::MiddleName'].value[0]),cells['accession_number_1'].cross('accessions_BEAL','accession_number_1').cells['Contacts::FirstName'].value[0] + ' ' + cells['accession_number_1'].cross('accessions_BEAL','accession_number_1').cells['Contacts::MiddleName'].value[0],cells['accession_number_1'].cross('accessions_BEAL','accession_number_1').cells['Contacts::FirstName'].value[0])
