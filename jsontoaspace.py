@@ -1,9 +1,7 @@
 import requests
-import json
 import os
 from os.path import join
-import re
- 
+import json
 
 baseURL = 'http://localhost:8089'
 repository = '2'
@@ -22,14 +20,10 @@ for filename in os.listdir(path):
     for result in jsontoresource:
         if 'saved' in result and not 'errors' in result:
             fout = open('C:/Users/Public/Documents/jsontoaspacesuccess.txt', 'a')
-            fout.write(filename + '\n' + str(result) + '\n\n')
+            fout.write(filename + '\n' + json.dumps(result) + '\n\n')
             fout.close()
         elif 'errors' in result:
             fout = open('C:/Users/Public/Documents/jsontoaspaceerrors.txt', 'a')
-            fout.write(filename + '\n' + str(result) + '\n\n')
+            fout.write(filename + '\n' + json.dumps(result) + '\n\n')
             fout.close()
     print filename
-    
-    
-    
-

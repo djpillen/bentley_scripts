@@ -1,11 +1,7 @@
 import csv
-import lxml
-from lxml import etree
-import os
-from os.path import join
 
-with open('normalattributes-7_split.csv', 'rb') as file:
-    reader = csv.reader(file)
+with open('normalattributes-7_split.csv', 'rb') as csvfile:
+    reader = csv.reader(csvfile)
     next(reader, None)
     for row in reader:
         filename = row[0]

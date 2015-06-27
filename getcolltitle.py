@@ -1,4 +1,3 @@
-import lxml
 from lxml import etree
 import csv
 import os
@@ -16,7 +15,7 @@ for filename in os.listdir(path):
             writer = csv.writer(csvfile, dialect='excel')
             writer.writerow([filename, title])
             print filename
-        
+
 '''
         if sub.tag == 'subject' or sub.tag == 'corpname' or sub.tag == 'geogname' or sub.tag == 'persname' or sub.tag == 'genreform' or sub.tag == 'famname':
             with open('C:/Users/Public/Documents/subjects.csv', 'ab') as csvfile:

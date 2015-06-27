@@ -1,4 +1,2 @@
-import lxml
-from lxml import etree
-
-def getseries(elem):
+def getseries():
+    pass

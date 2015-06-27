@@ -1,8 +1,6 @@
-import lxml
 from lxml import etree
 import os
 from os.path import join
-import re
 import csv
 
 path = 'C:/Users/Public/Documents/Real_Masters_all_2'
@@ -14,4 +12,3 @@ for filename in os.listdir(path):
             writer = csv.writer(csvfile, dialect='excel')
             writer.writerow([filename, tree.getpath(a), etree.tostring(a)])
     print filename
-           

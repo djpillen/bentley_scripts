@@ -1,4 +1,3 @@
-import lxml
 from lxml import etree
 import csv
 import os
@@ -22,7 +21,7 @@ for filename in os.listdir(path):
                         subjects.append(sub_and_source)
                 else:
                     continue
-                   
+
     print filename
 
 print len(subjects)

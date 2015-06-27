@@ -1,6 +1,4 @@
-import lxml
 from lxml import etree
-import xml.etree.cElementTree as cElementTree
 import os
 from os.path import join
 import csv
@@ -8,7 +6,7 @@ import csv
 path = 'marc_xml-split'
 for filename in os.listdir(path):
     tree = etree.parse(join(path, filename))
-    extent = tree.xpath('//marc:datafield[@tag="300"]/marc:subfield[@code="a"]', namespaces={'marc': 'http://www.loc.gov/MARC21/slim'}) 
+    extent = tree.xpath('//marc:datafield[@tag="300"]/marc:subfield[@code="a"]', namespaces={'marc': 'http://www.loc.gov/MARC21/slim'})
     try:
         e = extent[0].text
     except:
@@ -30,4 +28,3 @@ for filename in os.listdir(path):
             except:
                 writer.writerow([filename, cn, 'ENCODING ERROR', e])
     print filename
-

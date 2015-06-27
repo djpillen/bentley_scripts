@@ -9,7 +9,7 @@ for filename in os.listdir(path):
     start = open(join(path, filename), 'r')
     finish = open(join(outFilePath, filename), 'w')
     for i in start:
-        finish.write(i.replace('\’', '\''))
+        finish.write(i.replace("\’", "'"))
     start.close()
     finish.close()
     print filename

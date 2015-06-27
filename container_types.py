@@ -1,4 +1,3 @@
-import lxml
 from lxml import etree
 import os
 from os.path import join
@@ -22,7 +21,7 @@ for filename in os.listdir(path):
             container_label = r.attrib['label']
             if container_label not in container_labels:
                 container_labels.append(container_label)
-            
+
 print 'Container Types'
 print container_types
 print 'Container Labels'

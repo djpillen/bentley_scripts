@@ -1,10 +1,7 @@
-import lxml
 from lxml import etree
 import csv
-import docx
 from docx import Document
 import re
-import os
 from os.path import join
 
 path = 'Real_Masters_all'
@@ -27,7 +24,7 @@ with open(expired_file, 'rb') as expired_csv:
         date_path = row[1]
         expiration_date = row[2]
         full_text = row[3]
-        full_text = re.sub('\<\/?(.*?)\>','', full_text)
+        full_text = re.sub(r'</?(.*?)>','', full_text)
         full_text = full_text
         if filename not in access_restrictions:
             access_restrictions[filename] = {}
@@ -37,18 +34,19 @@ with open(expired_file, 'rb') as expired_csv:
         access_restrictions[filename]['Expired'][date_path] = {}
         access_restrictions[filename]['Expired'][date_path]['Expiration_date'] = expiration_date
         access_restrictions[filename]['Expired'][date_path]['Full_text'] = full_text
-        
-        component_path = re.sub('\/accessrestrict\/p\/date','',date_path)
+
+        component_path = re.sub(r'/accessrestrict/p/date','',date_path)
         component_path = component_path
         tree = etree.parse(join(path,filename))
         for r in tree.xpath(component_path):
-            try:
-                container = r.xpath('.//container')
+            container = r.xpath('.//container')
+            if container[0].text:
                 box_number = container[0].text
-                access_restrictions[filename]['Expired'][date_path]['Container_number'] = box_number
-            except:
-                access_restrictions[filename]['Expired'][date_path]['Container_number'] = 'N/A'
-                
+            else:
+                box_number = 'N/A'
+            access_restrictions[filename]['Expired'][date_path]['Container_number'] = box_number
+
+
 with open(title_file,'rb')as titles_csv:
     reader = csv.reader(titles_csv)
     next(reader, None)
@@ -57,19 +55,19 @@ with open(title_file,'rb')as titles_csv:
         coll_title = row[1]
         if filename in access_restrictions:
             access_restrictions[filename]['Title'] = coll_title
-            
-            
+
+
 with open(top_level_file, 'rb') as top_csv:
     reader = csv.reader(top_csv)
     for row in reader:
         filename = row[0]
         restriction = row[2]
         restriction = restriction.replace('<item>','\n')
-        restriction = re.sub('\<\/?(.*?)\>','', restriction)
+        restriction = re.sub(r'</?(.*?)>','', restriction)
         restriction = restriction
         if filename in access_restrictions:
             access_restrictions[filename]['Restriction'] = restriction
-            
+
 with open(all_dates_file,'rb') as all_csv:
     reader = csv.reader(all_csv)
     for row in reader:
@@ -81,7 +79,7 @@ with open(all_dates_file,'rb') as all_csv:
             else:
                 current_dict[filename] += 1
 
-                
+
 with open(no_date_file, 'rb') as no_date_csv:
     reader = csv.reader(no_date_csv)
     for row in reader:
@@ -90,7 +88,7 @@ with open(no_date_file, 'rb') as no_date_csv:
             non_time[filename] = 1
         else:
             non_time[filename] += 1
-            
+
 
 
 for filename in access_restrictions:
@@ -98,13 +96,13 @@ for filename in access_restrictions:
         access_restrictions[filename]['Remaining_time'] = str(current_dict[filename])
     else:
         access_restrictions[filename]['Remaining_time'] = '0'
-        
+
     if filename in non_time:
         access_restrictions[filename]['Remaining_non_time'] = str(non_time[filename])
     else:
         access_restrictions[filename]['Remaining_non_time'] = '0'
-    
-    
+
+
 document = Document()
 
 for filename in access_restrictions:
@@ -124,12 +122,12 @@ for filename in access_restrictions:
         row_cells[1].text = access_restrictions[filename]['Expired'][date_path]['Expiration_date']
         row_cells[2].text = access_restrictions[filename]['Expired'][date_path]['Full_text']
 
-            
+
     table.style= "TableGrid"
     document.add_paragraph('Remaining Time-Bound Restrictions')
     document.add_paragraph(access_restrictions[filename]['Remaining_time'])
     document.add_paragraph('Remaining Non-Time-Bound Restrictions')
     document.add_paragraph(access_restrictions[filename]['Remaining_non_time'])
     document.add_page_break()
-    
+
 document.save('test.docx')

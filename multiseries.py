@@ -1,4 +1,3 @@
-import lxml
 from lxml import etree
 import os
 from os.path import join
@@ -20,5 +19,5 @@ for filename in os.listdir(path):
             number = multiseries_path[-2]
             print filename + ' found a series nested in a series at ' + multiseries_path
             print number
-            
+
 print 'There are ' + str(multiseries_count) + ' series nested within series :('

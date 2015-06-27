@@ -1,7 +1,4 @@
-import urllib2
-import lxml
 from lxml import etree
-import urlparse
 import os
 from os.path import join
 import re
@@ -17,6 +14,6 @@ for filename in os.listdir(path):
         handle = re.compile('^http://hdl.handle.net/2027')
         if not handle.match(href):
             with open('C:/Users/Public/Documents/hrefs.csv', 'ab') as csvfile:
-                        writer = csv.writer(csvfile, dialect='excel')
-                        writer.writerow([filename, href])
+                writer = csv.writer(csvfile, dialect='excel')
+                writer.writerow([filename, href])
     print filename

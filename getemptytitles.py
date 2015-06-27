@@ -1,10 +1,6 @@
-import lxml
 from lxml import etree
-from lxml.etree import tostring
-import csv
 import os
 from os.path import join
-import re
 
 print "Searching for empty titles..."
 empties = []
@@ -19,7 +15,7 @@ for filename in os.listdir(path):
         if len(t) == 0 and len(subt) == 0 and len(d) == 0:
             print filename, titlepath
             empties.append(filename)
-            
+
 if len(empties) > 0:
     print "You have empty titles"
 else:

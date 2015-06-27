@@ -1,8 +1,6 @@
-import lxml
 from lxml import etree
 import os
 from os.path import join
-import csv
 import re
 
 path = "Real_Masters_all"
@@ -21,11 +19,11 @@ for filename in os.listdir(path):
             begins_alpha = re.compile('^[A-Za-z]')
             if begins_alpha.match(r.text):
                 print filename + ' extent begins with letters: ' + r.text
-                
+
     for r in dates:
         if r.text is None:
             print filename + ' has an empty date'
-            
+
     for r in components:
         t = r.xpath("./did[1]//unittitle/text()")
         subt = r.xpath("./did[1]//unittitle/*/text()")
@@ -33,7 +31,7 @@ for filename in os.listdir(path):
         titlepath = tree.getpath(r)
         if len(t) == 0 and len(subt) == 0 and len(d) == 0:
             print filename + ' is missing a title at ' + titlepath
-            
+
     # for r in daos:
         # if not 'title' in r.attrib:
             # has_plugin = raw_input('have plugin? (y/n): ')

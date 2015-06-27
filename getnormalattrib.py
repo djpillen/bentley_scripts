@@ -1,8 +1,6 @@
-import lxml
 from lxml import etree
 import os
 from os.path import join
-import re
 import csv
 
 path = 'Real_Masters_all'

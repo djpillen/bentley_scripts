@@ -1,4 +1,3 @@
-import lxml
 from lxml import etree
 import os
 from os.path import join
@@ -16,7 +15,7 @@ for filename in os.listdir(path):
             physdesc = r.getparent()
             physdesc.getparent().remove(physdesc)
         elif r.text is not None and alpha_extent.match(r.text):
-            remove_alpha = re.sub('^[A-Za-z]+(.*)?\s','',r.text)
+            remove_alpha = re.sub(r'^[A-Za-z]+(.*)?\s','',r.text)
             r.text = remove_alpha
     finish = open(join(outFilePath, filename), 'w')
     finish.write(etree.tostring(tree, encoding="utf-8", xml_declaration=True))

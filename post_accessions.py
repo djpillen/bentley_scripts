@@ -28,8 +28,6 @@ curl -H "X-ArchivesSpace-Session:$TOKEN" -d '{"event_type":"agreement_received",
 import json
 import csv
 import requests
-import os
-from os.path import join
 
 
 baseURL = 'http://localhost:8089'

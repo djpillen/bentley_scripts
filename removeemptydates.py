@@ -1,10 +1,6 @@
-import lxml
 from lxml import etree
-from lxml.etree import tostring
-import csv
 import os
 from os.path import join
-import re
 
 
 path = 'C:/Users/Public/Documents/dates'
@@ -15,7 +11,7 @@ for filename in os.listdir(path):
             for date in cs.xpath("./did[1]//unitdate"):
                 if date.text is None:
                     date.getparent().remove(date)
-                    
+
     outFilePath = 'C:/Users/Public/Documents/datesremoved'
     outFile = open((join(outFilePath, filename)), 'w')
     outFile.write(etree.tostring(tree, encoding="utf-8", xml_declaration=True))

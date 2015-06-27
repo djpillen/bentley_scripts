@@ -36,8 +36,8 @@ def getextents(xpath):
             extent_text = extent.text.encode("utf-8") if extent.text else ""
             extent_path = tree.getpath(extent)
             with open(output_csv, 'ab') as csvfile:
-                writer = csv.writer(csvfile, dialect='excel')
-                writer.writerow([filename, extent_path, extent_text])
-                
-# get extents       
+                extent_writer = csv.writer(csvfile, dialect='excel')
+                extent_writer.writerow([filename, extent_path, extent_text])
+
+# get extents
 getextents(all_extents) # <-- you'll have to change this to get the extents you want, "top level," component level or all (i want all)

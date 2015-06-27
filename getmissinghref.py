@@ -1,7 +1,6 @@
 from lxml import etree
 import os
 from os.path import join
-import re
 
 path = 'C:/Users/Public/Documents/daos'
 for filename in os.listdir(path):

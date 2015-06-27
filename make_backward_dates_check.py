@@ -1,10 +1,5 @@
-import lxml
 from lxml import etree
 import csv
-import docx
-from docx import Document
-import re
-import os
 from os.path import join
 
 path = 'Real_Masters_all'
@@ -50,12 +45,12 @@ with open(dates_file, 'rb') as dates_csv:
         with open('backward_dates_info.csv','ab') as backward_file:
             writer = csv.writer(backward_file)
             writer.writerow([filename, coll_title, unitid_text, container_type_num, date_text, date_path])
-        
 
-print backward_dates['beeton.xml']          
 
-"""    
-    
+print backward_dates['beeton.xml']
+
+"""
+
 document = Document()
 
 for filename in access_restrictions:
@@ -75,13 +70,13 @@ for filename in access_restrictions:
         row_cells[1].text = access_restrictions[filename]['Expired'][date_path]['Expiration_date']
         row_cells[2].text = access_restrictions[filename]['Expired'][date_path]['Full_text']
 
-            
+
     table.style= "TableGrid"
     document.add_paragraph('Remaining Time-Bound Restrictions')
     document.add_paragraph(access_restrictions[filename]['Remaining_time'])
     document.add_paragraph('Remaining Non-Time-Bound Restrictions')
     document.add_paragraph(access_restrictions[filename]['Remaining_non_time'])
     document.add_page_break()
-    
+
 document.save('test.docx')
 """

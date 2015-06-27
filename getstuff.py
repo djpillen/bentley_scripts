@@ -1,4 +1,3 @@
-import lxml
 from lxml import etree
 import os
 from os.path import join
@@ -36,7 +35,7 @@ def getdates():
                         writer.writerow([filename, tree.getpath(i), i.text])
             print filename
         print outfile + '.csv complete'
-    
+
 def getextents():
     print "1) Output only collection level extents to a csv"
     print "2) Output only component level extents to a csv"
@@ -80,7 +79,7 @@ def getaccessrestrict():
     path = 'Real_Masters_all'
     if choice == "1":
         outfile = raw_input("Enter a filename for the csv: ")
-        print 'Note: The csv containing collection level accessrestrict statements will have a filename ending in toplevel and the csv containing component level accessrestrict statements will have a filename ending in componentlevel' 
+        print 'Note: The csv containing collection level accessrestrict statements will have a filename ending in toplevel and the csv containing component level accessrestrict statements will have a filename ending in componentlevel'
         for filename in os.listdir(path):
             tree = etree.parse(join(path, filename))
             accesstop = tree.xpath('//archdesc/descgrp/accessrestrict')
@@ -131,17 +130,19 @@ def getaccessrestrict():
                     writer = csv.writer(csvfile, dialect='excel')
                     writer.writerow([filename, tree.getpath(a), a.text, normal, etree.tostring(a)])
             print filename
-        print outfile + '.csv complete'        
+        print outfile + '.csv complete'
 
+def getsubjects():
+    pass
 
 def start():
     print '1) Output content from <unitdate> tags to a csv'
     print '2) Output content from <extent> tags to a csv'
     print '3) Output content from <accessrestrict> tags to a csv'
     print '4) Output content from <subject>, <geogname>, <persname>, <genreform>, etc tags from <controlaccess> to a csv'
-    
+
     choice = raw_input("Enter a number: ")
-    
+
     if choice == "1":
         getdates()
     elif choice == "2":
@@ -152,5 +153,5 @@ def start():
         getsubjects()
     else:
         print "Please enter one of the above numbers"
-        
+
 start()

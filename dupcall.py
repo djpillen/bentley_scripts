@@ -1,8 +1,6 @@
-import lxml
 from lxml import etree
 import os
 from os.path import join
-import nltk
 
 
 path = 'Real_Masters_all'
@@ -14,7 +12,7 @@ print 'counting files...'
 
 for filename in os.listdir(path):
     filecount += 1
-    
+
 print filecount
 
 eachfile = 0
@@ -35,6 +33,6 @@ for r in dupes:
         callnumber = tree.xpath('//archdesc/did/unitid')
         for cn in callnumber:
             if cn.text == r:
-                print filename + ' ' + cn.text     
+                print filename + ' ' + cn.text
 
 print dupes

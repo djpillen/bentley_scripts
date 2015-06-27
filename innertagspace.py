@@ -1,4 +1,3 @@
-from lxml import etree
 import os
 from os.path import join
 import re
@@ -9,8 +8,8 @@ for filename in os.listdir(path):
     start = open(join(path, filename), 'r')
     finish = open(join(outFilePath, filename), 'w')
     for i in start:
-        innertag = re.sub('((?<=.)(?<!\s)(?<!\>))\<(?=\w)', ' <', i)
-        innerand = re.sub('(?<=\>)and',' and', innertag)
+        innertag = re.sub(r'((?<=.)(?<!\s)(?<!>))<(?=\w)', ' <', i)
+        innerand = re.sub(r'(?<=>)and',' and', innertag)
         newdoc = innerand
         finish.write(newdoc)
     print filename

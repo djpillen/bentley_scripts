@@ -1,6 +1,5 @@
 import os
 from os.path import join
-import re
 
 path = 'Real_Masters_all'
 outFilePath = 'camelcase'

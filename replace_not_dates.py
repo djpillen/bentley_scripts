@@ -1,7 +1,4 @@
 import csv
-import lxml
-from lxml import etree
-import os
 from os.path import join
 
 path = 'Real_Masters_all_2'
@@ -14,7 +11,7 @@ with open('not_dates-future.csv', 'rb') as file:
     for row in reader:
         filename = row[0]
         print filename
-        xpath = row[1]        
+        xpath = row[1]
         file = open(join(path, filename))
         tree = etree.parse(file)
         date = tree.xpath(xpath)
@@ -24,9 +21,9 @@ with open('not_dates-future.csv', 'rb') as file:
             writer = csv.writer(csvfile, dialect='excel')
             writer.writerow([filename, xpath, date_string, date_content])
 '''
-            
-with open('not_dates-future_to_replace-tail_removed.csv', 'rb') as file:
-    reader = csv.reader(file)
+
+with open('not_dates-future_to_replace-tail_removed.csv', 'rb') as csvfile:
+    reader = csv.reader(csvfile)
     next(reader, None)
     for row in reader:
         filename = row[0]

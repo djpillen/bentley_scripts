@@ -1,5 +1,3 @@
-import csv
-import lxml
 from lxml import etree
 import os
 from os.path import join
@@ -26,4 +24,3 @@ for filename in os.listdir(path):
         for k, v in to_replace.iteritems():
             print "Replace: " + k
             print "With: " + v
-        

@@ -1,5 +1,4 @@
 import csv
-import lxml
 from lxml import etree
 import os
 from os.path import join
@@ -17,4 +16,3 @@ for filename in os.listdir(path):
                 writer = csv.writer(csvfile, dialect='excel')
                 writer.writerow([filename, tree.getpath(date), date.text.encode('utf-8')])
     print filename
-           

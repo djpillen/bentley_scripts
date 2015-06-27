@@ -1,6 +1,4 @@
-import lxml
 from lxml import etree
-import os
 from os.path import join
 import csv
 
@@ -15,8 +13,8 @@ with open(csv_file, 'rb') as csvfile:
         print filename
         origin_xpath = row[1]
         origin_text = row[2]
-        file = open(join(path,filename))
-        tree = etree.parse(file)
+        ead = open(join(path,filename))
+        tree = etree.parse(ead)
         for date in tree.xpath(origin_xpath):
             if date.text == origin_text:
                 date_parent = date.getparent()
@@ -46,5 +44,4 @@ with open(csv_file, 'rb') as csvfile:
                 date_parent.remove(date)
         outfile = open(join(path, filename), 'w')
         outfile.write(etree.tostring(tree, encoding="utf-8", xml_declaration=True))
-        outfile.close()   
-        
+        outfile.close()

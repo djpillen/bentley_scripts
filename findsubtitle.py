@@ -1,4 +1,3 @@
-import lxml
 from lxml import etree
 import os
 from os.path import join
@@ -25,5 +24,5 @@ for filename in os.listdir(path):
                 subtitles.append(subttag)
             else:
                 continue
-            
+
 print subtitles

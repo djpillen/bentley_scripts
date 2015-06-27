@@ -1,7 +1,5 @@
-from lxml import etree
 import os
 from os.path import join
-import re
 
 path = 'C:/Users/Public/Documents/changed'
 outFilePath = 'C:/Users/Public/Documents/changed1'

@@ -1,4 +1,3 @@
-import lxml
 from lxml import etree
 import os
 from os.path import join
@@ -46,7 +45,7 @@ while itsokay < 1:
     else:
         whatsubj = raw_input("Try again: ")
 
-       
+
 subjectguide_web = whatsubj + '.html'
 fout = open(subjectguide_web, 'a')
 fout.write ('<body>')

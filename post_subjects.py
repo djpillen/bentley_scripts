@@ -4,9 +4,6 @@ curl -H "X-ArchivesSpace-Session:$TOKEN" -d '{"source":"lcsh","vocabulary":"/voc
 
 import requests
 import json
-import os
-from os.path import join
-import re
 import csv
 
 
@@ -32,13 +29,13 @@ with open('post_subjects.csv','rb') as csvfile:
         terms_list = []
         for i in range(0,10):
             try:
-                term, type = row[i].split(':')
+                term, term_type = row[i].split(':')
                 terms_dict = {}
                 terms_dict["term"] = term
-                terms_dict["term_type"] = type
+                terms_dict["term_type"] = term_type
                 terms_dict["vocabulary"] = "/vocabularies/1"
-                terms_list.append(terms_dict)                
-            except:
+                terms_list.append(terms_dict)
+            except StandardError:
                 continue
         data = json.dumps({"source":"lcsh","vocabulary":"/vocabularies/1","terms":[i for i in terms_list]})
         subjects = requests.post(baseURL+'/subjects', headers=headers, data=data).json()

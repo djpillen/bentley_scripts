@@ -1,5 +1,3 @@
-import csv
-import lxml
 from lxml import etree
 import os
 from os.path import join

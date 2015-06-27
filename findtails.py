@@ -9,8 +9,8 @@ tails = []
 for filename in os.listdir(path):
     tree = etree.parse(join(path, filename))
     elems = tree.xpath('//*')
-    spaces = re.compile('\s')
-    dont_replace = re.compile('[\'\.\,\?\!\"\-\:\)\}\]\;\s]')
+    spaces = re.compile(r'\s')
+    dont_replace = re.compile(r"""['\.,\?\!"\-:)}\];\s]""")
     for r in elems:
         if r.tail and not 'lb' in r.tag and not spaces.match(r.tail):
             print r.tag + ' ' + r.tail[0].encode('utf-8')

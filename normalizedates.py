@@ -1,4 +1,3 @@
-import lxml
 from lxml import etree
 import os
 from os.path import join
@@ -9,12 +8,12 @@ for filename in os.listdir(path):
     tree = etree.parse(join(path, filename))
     d = tree.xpath('//unitdate')
     for i in d:
-        yyyy = re.compile('^\d{4}$')
-        yyyys = re.compile('^\d{4}s$')
-        yyyy_yyyy = re.compile('^\d{4}\-\d{4}$')
-        yyyys_yyyy = re.compile('^\d{4}s\-\d{4}$')
-        yyyy_yyyys = re.compile('^\d{4}\-\d{4}s$')
-        yyyys_yyyys = re.compile('^\d{4}s\-\d{4}s$')
+        yyyy = re.compile(r'^\d{4}$')
+        yyyys = re.compile(r'^\d{4}s$')
+        yyyy_yyyy = re.compile(r'^\d{4}\-\d{4}$')
+        yyyys_yyyy = re.compile(r'^\d{4}s\-\d{4}$')
+        yyyy_yyyys = re.compile(r'^\d{4}\-\d{4}s$')
+        yyyys_yyyys = re.compile(r'^\d{4}s\-\d{4}s$')
         if yyyy.match(i.text) and len(i.text) == 4:
             i.attrib['normal'] = i.text
         elif yyyys.match(i.text) and len(i.text) == 5:

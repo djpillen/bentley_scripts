@@ -15,8 +15,6 @@ curl -H "X-ArchivesSpace-Session:$TOKEN" -d '{"building":"Bentley Historical Lib
 
 import requests
 import json
-import os
-from os.path import join
 import csv
  
 

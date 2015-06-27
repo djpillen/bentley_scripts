@@ -1,8 +1,5 @@
 import csv
-import lxml
-from lxml import etree
 import os
-from os.path import join
 
 path = 'C:/Users/Public/Documents/Real_Masters_all_2'
 path2 = 'C:/Users/Public/Documents/Master'

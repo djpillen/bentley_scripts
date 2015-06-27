@@ -1,5 +1,4 @@
 import urllib2
-import lxml
 from lxml import etree
 import urlparse
 import os
