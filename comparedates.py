@@ -1,6 +1,6 @@
 import csv
 
-with open('normalattributes-7_split.csv', 'rb') as csvfile:
+with open('C:/Users/Public/Documents/normalattributes-9_split.csv', 'rb') as csvfile:
     reader = csv.reader(csvfile)
     next(reader, None)
     for row in reader:
@@ -10,7 +10,7 @@ with open('normalattributes-7_split.csv', 'rb') as csvfile:
         end = row[3]
         if len(begin) is not 0 and len(end) is not 0:
             if begin > end:
-                with open('dates_begin_after_end-4.csv', 'ab') as csvfile:
+                with open('C:/Users/Public/Documents/dates_begin_after_end-5.csv', 'ab') as csvfile:
                     writer = csv.writer(csvfile, dialect='excel')
                     writer.writerow([filename, xpath, begin, end])
         print filename

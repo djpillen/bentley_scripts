@@ -4,7 +4,7 @@ from os.path import join
 
 print "Searching for empty titles..."
 empties = []
-path = 'Real_Masters_all'
+path = 'C:/Users/djpillen/GitHub/vandura/Real_Masters_all'
 for filename in os.listdir(path):
     tree = etree.parse(join(path, filename))
     for cs in tree.xpath("//dsc//*[starts-with(local-name(), 'c0')]"):

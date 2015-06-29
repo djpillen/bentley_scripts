@@ -2,21 +2,15 @@ import requests
 import json
 import os
 from os.path import join
- 
+
 
 baseURL = 'http://localhost:8089'
 repository = '2'
 user = 'admin'
 password = 'admin'
- 
-"""
-auth = requests.post(baseURL + '/users/'+user+'/login?password='+password).json()
-session = auth["session"]
 
-headers = {'Content-type': 'text/xml; charset=utf-8', 'X-ArchivesSpace-Session':session}
-"""
-
-path = 'test_eads'
+path = 'C:/Users/Public/Documents/test_eads'
+outfilepath = 'C:/Users/Public/Documents/test_json'
 
 
 for filename in os.listdir(path):
@@ -29,11 +23,10 @@ for filename in os.listdir(path):
     for result in eadtojson:
         if 'invalid_object' in result:
 
-            fout = open('eadtojsonerrors.txt', 'a')
+            fout = open('C:/Users/Public/Documentseadtojsonerrors.txt', 'a')
             fout.write(filename + '\n\n')
             fout.close()
 
-    outfilepath = 'test_json'
     outfilename = filename + '.json'
     outfile = open(join(outfilepath, outfilename), 'w')
     json.dump(eadtojson, outfile)

@@ -1,11 +1,12 @@
 import os
 from os.path import join
 
-path = 'Real_Masters_all'
-outFilePath = 'camelcase'
+path = 'C:/Users/djpillen/GitHub/vandura/Real_Masters_all'
+outFilePath = 'C:/Users/Public/Documents/test_eads'
 for filename in os.listdir(path):
     start = open(join(path, filename), 'r')
     finish = open(join(outFilePath, filename), 'w')
     for i in start:
         finish.write(i.replace('actuate="onrequest"', 'actuate="onRequest"').replace('actuate="onload"', 'actuate="onLoad"'))
-finish.close()
+    finish.close()
+print filename
