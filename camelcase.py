@@ -9,4 +9,4 @@ for filename in os.listdir(path):
     for i in start:
         finish.write(i.replace('actuate="onrequest"', 'actuate="onRequest"').replace('actuate="onload"', 'actuate="onLoad"'))
     finish.close()
-print filename
+    print filename

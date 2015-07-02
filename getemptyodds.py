@@ -12,6 +12,6 @@ for filename in os.listdir(path):
     for r in odds:
         if r.text is None:
             print filename, tree.getpath(r)
-            with open('C:/Users/Public/Documents/emptyodds_20150629.csv','ab') as csvfile:
+            with open('C:/Users/Public/Documents/emptyodds_20150701.csv','ab') as csvfile:
                 writer = csv.writer(csvfile, dialect='excel')
                 writer.writerow([filename, tree.getpath(r)])

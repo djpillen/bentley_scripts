@@ -13,7 +13,7 @@ session = auth["session"]
 
 headers = {'Content-type': 'application/json', 'X-ArchivesSpace-Session': session}
 
-path = 'test_json'
+path = 'C:/Users/Public/Documents/winchell_json'
 for filename in os.listdir(path):
     data = open(join(path, filename), 'rb')
     jsontoresource = requests.post(baseURL + '/repositories/2/batch_imports', headers=headers, data=data).json()

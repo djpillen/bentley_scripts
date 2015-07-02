@@ -12,7 +12,7 @@ for filename in os.listdir(path):
             for date in cs.xpath("./did[1]//unitdate"):
                 if date.text == None:
                     titlepath = tree.getpath(cs)
-                    csvfile = open('C:/Users/Public/Documents/emptydates_20150629.csv', 'ab')
+                    csvfile = open('C:/Users/Public/Documents/emptydates_20150701.csv', 'ab')
                     writer = csv.writer(csvfile, dialect='excel')
                     writer.writerow([filename, titlepath])
                     csvfile.close()

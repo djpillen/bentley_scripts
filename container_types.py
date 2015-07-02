@@ -3,7 +3,7 @@ import os
 from os.path import join
 
 
-path = 'Real_Masters_all'
+path = 'C:/Users/djpillen/GitHub/vandura/Real_Masters_all'
 
 container_types = []
 container_labels = []
