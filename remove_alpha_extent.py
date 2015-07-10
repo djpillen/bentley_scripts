@@ -4,7 +4,7 @@ from os.path import join
 import re
 
 
-path = 'C:/Users/Public/Documents/test_eads'
+path = 'C:/Users/Public/Documents/camelcase'
 for filename in os.listdir(path):
     print filename
     tree = etree.parse(join(path, filename))

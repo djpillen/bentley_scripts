@@ -16,7 +16,7 @@ for filename in os.listdir(path):
 '''
 
 
-path = 'C:/Users/djpillen/GitHub/vandura/Real_Masters_all'
+path = 'C:/Users/Public/Documents/spec_coll_ead_pp'
 for filename in os.listdir(path):
     tree = etree.parse(join(path, filename))
     didodd = tree.xpath("//dsc//*[starts-with(local-name(), 'c0')]//did/odd")
