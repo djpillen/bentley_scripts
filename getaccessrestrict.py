@@ -4,7 +4,7 @@ from os.path import join
 import re
 import csv
 
-path = 'Real_Masters_all'
+path = 'C:/Users/djpillen/GitHub/vandura/Real_Masters_all'
 eads = re.compile(r'\.xml$')
 for filename in os.listdir(path):
     if eads.search(filename):
@@ -13,19 +13,21 @@ for filename in os.listdir(path):
         accesscomponent = tree.xpath('//archdesc/dsc//accessrestrict')
         accessdate = tree.xpath('//archdesc/dsc//accessrestrict//date')
         for a in accesstop:
-            with open('accessrestrict_toplevel-3.csv', 'ab') as csvfile:
+            with open('C:/Users/Public/Documents/accessrestrict_toplevel-5.csv', 'ab') as csvfile:
                 writer = csv.writer(csvfile, dialect='excel')
                 writer.writerow([filename, tree.getpath(a), etree.tostring(a)])
         for a in accesscomponent:
-            with open('accessrestrict_component-3.csv', 'ab') as csvfile:
+            with open('C:/Users/Public/Documents/accessrestrict_component-6.csv', 'ab') as csvfile:
                 writer = csv.writer(csvfile, dialect='excel')
-                writer.writerow([filename, tree.getpath(a), etree.tostring(a)])
+                writer.writerow([filename, tree.getpath(a)]) #etree.tostring(a)])
+        '''
         for a in accessdate:
             if 'normal' in a.attrib:
                 normal = a.attrib['normal']
             else:
                 normal = ''
-            with open('accessrestrictdate-7.csv', 'ab') as csvfile:
+            with open('C:/Users/Public/Documents/accessrestrictdate-8.csv', 'ab') as csvfile:
                 writer = csv.writer(csvfile, dialect='excel')
                 writer.writerow([filename, tree.getpath(a), a.text, normal, etree.tostring(a)])
+        '''
         print filename

@@ -4,7 +4,7 @@ from os.path import join
 import uuid
 import re
 
-path = 'containers'
+path = 'C:/Users/Public/Documents/containers'
 
 for filename in os.listdir(path):
     container_ids = {}
@@ -26,6 +26,6 @@ for filename in os.listdir(path):
         if container_type_num in container_ids:
             c.attrib['label'] = c.attrib['label'] + ' ['+str(container_ids[container_type_num])+']'
 
-    fout = open('containers/unique_' + filename, 'w')
+    fout = open('C:/Users/Public/Documents/containers/barcodes_' + filename, 'w')
     fout.write(etree.tostring(tree))
     fout.close()

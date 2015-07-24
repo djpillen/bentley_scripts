@@ -12,8 +12,8 @@ repository = '2'
 user = 'admin'
 password = 'admin'
 
-path = 'C:/Users/Public/Documents/spec_coll_ead_problem'
-outfilepath = 'C:/Users/Public/Documents/spec_coll_json'
+path = 'C:/Users/Public/Documents/containers'
+outfilepath = 'C:/Users/Public/Documents/containers_json'
 
 attempts = 0
 errors = 0

@@ -12,4 +12,4 @@ def prettify_xml_in_directory(input_directory, output_directory):
             with open(join(output_directory, filename), 'w') as f:
                 f.write(etree.tostring(xml, xml_declaration=True, encoding='UTF-8',pretty_print=True))
 
-prettify_xml_in_directory('C:/Users/Public/Documents/spec_coll_ead', 'C:/Users/Public/Documents/spec_coll_ead_pp')
+prettify_xml_in_directory('C:/Users/Public/Documents/s_master', 'C:/Users/Public/Documents/s_master-2')

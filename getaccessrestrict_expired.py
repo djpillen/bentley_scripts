@@ -2,8 +2,10 @@ import csv
 from lxml import etree
 from os.path import join
 
-access_file = 'accessrestrict_expired.csv'
-path = 'Real_Masters_all'
+
+access_file = 'C:/Users/Public/Documents/accessrestrict_expired-1.csv'
+path = 'C:/Users/djpillen/GitHub/vandura/Real_Masters_all'
+
 
 with open(access_file, 'rb') as csvfile:
     reader = csv.reader(csvfile)
@@ -15,16 +17,16 @@ with open(access_file, 'rb') as csvfile:
         tree = etree.parse(join(path,filename))
         date = tree.xpath(date_path)
         restriction = date[0].getparent()
-        with open('accessrestrict_expired_fulltext.csv', 'ab') as csvout:
+        with open('C:/Users/Public/Documents/accessrestrict_expired_fulltext-1.csv', 'ab') as csvout:
             writer = csv.writer(csvout, dialect='excel')
             writer.writerow([filename, date_path, normal, etree.tostring(restriction)])
 
 
 '''
-file = 'accessrestrictdate-7.csv'
+date_file = 'C:/Users/Public/Documents/accessrestrictdate-8.csv'
 
 expired = 0
-with open(file, 'rb') as csvfile:
+with open(date_file, 'rb') as csvfile:
     reader = csv.reader(csvfile)
     for row in reader:
         filename = row[0]
@@ -34,7 +36,7 @@ with open(file, 'rb') as csvfile:
         if normal < '2015-07-02':
             print normal
             expired += 1
-            with open('accessrestrict_expired.csv','ab') as csvout:
+            with open('C:/Users/Public/Documents/accessrestrict_expired-1.csv','ab') as csvout:
                 writer = csv.writer(csvout, dialect='excel')
                 writer.writerow([filename, path, normal, to_string])
 

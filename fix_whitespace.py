@@ -18,4 +18,4 @@ def fix_whitespace(input_dir, output_dir):
 
 	prettify_xml_in_directory(input_dir=output_dir, output_dir=output_dir)
 
-fix_whitespace('C:/Users/Public/Documents/spec_coll_ead-odd', 'C:/Users/Public/Documents/spec_coll_ead_pp')
+fix_whitespace('C:/Users/Public/Documents/s_master-2', 'C:/Users/Public/Documents/s_master')

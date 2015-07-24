@@ -4,13 +4,13 @@ from docx import Document
 import re
 from os.path import join
 
-path = 'Real_Masters_all'
+path = 'C:/Users/djpillen/GitHub/vandura/Real_Masters_all'
 
-title_file = 'collection_titles.csv'
-top_level_file = 'accessrestrict_toplevel-3.csv'
-expired_file = 'accessrestrict_expired_fulltext.csv'
-all_dates_file = 'accessrestrictdate-7.csv'
-no_date_file = 'accessrestrict-nodate.csv'
+#title_file = 'collection_titles.csv'
+top_level_file = 'C:/Users/Public/Documents/accessrestrict_toplevel-4.csv'
+expired_file = 'C:/Users/Public/Documents/accessrestrict_expired_fulltext-1.csv'
+all_dates_file = 'C:/Users/Public/Documents/accessrestrictdate-8.csv'
+no_date_file = 'C:/Users/Public/Documents/accessrestrict_nodate-1.csv'
 
 access_restrictions = {}
 current_dict = {}
@@ -21,6 +21,7 @@ with open(expired_file, 'rb') as expired_csv:
     next(reader, None)
     for row in reader:
         filename = row[0]
+        print 'Parsing expired_file for', filename
         date_path = row[1]
         expiration_date = row[2]
         full_text = row[3]
@@ -40,13 +41,22 @@ with open(expired_file, 'rb') as expired_csv:
         tree = etree.parse(join(path,filename))
         for r in tree.xpath(component_path):
             container = r.xpath('.//container')
-            if container[0].text:
-                box_number = container[0].text
+            physloc = r.xpath('.//physloc')
+            if container:
+                if container[0].text:
+                    box_number = container[0].text
+                else:
+                    box_number = 'N/A'
+            elif physloc:
+                if physloc[0].text:
+                    box_number = physloc[0].text
+                else:
+                    box_number = 'N/A'
             else:
                 box_number = 'N/A'
             access_restrictions[filename]['Expired'][date_path]['Container_number'] = box_number
 
-
+"""
 with open(title_file,'rb')as titles_csv:
     reader = csv.reader(titles_csv)
     next(reader, None)
@@ -55,14 +65,15 @@ with open(title_file,'rb')as titles_csv:
         coll_title = row[1]
         if filename in access_restrictions:
             access_restrictions[filename]['Title'] = coll_title
-
+"""
 
 with open(top_level_file, 'rb') as top_csv:
     reader = csv.reader(top_csv)
     for row in reader:
         filename = row[0]
+        print 'Parsing top_level_file for', filename
         restriction = row[2]
-        restriction = restriction.replace('<item>','\n')
+        restriction = restriction.replace('<item>','\n*')
         restriction = re.sub(r'</?(.*?)>','', restriction)
         restriction = restriction
         if filename in access_restrictions:
@@ -72,6 +83,7 @@ with open(all_dates_file,'rb') as all_csv:
     reader = csv.reader(all_csv)
     for row in reader:
         filename = row[0]
+        print 'Parsing all_date_file for', filename
         normal = row[3]
         if normal > '2015-07-02':
             if filename not in current_dict:
@@ -84,12 +96,14 @@ with open(no_date_file, 'rb') as no_date_csv:
     reader = csv.reader(no_date_csv)
     for row in reader:
         filename = row[0]
+        print 'Parsing no_date_file for', filename
         if filename not in non_time:
             non_time[filename] = 1
         else:
             non_time[filename] += 1
 
 
+print 'Parsing dictionaries and building document'
 
 for filename in access_restrictions:
     if filename in current_dict:
@@ -106,7 +120,7 @@ for filename in access_restrictions:
 document = Document()
 
 for filename in access_restrictions:
-    document.add_heading(access_restrictions[filename]['Title'])
+    document.add_heading(filename)
     document.add_heading('Collection Level Restriction', level=2)
     document.add_paragraph(access_restrictions[filename]['Restriction'])
     document.add_heading('Expired Restrictions', level=2)
@@ -130,4 +144,4 @@ for filename in access_restrictions:
     document.add_paragraph(access_restrictions[filename]['Remaining_non_time'])
     document.add_page_break()
 
-document.save('test.docx')
+document.save('C:/Users/Public/Documents/expired_restrictions_20150713.docx')

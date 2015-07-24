@@ -2,33 +2,29 @@ from lxml import etree
 import os
 from os.path import join
 import uuid
-import re
 
-path = 'C:/Users/Public/Documents/containers'
+# Enter the path to your starting EAD directory
+input_directory = 'path/to/original/EADs'
 
-for filename in os.listdir(path):
-    container_ids = {}
-    tree = etree.parse(join(path,filename))
-    components = tree.xpath("//*[starts-with(local-name(), 'c0')]")
-    for r in components:
-        containers = r.xpath('./did/container')
-        if len(containers) > 1:
-            parent = containers[0]
-            child = containers[1]
-            parent_type_num = parent.attrib['type'] + parent.text
-            if parent_type_num not in container_ids:
-                container_ids[parent_type_num] = str(uuid.uuid4())
-                parent.attrib['id'] = container_ids[parent_type_num]
-            else:
-                parent.attrib['id'] = container_ids[parent_type_num]
-            child.attrib['parent'] = container_ids[parent_type_num]
-        elif len(containers) == 1:
-            container_type_num = containers[0].attrib['type'] + containers[0].text
-            if container_type_num not in container_ids:
-                container_ids[container_type_num] = str(uuid.uuid4())
-                containers[0].attrib['id'] = container_ids[container_type_num]
-            else:
-                containers[0].attrib['id'] = container_ids[container_type_num]
-    fout = open('C:/Users/Public/Documents/containers/unique_' + filename, 'w')
-    fout.write(etree.tostring(tree))
-    fout.close()
+# Enter the path to the output directory for the modified EADs
+# Warning! If you set the output_directory to the same path as the input_directory,
+# all of your original EADs will be overwritten
+output_directory = 'path/to/new/EADs'
+
+# Loop through each file in the input directory
+for filename in os.listdir(input_directory):
+    if filename.endswith(".xml"):
+        ead = etree.parse(join(input_directory,filename))
+        components = ead.xpath("//*[starts-with(local-name(), 'c0')]")
+        # Check each component for multiple containers
+        for component in components:
+            containers = component.xpath('./did/container')
+            # Only add ids and parent attributes if there are two containers
+            if len(containers) == 2:
+                parent = containers[0]
+                child = containers[1]
+                parent_id = str(uuid.uuid4())
+                parent.attrib['id'] = parent_id
+                child.attrib['parent'] = parent_id
+        with open(join(output_directory, filename), 'w') as new_ead:
+            new_ead.write(etree.tostring(ead, encoding="utf-8", xml_declaration=True))
