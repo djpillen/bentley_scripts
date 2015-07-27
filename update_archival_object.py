@@ -14,11 +14,11 @@ auth = requests.post(aspace_url+'/users/'+username+'/login?password='+password).
 session = auth["session"]
 headers = {'X-ArchivesSpace-Session':session}
 
-with open('C:/Users/Public/Documents/digital_objects.csv','rb') as csvfile:
+with open('C:/Users/Public/Documents/7.csv','rb') as csvfile:
     reader = csv.reader(csvfile)
     for row in reader:
-        identifier = row[2]
-        ref_id = row[3]
+        identifier = row[3]
+        ref_id = row[2]
         search = requests.get(aspace_url+'/repositories/2/search?page=1&q='+ref_id,headers=headers).json()
         archival_object_uri = search['results'][0]['uri']
         archival_object_json = requests.get(aspace_url+archival_object_uri,headers=headers).json()
@@ -51,6 +51,6 @@ with open('C:/Users/Public/Documents/digital_objects.csv','rb') as csvfile:
 
         print archival_object_update
 
-        with open('C:/Users/Public/Documents/digital_object_temp.csv','ab') as csvout:
+        with open('C:/Users/Public/Documents/7_temp.csv','ab') as csvout:
             writer = csv.writer(csvout)
             writer.writerow(row)
