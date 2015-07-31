@@ -1,7 +1,7 @@
 import csv
 
-# we need to rewrite this csc with no null bytes
-exported = open('beal_export_20150710-copy.csv','rb')
+# we need to rewrite this csv with no null bytes
+exported = open('C:/Users/Public/Documents/','rb')
 data = exported.read()
 exported.close()
 
