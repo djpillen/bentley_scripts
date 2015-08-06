@@ -6,7 +6,7 @@ import csv
 path = 'C:/Users/Public/Documents/marc_xml-has_ead-split'
 for filename in os.listdir(path):
     tree = etree.parse(join(path, filename))
-    subject_fields = ['650','651']
+    subject_fields = ['650','651','655']
     for subject_field in subject_fields:
         subjects = tree.xpath('//marc:datafield[@tag="'+subject_field+'"]', namespaces={'marc': 'http://www.loc.gov/MARC21/slim'})
         for subject in subjects:
@@ -33,6 +33,6 @@ for filename in os.listdir(path):
                     row.append(terms_dict[loop+1][term])
                     loop += 1
 
-            with open('C:/Users/Public/Documents/marc_xml-subjects.csv','ab') as csvfile:
+            with open('C:/Users/Public/Documents/marc_xml-subjects_20150806.csv','ab') as csvfile:
                 writer = csv.writer(csvfile, dialect='excel')
                 writer.writerow(row)
