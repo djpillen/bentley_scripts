@@ -2,6 +2,13 @@ import requests
 import json
 import csv
 
+# This script will create a new digital object and link it as an instance to an existing archival object
+# This was written under the assumption that you might have a csv (or similar), exported from ASpace or
+# compiled from an ASpace exported EAD, with an existing archival object's refid. Using only the refid,
+# this will search for an existing archival object, retrieve its URI, store the archival object's JSON,
+# create a new digital object using the title from the archival object and an identifier (also from the CSV),
+# grab the URI for the newly created digital object, add the link as an instance to the archival object JSON,
+# and repost the archival object to ASpace using the update archival object endpoint
 
 
 aspace_url = 'http://localhost:8089'
@@ -12,7 +19,7 @@ auth = requests.post(aspace_url+'/users/'+username+'/login?password='+password).
 session = auth["session"]
 headers = {'X-ArchivesSpace-Session':session}
 
-with open(archival_object,'rb') as csvfile:
+with open(archival_objects_csv,'rb') as csvfile:
     reader = csv.reader(csvfile)
     for row in reader:
 
