@@ -41,8 +41,24 @@ for null in nulls:
         middle_date = previous_date_object - (difference/2)
     if difference.days <= 365:
         possible_dates += 1
+        accession_dates[null] = middle_date.strftime('%m/%d/%Y')
     print null, '-', null-previous_index, '(-' + str(previous_index) + '):', previous_date, '|', null+next_index, '(+' + str(next_index) + '):', next_date, '|', 'Difference:', difference.days, '|', 'Middle:',middle_date.strftime('%m/%d/%Y')
 
 print 'Total nulls:', len(nulls)
 print 'Total possible dates:', possible_dates
 print 'Remaining nulls:', len(nulls) - possible_dates
+
+with open('C:/Users/Public/Documents/accessions/accessions_20150810-noblanks.csv','rb') as csvin, open('C:/Users/Public/Documents/accessions/accessions_20150810-datefix.csv','ab') as csvout:
+    reader = csv.reader(csvin)
+    writer = csv.writer(csvout, dialect='excel')
+    count = -1
+    for row in reader:
+        accession_date = row[1]
+        if len(accession_date) > 0:
+            writer.writerow(row)
+        elif accession_dates[count] != 'null':
+            row[1] = accession_dates[count]
+            writer.writerow(row)
+        else:
+            writer.writerow(row)
+        count += 1
