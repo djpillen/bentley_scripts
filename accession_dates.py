@@ -53,7 +53,11 @@ with open('C:/Users/Public/Documents/accessions/accessions_20150810-noblanks.csv
     writer = csv.writer(csvout, dialect='excel')
     count = -1
     for row in reader:
+        accession_description = row[0]
         accession_date = row[1]
+        status = row[35]
+        if len(accession_date) == 0 and len(accession_description) == 0 and not (status == 'Backlog' or status == 'In Progress'):
+            continue
         if len(accession_date) > 0:
             writer.writerow(row)
         elif accession_dates[count] != 'null':
@@ -62,3 +66,15 @@ with open('C:/Users/Public/Documents/accessions/accessions_20150810-noblanks.csv
         else:
             writer.writerow(row)
         count += 1
+
+with open('C:/Users/Public/Documents/accessions/accessions_20150810-datefix.csv','rb') as csvin, open('C:/Users/Public/Documents/accessions/accessions_20150810-final.csv','ab') as csvout:
+    reader = csv.reader(csvin)
+    writer = csv.writer(csvout, dialect='excel')
+    for row in reader:
+        accession_date = row[1]
+        accession_description = row[0]
+        status = row[35]
+        if len(accession_date) == 0 and len(accession_description) == 0 and not (status == 'Backlog' or status == 'In Progress'):
+            continue
+        else:
+            writer.writerow(row)
