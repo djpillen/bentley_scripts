@@ -1,8 +1,10 @@
 import csv
+import datetime
+from datetime import datetime as dt
 
 
 
-accessions_file = 'C:/Users/Public/Documents/accessions/accessions-20150729-final.csv'
+accessions_file = 'C:/Users/Public/Documents/accessions/accessions_20150810-noblanks.csv'
 
 accession_dates = []
 possible_dates = []
@@ -27,16 +29,20 @@ for null in nulls:
     while accession_dates[null+next_index] == 'null':
         next_index += 1
     previous_date = accession_dates[null-previous_index]
+    previous_date_object = dt.strptime(previous_date, '%m/%d/%Y')
     next_date = accession_dates[null+next_index]
+    next_date_object = dt.strptime(next_date,'%m/%d/%Y')
     previous_year = int(previous_date.split('/')[2])
     next_year = int(next_date.split('/')[2])
-    if next_year >= previous_year:
-        difference = next_year - previous_year
+    if next_date_object >= previous_date_object:
+        difference = next_date_object - previous_date_object
+        middle_date = next_date_object - (difference/2)
     else:
-        difference = previous_year - next_year
-    if difference == 0:
-        possible_dates.append(next_year)
-    print null, '-', null-previous_index, '(-' + str(previous_index) + '):', previous_date, '|', null+next_index, '(+' + str(next_index) + '):', next_date, '|', 'Difference:', difference
+        difference = previous_date_object - next_date_object
+        middle_date = previous_date_object - (difference/2)
+    if difference.days <= 365:
+        possible_dates.append(middle_date)
+    print null, '-', null-previous_index, '(-' + str(previous_index) + '):', previous_date, '|', null+next_index, '(+' + str(next_index) + '):', next_date, '|', 'Difference:', difference.days, '|', 'Middle:',middle_date.strftime('%m/%d/%Y')
 
 print 'Total nulls:', len(nulls)
 print 'Total possible dates:', len(possible_dates)
