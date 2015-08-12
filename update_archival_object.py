@@ -23,7 +23,7 @@ auth = requests.post(aspace_url+'/users/'+username+'/login?password='+password).
 session = auth["session"]
 headers = {'X-ArchivesSpace-Session':session}
 
-with open('C:/Users/Public/Documents/digital_object_csv.csv','rb') as csvfile:
+with open(starting_csv,'rb') as csvfile:
     reader = csv.reader(csvfile)
     for row in reader:
 
@@ -86,6 +86,6 @@ with open('C:/Users/Public/Documents/digital_object_csv.csv','rb') as csvfile:
             print archival_object_update
 
             # Write a new csv with all the info from the old one + the archival object and digital object uris
-            with open('C:/Users/Public/Documents/digital_object_csv_updated.csv','ab') as csvout:
+            with open(updated_csv,'ab') as csvout:
                 writer = csv.writer(csvout)
                 writer.writerow(row)
