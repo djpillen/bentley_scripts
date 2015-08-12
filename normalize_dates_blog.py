@@ -7,7 +7,7 @@ from os.path import join
 import re
 
 
-path = 'C:/Users/djpillen/Github/vandura/Real_Masters_all' #<-- Change this to your EAD directory path
+path = 'C:/Users/Public/Documents/s_master-2' #<-- Change this to your EAD directory path
 
 # Make some regular expressions
 yyyy = re.compile(r'^\d{4}$') # Ex: 1920
@@ -64,7 +64,7 @@ for filename in os.listdir(path):
                 not_normalized_dates += 1
                 continue
 
-    outfilepath = 'normalized' #<-- Change this to a different directory than the one you started with in case anything goes wrong. You don't want to overwrite your original EADs.
+    outfilepath = 'C:/Users/Public/Documents/normalized' #<-- Change this to a different directory than the one you started with in case anything goes wrong. You don't want to overwrite your original EADs.
     outfile = open((join(outfilepath, filename)), 'w')
     outfile.write(etree.tostring(tree, encoding="utf-8", xml_declaration=True)) # Write the new version of the EAD with normalized dates!
     outfile.close()

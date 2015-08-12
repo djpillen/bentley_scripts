@@ -54,7 +54,7 @@ value.replace(/\b[Jj]an\.?\b/, 'January').replace(/\b[Ff]eb\.?\b/, 'February').r
 
 818 linear feet, 25 linear feet (visual materials)
 
-search 
+search
 
 d/d/y
 d/y
@@ -137,3 +137,6 @@ if(and(cells['accession_number_1'].cross('accessions_BEAL','accession_number_1')
 
 
 if(and(cells['accession_number_1'].cross('accessions_BEAL','accession_number_1if(and(cells['accession_number_1'].cross('accessions_BEAL','accession_number_1').cells['Contacts::FirstName'].value[0], cells['accession_number_1'].cross('accessions_BEAL','accession_number_1').cells['Contacts::MiddleName'].value[0]),cells['accession_number_1'].cross('accessions_BEAL','accession_number_1').cells['Contacts::FirstName'].value[0] + ' ' + cells['accession_number_1'].cross('accessions_BEAL','accession_number_1').cells['Contacts::MiddleName'].value[0],cells['accession_number_1'].cross('accessions_BEAL','accession_number_1').cells['Contacts::FirstName'].value[0])
+
+
+value.toDate('MM/dd/yyyy','MM.dd.yyyy').toString('yyyy-MM-dd')

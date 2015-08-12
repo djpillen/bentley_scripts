@@ -19,12 +19,13 @@ for filename in os.listdir(path):
                 subjects[sub.tag][source] = []
             if sub_text not in subjects[sub.tag][source]:
                 subjects[sub.tag][source].append(sub_text)
-    print filename
+    print '\rProcessing unique subjects for',filename
 
+print 'Writing unique subject csv'
 for subject_type in subjects:
     for source in subjects[subject_type]:
         for subject in subjects[subject_type][source]:
-            with open('C:/Users/Public/Documents/ead_unique_subjects_20150806.csv', 'ab') as csvfile:
+            with open('C:/Users/Public/Documents/ead_unique_subjects_20150810.csv', 'ab') as csvfile:
                 row = []
                 row.append(subject_type)
                 row.append(source)
@@ -34,9 +35,7 @@ for subject_type in subjects:
                     row.append(term)
                 writer = csv.writer(csvfile, dialect='excel')
                 writer.writerow(row)
-'''
 
-path = 'C:/Users/djpillen/GitHub/vandura/Real_Masters_all'
 for filename in os.listdir(path):
     tree = etree.parse(join(path, filename))
     for sub in tree.xpath('//controlaccess/*'):
@@ -51,8 +50,7 @@ for filename in os.listdir(path):
                 terms = sub_text.split('--')
                 for term in terms:
                     row.append(term)
-            with open('C:/Users/Public/Documents/ead_subjects_20150806.csv', 'ab') as csvfile:
+            with open('C:/Users/Public/Documents/ead_subjects_20150810.csv', 'ab') as csvfile:
                 writer = csv.writer(csvfile, dialect='excel')
                 writer.writerow(row)
-    print filename
-'''
+    print '\rWriting csv with all subjects for',filename
