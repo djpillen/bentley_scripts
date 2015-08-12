@@ -10,6 +10,10 @@ import csv
 # grab the URI for the newly created digital object, add the link as an instance to the archival object JSON,
 # and repost the archival object to ASpace using the update archival object endpoint
 
+# The hypothetical 5 column csv might look something like this:
+# [Box 1], [Component title], [ASpace ref_id], [an identifier], [uri to the digital object]
+# Columns 3-5 are used in this script
+
 
 aspace_url = 'http://localhost:8089'
 username= 'admin'
