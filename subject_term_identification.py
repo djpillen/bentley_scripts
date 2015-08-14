@@ -2,8 +2,8 @@ from lxml import etree
 import csv
 
 ead_agents = 'C:/Users/Public/Documents/compound_agents.csv'
-ead_subjects = 'C:/Users/Public/Documents/ead_subjects_20150810.csv'
-ead_unique_subjects = 'C:/Users/Public/Documents/ead_unique_subjects_20150810.csv'
+#ead_subjects = 'C:/Users/Public/Documents/ead_subjects_20150810.csv'
+ead_subjects = 'C:/Users/Public/Documents/ead_unique_subjects_20150814.csv'
 
 marc_agents = 'C:/Users/Public/Documents/marc_xml-agents_20150812.csv'
 marc_subjects = 'C:/Users/Public/Documents/marc_xml-subjects_20150806.csv'
@@ -34,23 +34,23 @@ with open(ead_subjects,'rb') as ead_csv:
     reader = csv.reader(ead_csv)
     for row in reader:
         row_indexes = len(row) - 1
-        sub_tag = row[1]
+        sub_tag = row[0]
         sub_tag_type = type_dict[sub_tag]
         if row_indexes > 3:
-            first_term = row[4]
+            first_term = row[3]
             if first_term not in terms_dict:
                 terms_dict[first_term] = []
             if sub_tag_type not in terms_dict[first_term]:
                 terms_dict[first_term].append(sub_tag_type)
             row_nums = []
-            for row_num in range(5,row_indexes+1):
+            for row_num in range(4,row_indexes+1):
                 term = row[row_num]
                 if row_num == row_indexes:
                     term = term.strip('.')
                 if term not in terms_dict:
                     terms_dict[term] = []
         else:
-            subject = row[3]
+            subject = row[2]
             subject = subject.strip('.')
             if subject not in terms_dict:
                 terms_dict[subject] = []
@@ -106,7 +106,6 @@ with open(marc_agents,'rb') as marc_agent_csv:
 
 with open(multiple_term_types,'rb') as multi_csv:
     reader = csv.reader(multi_csv)
-    next(reader,None)
     for row in reader:
         term = row[0]
         term_type = row[2]
@@ -114,7 +113,6 @@ with open(multiple_term_types,'rb') as multi_csv:
 
 with open(unidentified_term_types,'rb') as unid_csv:
     reader = csv.reader(unid_csv)
-    next(reader,None)
     for row in reader:
         term = row[0]
         term_type = row[1]
@@ -145,7 +143,7 @@ print total
 
 
 #Write a csv with aspaceified subjects
-with open(ead_unique_subjects,'rb') as unique_file:
+with open(ead_subjects,'rb') as unique_file:
     reader = csv.reader(unique_file)
     for row in reader:
         sub_tag = row[0]
