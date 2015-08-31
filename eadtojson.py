@@ -12,8 +12,8 @@ repository = '2'
 user = 'admin'
 password = 'admin'
 
-path = 'C:/Users/Public/Documents/ucerrors'
-outfilepath = 'C:/Users/Public/Documents/uc_json'
+path = 'C:/Users/Public/Documents/test_eads'
+outfilepath = 'C:/Users/Public/Documents/test_json'
 
 attempts = 0
 errors = 0
@@ -29,7 +29,7 @@ for filename in os.listdir(path):
     eadtojson = requests.post(baseURL + '/plugins/jsonmodel_from_format/resource/ead', headers=headers, data=data).json()
     for result in eadtojson:
         if 'invalid_object' in result:
-            fout = open('C:/Users/Public/Documents/eadtojsonerrors_uc.txt', 'a')
+            fout = open('C:/Users/Public/Documents/eadtojsonerrors_20150827.txt', 'a')
             fout.write(filename + '\n')
             fout.close()
             errors += 1

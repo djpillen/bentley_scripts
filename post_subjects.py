@@ -20,6 +20,7 @@ auth = requests.post(baseURL + '/users/'+user+'/login?password='+password).json(
 session = auth["session"]
 headers = {'X-ArchivesSpace-Session':session}
 
+'''
 enum_sources = []
 ead_sources = []
 update_enum = 0
@@ -52,17 +53,17 @@ if update_enum > 0:
     subject_sources_json = json.dumps(subject_sources)
     update_sources = requests.post(baseURL+source_uri, data=subject_sources_json, headers=headers).json()
     print update_sources
+'''
 
-
-"""
+'''
 subject_ids = requests.get(baseURL+'/subjects?all_ids=true').json()
 
 for i in subject_ids:
     subject_json = requests.get(baseURL+'/subjects/'+str(i)).json()
     print subject_json['title'], subject_json['uri']
-"""
-
 '''
+
+
 with open(subjects_csv,'rb') as csvfile:
     reader = csv.reader(csvfile)
     for row in reader:
@@ -94,4 +95,3 @@ end_time = datetime.now()
 print "Script start time:", start_time.strftime("%Y-%m-%d %H:%M:%S %p")
 print "Script end time:", end_time.strftime("%Y-%m-%d %H:%M:%S %p")
 print "Script running time:", end_time - start_time
-'''

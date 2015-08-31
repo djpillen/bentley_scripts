@@ -52,7 +52,7 @@ for null in nulls:
         else:
             difference = previous_date_object - next_date_object
             middle_date = previous_date_object - (difference/2)
-        if difference.days <= 90:
+        if difference.days <= 365:
             possible_dates += 1
             accession_dates[null] = middle_date.strftime('%m/%d/%Y')
         print null, '-', null-previous_index, '(-' + str(previous_index) + '):', previous_date, '|', null+next_index, '(+' + str(next_index) + '):', next_date, '|', 'Difference:', difference.days, '|', 'Middle:',middle_date.strftime('%m/%d/%Y')
