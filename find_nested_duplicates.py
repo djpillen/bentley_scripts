@@ -16,4 +16,4 @@ for filename in os.listdir(path):
             subelement_tag = subelement.tag
             if subelement_tag not in okay:
                 if subelement_tag == element_tag:
-                    print filename, element_tag
+                    print filename, element_tag, tree.getpath(element)
