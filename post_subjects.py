@@ -1,12 +1,9 @@
-"""
-curl -H "X-ArchivesSpace-Session:$TOKEN" -d '{"source":"lcsh","vocabulary":"/vocabularies/1","terms":[{"term":"Cheese", "term_type":"topical","vocabulary":"/vocabularies/1"},{"term":"Michigan","term_type":"geographic","vocabulary":"/vocabularies/1"}]}' http://localhost:8089/subjects
-"""
-
-import requests
-import json
 import csv
-import time
 from datetime import datetime
+import json
+import requests
+import time
+
 
 start_time = datetime.now()
 
@@ -19,50 +16,6 @@ password='admin'
 auth = requests.post(baseURL + '/users/'+user+'/login?password='+password).json()
 session = auth["session"]
 headers = {'X-ArchivesSpace-Session':session}
-
-'''
-enum_sources = []
-ead_sources = []
-update_enum = 0
-
-with open(subjects_csv,'rb') as csvfile:
-    reader = csv.reader(csvfile)
-    for row in reader:
-        source = row[1]
-        if source not in ead_sources:
-            ead_sources.append(source)
-
-enumerations = requests.get(baseURL+'/config/enumerations', headers=headers).json()
-
-for enumeration in enumerations:
-    if enumeration['name'] == 'subject_source':
-        source_uri = enumeration['uri']
-
-subject_sources = requests.get(baseURL+source_uri,headers=headers).json()
-
-for value in subject_sources['enumeration_values']:
-    enum_sources.append(value['value'])
-
-for source in ead_sources:
-    if source not in enum_sources:
-        new_source = {"value":source,"suppressed":False,"jsonmodel_type":"enumeration_value"}
-        subject_sources['enumeration_values'].append(new_source)
-        update_enum += 1
-
-if update_enum > 0:
-    subject_sources_json = json.dumps(subject_sources)
-    update_sources = requests.post(baseURL+source_uri, data=subject_sources_json, headers=headers).json()
-    print update_sources
-'''
-
-'''
-subject_ids = requests.get(baseURL+'/subjects?all_ids=true').json()
-
-for i in subject_ids:
-    subject_json = requests.get(baseURL+'/subjects/'+str(i)).json()
-    print subject_json['title'], subject_json['uri']
-'''
-
 
 with open(subjects_csv,'rb') as csvfile:
     reader = csv.reader(csvfile)
