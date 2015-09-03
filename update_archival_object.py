@@ -14,7 +14,16 @@ import csv
 # [Container number], [Component title], [ASpace ref_id], [an identifier], [uri to the digital object]
 # Columns 3-5 are used in this script
 
+# The archival_object_csv will be your starting csv with the ASpace ref_id of the archival object's to be updated,
+# the identifier to be used in the newly created digital object (could be a barcode, a random string, etc) and the uri
+# to the digital object that will be added as a file_uri in the ArchivesSpace digital object record
+archival_object_csv = 'path/to/starting.csv'
 
+# The updated_archival_object_csv will be an updated csv that will be created at the end of this script, containing all of the same
+# information as the starting csv, plus the ArchivesSpace uris for the archival and digital objects
+updated__archival_object_csv = 'path/to/updated.csv'
+
+# Modify your ArchivesSpace backend url, username, and password as necessary
 aspace_url = 'http://localhost:8089'
 username= 'admin'
 password = 'admin'
@@ -23,17 +32,17 @@ auth = requests.post(aspace_url+'/users/'+username+'/login?password='+password).
 session = auth["session"]
 headers = {'X-ArchivesSpace-Session':session}
 
-with open(starting_csv,'rb') as csvfile:
+with open(archival_object_csv,'rb') as csvfile:
     reader = csv.reader(csvfile)
     for row in reader:
 
         # Use an identifier and a file_uri from the csv to create the digital object
         # If you don't have specific identifiers and just want a random string,
-        # you could do something line 'identifier = uuid.uuid4()'
+        # you could import uuid up top and do something like 'identifier = uuid.uuid4()'
         identifier = row[3]
         file_uri = row[4]
 
-        # Grab the archival object's ASpace ref_id from the csv
+        # Grab the archival object's ArchivesSpace ref_id from the csv
         ref_id = row[2]
 
         # Search ASpace for the ref_id
@@ -45,14 +54,15 @@ with open(starting_csv,'rb') as csvfile:
         # Submit a get request for the archival object and store the JSON
         archival_object_json = requests.get(aspace_url+archival_object_uri,headers=headers).json()
 
-        # Continue only if the search-returned archival object's ref_id matches our starting ref_id
+        # Continue only if the search-returned archival object's ref_id matches our starting ref_id, just to be safe
         if archival_object_json['ref_id'] == ref_id:
 
             # Add the archival object uri to the row from the csv to write it out at the end
             row.append(archival_object_uri)
 
             # Reuse the display string from the archival object as the digital object title
-            # Note: a better way of doing this would be to add the title and dates from the archival object separately
+            # Note: a more sophisticated way of doing this would be to add the title and dates from the
+            # archival object separately into the appropriate title and date records in the digital object
             # This also does not copy over any notes from the archival object
             display_string = archival_object_json['display_string']
 
@@ -63,12 +73,12 @@ with open(starting_csv,'rb') as csvfile:
             # Post the digital object
             dig_obj_post = requests.post(aspace_url+'/repositories/2/digital_objects',headers=headers,data=dig_obj_data).json()
 
-            print 'Digital Object Status', dig_obj_post['status']
+            print 'Digital Object Status:', dig_obj_post['status']
 
             # Grab the digital object uri
             dig_obj_uri = dig_obj_post['uri']
 
-            print 'Digital Object URI', dig_obj_uri
+            print 'Digital Object URI:', dig_obj_uri
 
             # Add the digital object uri to the row from the csv to write it out at the end
             row.append(dig_obj_uri)
@@ -76,7 +86,7 @@ with open(starting_csv,'rb') as csvfile:
             # Build a new instance to add to the archival object, linking to the digital object
             dig_obj_instance = {'instance_type':'digital_object', 'digital_object':{'ref':dig_obj_uri}}
 
-            # Append the new instance to the existing archival object record
+            # Append the new instance to the existing archival object record's instances
             archival_object_json['instances'].append(dig_obj_instance)
             archival_object_data = json.dumps(archival_object_json)
 
@@ -85,7 +95,7 @@ with open(starting_csv,'rb') as csvfile:
 
             print archival_object_update
 
-            # Write a new csv with all the info from the old one + the archival object and digital object uris
-            with open(updated_csv,'ab') as csvout:
+            # Write a new csv with all the info from the initial csv + the ArchivesSpace uris for the archival and digital objects
+            with open(updated__archival_object_csv,'ab') as csvout:
                 writer = csv.writer(csvout)
                 writer.writerow(row)

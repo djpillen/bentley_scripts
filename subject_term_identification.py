@@ -2,7 +2,6 @@ from lxml import etree
 import csv
 
 ead_agents = 'C:/Users/Public/Documents/compound_agents.csv'
-#ead_subjects = 'C:/Users/Public/Documents/ead_subjects_20150810.csv'
 ead_subjects = 'C:/Users/Public/Documents/ead_unique_subjects_20150814.csv'
 
 marc_agents = 'C:/Users/Public/Documents/marc_xml-agents_20150812.csv'
@@ -10,14 +9,14 @@ marc_subjects = 'C:/Users/Public/Documents/marc_xml-subjects_20150806.csv'
 
 multiple_term_types = 'C:/Users/Public/Documents/multiple_type_terms_fix.csv'
 unidentified_term_types = 'C:/Users/Public/Documents/unidentified_terms_fix.csv'
-fixed_term_types = {}
 
 aspace_subjects = 'C:/Users/Public/Documents/aspace_subjects.csv'
 compound_agents_fix = 'C:/Users/Public/Documents/compound_agents_terms.csv'
 
-terms_dict = {}
 type_dict = {'t':'uniform_title','v':'genre_form','b':'topical','x':'topical','d':'temporal','y':'temporal','z':'geographic','subject':'topical','geogname':'geographic','genreform':'genre_form','655':'genre_form','650':'topical','651':'geographic'}
 
+fixed_term_types = {}
+terms_dict = {}
 
 with open(ead_agents,'rb') as agent_csv:
     reader = csv.reader(agent_csv)
@@ -118,6 +117,12 @@ with open(unidentified_term_types,'rb') as unid_csv:
         term_type = row[1]
         fixed_term_types[term] = term_type
 
+# Output any terms that do not have an identifiable term type or that have multiple identified
+# term types to CSVs for evaluation in OpenRefine. Modify the CSVs to identify the appropriate term type
+# for each term, export the modified CSVs, merge them with any existing multiple_term_types and
+# unidentified_term_types CSVs, and include those CSVs in this script up top. When you're ready to run
+# this script *for real*, this portion of the script should not output any new unidentified type or
+# multiple type terms.
 unid = 0
 multi = 0
 total = 0
@@ -140,9 +145,7 @@ print unid
 print multi
 print total
 
-
-
-#Write a csv with aspaceified subjects
+#Finally, write a CSV with aspaceified subjects to be posted via the API
 with open(ead_subjects,'rb') as unique_file:
     reader = csv.reader(unique_file)
     for row in reader:
@@ -182,6 +185,8 @@ with open(ead_subjects,'rb') as unique_file:
             with open(aspace_subjects,'ab') as csv_out:
                 writer = csv.writer(csv_out,dialect='excel')
                 writer.writerow(new_row)
+
+# Also write a CSV with the term types for terms included in compound agent subjects
 
 with open(ead_agents, 'rb') as compound_file:
     reader = csv.reader(compound_file)

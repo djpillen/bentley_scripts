@@ -19,7 +19,7 @@ for filename in os.listdir(path):
                 subjects[sub.tag][source] = []
             if sub_text not in subjects[sub.tag][source]:
                 subjects[sub.tag][source].append(sub_text)
-    print '\rProcessing unique subjects for',filename
+    print 'Processing unique subjects for',filename
 
 print 'Writing unique subject csv'
 for subject_type in subjects:
@@ -35,8 +35,9 @@ for subject_type in subjects:
                     row.append(term)
                 writer = csv.writer(csvfile, dialect='excel')
                 writer.writerow(row)
+
 '''
-# Get a csv with all subjects for each file
+# Get a csv with all subjects, including duplicates, for each file
 for filename in os.listdir(path):
     tree = etree.parse(join(path, filename))
     for sub in tree.xpath('//controlaccess/*'):
@@ -54,5 +55,5 @@ for filename in os.listdir(path):
             with open('C:/Users/Public/Documents/ead_subjects_20150810.csv', 'ab') as csvfile:
                 writer = csv.writer(csvfile, dialect='excel')
                 writer.writerow(row)
-    print '\rWriting csv with all subjects for',filename
+    print 'Writing csv with all subjects for',filename
 '''
