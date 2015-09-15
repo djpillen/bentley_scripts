@@ -4,12 +4,12 @@ from os.path import join
 import uuid
 
 # Enter the path to your starting EAD directory
-input_directory = 'path/to/original/EADs'
+input_directory = 'C:/Users/djpillen/GitHub/vandura/Real_Masters_all'
 
 # Enter the path to the output directory for the modified EADs
 # Warning! If you set the output_directory to the same path as the input_directory,
 # all of your original EADs will be overwritten
-output_directory = 'path/to/new/EADs'
+output_directory = 'C:/Users/djpillen/GitHub/test_dir'
 
 # Loop through each file in the input directory
 for filename in os.listdir(input_directory):
@@ -28,3 +28,4 @@ for filename in os.listdir(input_directory):
                 child.attrib['parent'] = parent_id
         with open(join(output_directory, filename), 'w') as new_ead:
             new_ead.write(etree.tostring(ead, encoding="utf-8", xml_declaration=True))
+        print filename

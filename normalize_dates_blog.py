@@ -7,7 +7,7 @@ from os.path import join
 import re
 
 
-path = 'path/to/EADs' #<-- Change this to your EAD directory path
+path = 'C:/Users/djpillen/GitHub/vandura/Real_Masters_all' #<-- Change this to your EAD directory path
 
 # Make some regular expressions
 yyyy = re.compile(r'^\d{4}$') # Ex: 1920
@@ -16,6 +16,8 @@ yyyy_yyyy = re.compile(r'^\d{4}\-\d{4}$') # Ex: 1920-1930
 yyyys_yyyy = re.compile(r'^\d{4}s\-\d{4}$') # Ex: 1920s-1930
 yyyy_yyyys = re.compile(r'^\d{4}\-\d{4}s$') # Ex: 1920-1930s
 yyyys_yyyys = re.compile(r'^\d{4}s\-\d{4}s$') # Ex: 1920s-1930s
+
+undated = re.compile(r'^[Uu]ndated$')
 
 # Initialize these values to keep track of how many dates we've normalized
 normalized_dates = 0
@@ -28,7 +30,7 @@ for filename in os.listdir(path):
     dates = tree.xpath('//unitdate')
     # loop through each <unitdate>
     for i in dates:
-        if not 'normal' in i.attrib:
+        if not 'normal' in i.attrib and not undated.match(i.text):
             if i.text and len(i.text) > 0:
                 # check if the content of <unitdate> matches any of those regular expressions
                 if yyyy.match(i.text) and len(i.text) == 4: # We also verify that the length is what we would expect based on the regular expression for an added level of certainty that these really are the kinds of dates we're looking for
@@ -64,9 +66,9 @@ for filename in os.listdir(path):
                 not_normalized_dates += 1
                 continue
 
-    outfilepath = 'path/to/updated/EADs' #<-- Change this to a different directory than the one you started with in case anything goes wrong. You don't want to overwrite your original EADs.
+    outfilepath = 'C:/Users/djpillen/GitHub/vandura/Real_Masters_all' #<-- Change this to a different directory than the one you started with in case anything goes wrong. You don't want to overwrite your original EADs.
     outfile = open((join(outfilepath, filename)), 'w')
-    outfile.write(etree.tostring(tree, encoding="utf-8", xml_declaration=True)) # Write the new version of the EAD with normalized dates!
+    outfile.write(etree.tostring(tree, encoding="utf-8", xml_declaration=True, pretty_print=True)) # Write the new version of the EAD with normalized dates!
     outfile.close()
 
 # Add up our normalized_dates and not_normalized_dates to get the total dates checked
