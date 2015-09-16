@@ -3,7 +3,7 @@ from datetime import datetime
 
 
 
-accessions_file = 'C:/Users/Public/Documents/accessions/accessions_20150810-noblanks.csv'
+accessions_file = 'C:/Users/Public/Documents/accessions/accessions_20150916-noblanks.csv'
 
 accession_dates = []
 possible_dates = 0
@@ -61,7 +61,7 @@ print 'Total nulls:', len(nulls)
 print 'Total possible dates:', possible_dates
 print 'Remaining nulls:', len(nulls) - possible_dates
 
-with open('C:/Users/Public/Documents/accessions/accessions_20150810-noblanks.csv','rb') as csvin, open('C:/Users/Public/Documents/accessions/accessions_20150810-datefix.csv','ab') as csvout:
+with open('C:/Users/Public/Documents/accessions/accessions_20150916-noblanks.csv','rb') as csvin, open('C:/Users/Public/Documents/accessions/accessions_20150916-datefix.csv','ab') as csvout:
     reader = csv.reader(csvin)
     writer = csv.writer(csvout, dialect='excel')
     count = -1
@@ -71,12 +71,13 @@ with open('C:/Users/Public/Documents/accessions/accessions_20150810-noblanks.csv
             writer.writerow(row)
         elif accession_dates[count] != 'null':
             row[1] = accession_dates[count]
+            #To do - add general note indicating that this date is a guess
             writer.writerow(row)
         else:
             writer.writerow(row)
         count += 1
 
-with open('C:/Users/Public/Documents/accessions/accessions_20150810-datefix.csv','rb') as csvin, open('C:/Users/Public/Documents/accessions/accessions_20150810-final.csv','ab') as csvout:
+with open('C:/Users/Public/Documents/accessions/accessions_20150916-datefix.csv','rb') as csvin, open('C:/Users/Public/Documents/accessions/accessions_20150916-final.csv','ab') as csvout:
     reader = csv.reader(csvin)
     writer = csv.writer(csvout, dialect='excel')
     removed = 0
@@ -85,7 +86,7 @@ with open('C:/Users/Public/Documents/accessions/accessions_20150810-datefix.csv'
         accession_description = row[0]
         status = row[35]
         donor_number_id = row[9]
-        if len(accession_date) == 0 and len(accession_description) == 0 and not (status == 'Backlog' or status == 'In Progress'):
+        if len(accession_date) == 0 and len(accession_description) == 0 and len(status) == 0:
             removed += 1
             continue
         else:
