@@ -30,5 +30,5 @@ for filename in os.listdir(path):
                 c.attrib['label'] = c.attrib['label'] + ' ['+str(container_ids[container_type_num])+']'
 
     fout = open(join(path,filename), 'w')
-    fout.write(etree.tostring(tree,xml_declaration=True,encoding="utf-8")
+    fout.write(etree.tostring(tree,xml_declaration=True,encoding="utf-8"))
     fout.close()
