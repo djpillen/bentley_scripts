@@ -5,15 +5,14 @@ from os.path import join
 from lxml import etree
 from tqdm import tqdm
 
-input_directory = 'C:/Users/djpillen/GitHub/vandura/Real_Masters_all'
-output_directory = 'C:/Users/djpillen/GitHub/vandura/Real_Masters_all'
+input_directory = 'C:/Users/djpillen/GitHub/mmdp-workshop/EADs'
+output_directory = 'C:/Users/djpillen/GitHub/mmdp-workshop/EADs'
 
-files = ['detroitnews.xml','gonzalesjess.xml','kevorkian.xml','ovshinskyharv.xml','pohrtkarl.xml']
 
 def prettify_xml_in_directory(input_dir, output_dir):
     parser = etree.XMLParser(remove_blank_text=True)
     for filename in tqdm(os.listdir(input_dir), desc="Prettify progress", leave=True):
-        if filename.endswith(".xml") and filename in files:
+        if filename.endswith(".xml"):
             # first, prettyprint with the custom parser
             xml = etree.parse(join(input_dir, filename), parser)
             with open(join(output_dir, filename), mode='w') as f:

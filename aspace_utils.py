@@ -41,6 +41,10 @@ class ArchivesSpace(object):
             subject = self.get_subject(subject_id)
             print subject_id, subject['title']
 
+    def post_subject(self, data):
+        subject = requests.post(baseURL+'/subjects', headers=headers, data=data).json()
+        return subject
+
     def get_person(self, person_id):
         person = requests.get(self.aspace_url + '/agents/people/' + str(person_id)).json()
         return person
