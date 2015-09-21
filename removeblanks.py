@@ -73,12 +73,9 @@ for count in missingid:
     different = False
     for content in contents:
         if previous[content] != current_row[content]:
-            different = True
-    if different:
-        for content in contents:
             previous[content] = previous[content] + ';;;' + current_row[content]
-        if the_id not in differences:
-            differences.append(the_id)
+            if the_id not in differences:
+                differences.append(the_id)
 
 print sorted([int(i) for i in differences])
 
