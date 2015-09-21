@@ -33,13 +33,9 @@ for null in nulls:
             next_index += 1
     except:
         next_index = 0
-    if previous_index <= 3:
-        previous_index = previous_index
-    else:
+    if previous_index > 3:
         previous_index = 3
-    if next_index <= 3:
-        next_index = next_index
-    else:
+    if next_index > 3:
         next_index = 3
     if accession_dates[null-previous_index] != 'null':
         previous_date = accession_dates[null-previous_index]
