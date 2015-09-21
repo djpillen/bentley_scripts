@@ -39,7 +39,7 @@ class ArchivesSpace(object):
         subject_ids = requests.get(self.aspace_url + '/subjects?all_ids=true').json()
         for subject_id in subject_ids:
             subject = self.get_subject(subject_id)
-            print subject_id, subject['title']
+            print subject_id, subject['title'].encode('utf-8')
 
     def post_subject(self, data):
         subject = requests.post(baseURL+'/subjects', headers=headers, data=data).json()
@@ -53,7 +53,7 @@ class ArchivesSpace(object):
         person_ids = requests.get(self.aspace_url + '/agents/people?all_ids=true').json()
         for person_id in person_ids:
             person = self.get_person(person_id)
-            print person_id, person['display_name']['sort_name']
+            print person_id, person['display_name']['sort_name'].encode('utf-8')
 
     def search(self):
         query = raw_input('Search query: ')

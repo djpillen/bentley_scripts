@@ -8,7 +8,6 @@ from tqdm import tqdm
 input_directory = 'C:/Users/djpillen/GitHub/mmdp-workshop/EADs'
 output_directory = 'C:/Users/djpillen/GitHub/mmdp-workshop/EADs'
 
-
 def prettify_xml_in_directory(input_dir, output_dir):
     parser = etree.XMLParser(remove_blank_text=True)
     for filename in tqdm(os.listdir(input_dir), desc="Prettify progress", leave=True):

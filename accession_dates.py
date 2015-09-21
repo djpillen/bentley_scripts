@@ -1,9 +1,12 @@
 import csv
 from datetime import datetime
+import os
 
 
 
-accessions_file = 'C:/Users/Public/Documents/accessions/accessions_20150916-noblanks.csv'
+accessions_file = 'C:/Users/Public/Documents/accessions/accessions_20150921-noblankids.csv'
+date_fix = accessions_file.replace('-noblankids','-datefix')
+final_csv = accessions_file.replace('-noblankids','-final')
 
 accession_dates = []
 possible_dates = 0
@@ -25,8 +28,11 @@ for null in nulls:
     next_index = 1
     while accession_dates[null-previous_index] == 'null':
         previous_index += 1
-    while accession_dates[null+next_index] == 'null':
-        next_index += 1
+    try:
+        while accession_dates[null+next_index] == 'null':
+            next_index += 1
+    except:
+        next_index = 0
     if previous_index <= 3:
         previous_index = previous_index
     else:
@@ -61,7 +67,7 @@ print 'Total nulls:', len(nulls)
 print 'Total possible dates:', possible_dates
 print 'Remaining nulls:', len(nulls) - possible_dates
 
-with open('C:/Users/Public/Documents/accessions/accessions_20150916-noblanks.csv','rb') as csvin, open('C:/Users/Public/Documents/accessions/accessions_20150916-datefix.csv','ab') as csvout:
+with open(accessions_file,'rb') as csvin, open(date_fix,'ab') as csvout:
     reader = csv.reader(csvin)
     writer = csv.writer(csvout, dialect='excel')
     count = -1
@@ -77,7 +83,7 @@ with open('C:/Users/Public/Documents/accessions/accessions_20150916-noblanks.csv
             writer.writerow(row)
         count += 1
 
-with open('C:/Users/Public/Documents/accessions/accessions_20150916-datefix.csv','rb') as csvin, open('C:/Users/Public/Documents/accessions/accessions_20150916-final.csv','ab') as csvout:
+with open(date_fix,'rb') as csvin, open(final_csv,'ab') as csvout:
     reader = csv.reader(csvin)
     writer = csv.writer(csvout, dialect='excel')
     removed = 0
@@ -86,9 +92,13 @@ with open('C:/Users/Public/Documents/accessions/accessions_20150916-datefix.csv'
         accession_description = row[0]
         status = row[35]
         donor_number_id = row[9]
-        if len(accession_date) == 0 and len(accession_description) == 0 and len(status) == 0:
+        donor_number = row[26]
+        if len(accession_date) == 0 and ((len(accession_description) == 0 and len(status) == 0) or donor_number == '1771'):
             removed += 1
             continue
         else:
             writer.writerow(row)
     print 'Removed:', removed
+
+#os.remove(accessions_file)
+os.remove(date_fix)
