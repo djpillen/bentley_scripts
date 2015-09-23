@@ -3,6 +3,7 @@ from lxml import etree
 from datetime import datetime
 import os.path
 
+#EXPLORE THIS OPTION: https://archive-it.org/oai/organizations/89?verb=ListRecords&metadataPrefix=oai_marc21
 all_collections = 'https://partner.archive-it.org/seam/resource/collectionFeed?accountId=934'
 
 last_exported_doc = 'last_exported_date.txt'
@@ -47,13 +48,13 @@ def parse_collection(collection):
                             corporate_creators.append(custom.text)
                         elif custom.attrib['name'] == 'personal creator':
                             personal_creators.append(custom.text)
-                            
+
                 # Make the MARC
                 record = etree.Element('record',nsmap={None:'http://www.loc.gov/MARC21/slim','xsi':'http://www.w3.org/2001/XMLSchema-instance'})
-  
-                
-                    
-            
+
+
+
+
         print coll_name, coll_id
 
 parse_collection(all_collections)
