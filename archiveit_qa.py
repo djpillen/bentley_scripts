@@ -98,10 +98,11 @@ def find_repeat_dirs(job_dir, host_list):
 def check_repeat_url_status(repeat_dict):
     print "Checking the status of a random sample of repeating directory URLs"
     for host in repeat_dict:
+        print "Checking statuses for {0}".format(host)
         urls = repeat_dict[host]['repeats']
-        hosts[host]['ok'] = []
-        hosts[host]['maybe'] = []
-        hosts[host]['notok'] = []
+        repeat_dict[host]['ok'] = []
+        repeat_dict[host]['maybe'] = []
+        repeat_dict[host]['notok'] = []
         repeat_checked = 0
         while (len(urls) > 0) and (repeat_checked < 50):
             url = random.choice(urls)
@@ -110,11 +111,11 @@ def check_repeat_url_status(repeat_dict):
                 with requests.Session() as s:
                     repeat_check = s.get(url)
                     if repeat_check.status_code == 200 and len(repeat_check.history) == 0:
-                        hosts[host]['ok'].append(url)
+                        repeat_dict[host]['ok'].append(url)
                     elif repeat_check.status_code == 200 and len(repeat_check.history) > 0:
-                        hosts[host]['maybe'].append(url)
+                        repeat_dict[host]['maybe'].append(url)
                     else:
-                        hosts[host]['notok'].append(url)
+                        repeat_dict[host]['notok'].append(url)
                 repeat_checked += 1
             except:
                 continue
@@ -141,21 +142,21 @@ def process_repeats(job_dir, repeat_dict):
             writer.writerow([host,count,ok,maybe,notok])
         if ok > 0:
             ok_dir = join(repeat_dir_checked,'ok')
-            ok_list = hosts[host]['ok']
+            ok_list = repeat_dict[host]['ok']
             if not os.path.exists(ok_dir):
                 os.makedirs(ok_dir)
             with open(join(okay_dir,host + '.txt'),'a') as ok_txt:
                 ok_txt.write('\n'.join(ok_list))
         if maybe > 0:
             maybe_dir = join(repeat_dir_checked,'maybe')
-            maybe_list = hosts[host]['maybe']
+            maybe_list = repeat_dict[host]['maybe']
             if not os.path.exists(maybe_dir):
                 os.makedirs(maybe_dir)
             with open(join(maybe_dir,host + '.txt'),'a') as maybe_txt:
                 maybe_txt.write('\n'.join(maybe_list))
         if notok > 0:
             notok_dir = join(repeat_dir_checked,'notok')
-            notok_list = hosts[host]['notok']
+            notok_list = repeat_dict[host]['notok']
             if not os.path.exists(notok_dir):
                 os.makedirs(notok_dir)
             with open(join(notok_dir,host + '.txt'),'a') as notok_txt:
@@ -239,16 +240,20 @@ def build_report_summary():
 def main():
     job = raw_input('Enter a job number: ')
     base_dir = raw_input('Enter a base directory: ')
-    job_dir = make_directories(base_dir, job)
-    get_base_reports(job, job_dir)
+    #job_dir = make_directories(base_dir, job)
+    job_dir = join(base_dir,job)
+    
+    #get_base_reports(job, job_dir)
     host_dict, host_list = get_host_info(job_dir)
+    """
     for host in host_dict:
         if (host_dict[host]['crawled'] > 25) or (host_dict[host]['data'] > 1000000000):
             get_crawl_reports(job_dir, job, host, 'crawled')
         if host_dict[host]['queued'] > 0:
             get_crawl_reports(job_dir, job, host, 'queued')
     extract_reports(job_dir)
-    repeat_dict = find_repeat_dirs(job_dir, host_list, host_dict)
+    """
+    repeat_dict = find_repeat_dirs(job_dir, host_list)
     url_status_dict = check_repeat_url_status(repeat_dict)
     process_repeats(job_dir, url_status_dict)
     seed_status_dict = check_seed_status(job_dir)
