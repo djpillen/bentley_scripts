@@ -6,7 +6,7 @@ from os.path import join
 import zipfile
 import random
 
-def make_dirs(base_dir, job):
+def make_directories(base_dir, job):
     print "Making necessary directories"
     job_dir = join(base_dir,job)
     os.makedirs(job_dir)
@@ -38,39 +38,41 @@ def get_host_info(job_dir):
         for row in reader:
             host = row[0]
             crawled = row[1]
+            data = row[2]
             queued = row[6]
+            if host.endswith(':'):
+                host = re.sub(r':$','',host)
             host_dict[host] = {}
             host_dict[host]['crawled'] = int(crawled)
             host_dict[host]['queued'] = int(queued)
-            if host.endswith(':'):
-                host = re.sub(r':$','',host)
+            host_dict[host]['data'] = int(data)
             host_list.append(host)
     return host_dict, host_list
 
 def get_crawl_reports(job_dir, job, host, report_type):
-    print "Getting {0} reports for {1}".format(report_type, host)
+    print "Downloading {0} report for {1}".format(report_type, host)
     url = 'https://partner.archive-it.org/seam/resource/' + report_type + 'ByHost?crawlJobId=' + job + '&host=' + host
     if url.endswith(':'):
         re.sub(r':$',r'%3A',url)
-    crawl_report = requests.get(url)
-    content_type = crawl_report.headers['content-type']
-    if content_type == 'application/zip':
-        output = open(job_dir + '/zips/' + report_type + '-' + host + '.zip','wb')
-        output.write(crawl_report.content)
-        output.close()
-    elif content_type.startswith('text/plain'):
-        output = open(job_dir + '/crawled_queued/' + report_type + '-' + host + '.txt','w')
-        output.write(crawl_report.content)
-        output.close()
+    with requests.Session() as s:
+        crawl_report = s.get(url)
+        content_type = crawl_report.headers['content-type']
+        if content_type == 'application/zip':
+            output = open(job_dir + '/zips/' + report_type + '-' + host + '.zip','wb')
+            output.write(crawl_report.content)
+            output.close()
+        elif content_type.startswith('text/plain'):
+            output = open(job_dir + '/crawled_queued/' + report_type + '-' + host + '.txt','w')
+            output.write(crawl_report.content)
+            output.close()
 
 def extract_reports(job_dir):
     print "Extracting zips"
-    zip_dir = job_dir + '/zips'
-    extract_dir = job_dir + '/crawled_queued'
-    if os.path.exists(zip_dir):
-        for source_zip in os.listdir(zip_dir):
-            with zipfile.ZipFile(join(zip_dir,source_zip)) as zf:
-                zf.extractall(extract_dir)
+    zip_dir = join(job_dir,'zips')
+    extract_dir = join(job_dir, 'crawled_queued')
+    for source_zip in os.listdir(zip_dir):
+        with zipfile.ZipFile(join(zip_dir,source_zip)) as zf:
+            zf.extractall(extract_dir)
 
 def find_repeat_dirs(job_dir, host_list):
     print "Looking for repeating directories"
@@ -93,7 +95,8 @@ def find_repeat_dirs(job_dir, host_list):
                     repeat_dict[host]['repeats'].append(url)
     return repeat_dict
 
-def check_repeat_url_status(job_dir, repeat_dict):
+def check_repeat_url_status(repeat_dict):
+    print "Checking the status of a random sample of repeating directory URLs"
     for host in repeat_dict:
         urls = repeat_dict[host]['repeats']
         hosts[host]['ok'] = []
@@ -159,6 +162,7 @@ def process_repeats(job_dir, repeat_dict):
                 notok_txt.write('\n'.join(notok_list))
 
 def check_seed_status(job_dir):
+    print "Checking seed status reports"
     statuses = {'redirects':{},'robots':{},'unknown':{}}
     status_dir = join(job_dir,'statuses')
     with open(join(job_dir,'seedstatus.csv'),'rb') as status_csv:
@@ -185,7 +189,8 @@ def check_seed_status(job_dir):
                 writer.writerow([url, statuses[status][url]])
     return statuses
 
-def get_redirect_metadata(job_dir, seed_status_dict)):
+def get_redirect_metadata(job_dir, seed_status_dict):
+    print "Getting metadata for redirected seeds"
     redirect_dir = join(job_dir,'redirects')
     starting_seeds = {}
     skip = ['createdDate','lastUpdatedDate','active','public','note','url']
@@ -234,17 +239,17 @@ def build_report_summary():
 def main():
     job = raw_input('Enter a job number: ')
     base_dir = raw_input('Enter a base directory: ')
-    job_dir = make_dirs(base_dir, job)
+    job_dir = make_directories(base_dir, job)
     get_base_reports(job, job_dir)
     host_dict, host_list = get_host_info(job_dir)
     for host in host_dict:
-        if host_dict[host]['crawled'] > 0:
+        if (host_dict[host]['crawled'] > 25) or (host_dict[host]['data'] > 1000000000):
             get_crawl_reports(job_dir, job, host, 'crawled')
         if host_dict[host]['queued'] > 0:
             get_crawl_reports(job_dir, job, host, 'queued')
     extract_reports(job_dir)
-    repeat_dict = find_repeat_dirs(job_dir, host_list)
-    url_status_dict = check_repeat_url_status(job_dir, repeat_dict)
+    repeat_dict = find_repeat_dirs(job_dir, host_list, host_dict)
+    url_status_dict = check_repeat_url_status(repeat_dict)
     process_repeats(job_dir, url_status_dict)
     seed_status_dict = check_seed_status(job_dir)
     get_redirect_metadata(job_dir, seed_status_dict)
