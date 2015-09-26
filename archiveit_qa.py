@@ -322,7 +322,7 @@ def build_report_summary():
 
 def main():
     job_numbers = raw_input('Enter a comma separated list of job numbers: ')
-    base_dir = 'U:/web_archives/jobs'
+    base_dir = raw_input('Enter a directory to save job files (e.g., U:/web_archives/jobs): ')
     if not os.path.exists(base_dir):
         os.makedirs(base_dir)
     jobs = [job.strip() for job in job_numbers.split(',')]
