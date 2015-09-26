@@ -6,6 +6,7 @@ from os.path import join
 import zipfile
 import random
 from lxml import etree
+import time
 
 def make_directories(base_dir, job):
     job_dir = join(base_dir,job)
@@ -90,9 +91,11 @@ def find_repeat_dirs(job_dir, host_list):
                     repeat_dict[host]['count'] += 1
                     repeat_dict[host]['repeats'].append(url)
     if len(repeat_dict) > 0:
-        repeat_dir_all = join(job_dir,'repeating_directories_all')
-        if not os.path.exists(repeat_dir_all):
-            os.makedirs(repeat_dir_all)
+        repeat_dir = join(job_dir,'repeating_directories')
+        if not os.path.exists(repeat_dir):
+            os.makedirs(repeat_dir)
+        repeat_dir_all = join(repeat_dir,'all')
+        os.makedirs(repeat_dir_all)
         for host in repeat_dict:
             urls = repeat_dict[host]['repeats']
             with open(join(repeat_dir_all, host + '.txt'),'w') as repeat_txt:
@@ -104,7 +107,7 @@ def find_repeat_dirs(job_dir, host_list):
 def check_repeat_url_status(repeat_dict):
     for host in repeat_dict:
         print "Checking statuses for {0}".format(host)
-        urls = repeat_dict[host]['repeats']
+        urls = [url for url in repeat_dict[host]['repeats']]
         repeat_dict[host]['ok'] = []
         repeat_dict[host]['maybe'] = []
         repeat_dict[host]['notok'] = []
@@ -122,13 +125,13 @@ def check_repeat_url_status(repeat_dict):
                     else:
                         repeat_dict[host]['notok'].append(url)
                 repeat_checked += 1
+                time.sleep(2)
             except:
                 continue
     return repeat_dict
 
 def process_repeats(job_dir, repeat_dict):
-
-    repeat_dir_checked = join(job_dir,'repeating_directories_checked')
+    repeat_dir = join(job_dir,'repeating_directories')
     repeat_csv = join(job_dir,'repeating_directories.csv')
     with open(repeat_csv,'ab') as csvfile:
         writer = csv.writer(csvfile)
@@ -142,21 +145,21 @@ def process_repeats(job_dir, repeat_dict):
             writer = csv.writer(csvfile)
             writer.writerow([host,count,ok,maybe,notok])
         if ok > 0:
-            ok_dir = join(repeat_dir_checked,'ok')
+            ok_dir = join(repeat_dir,'ok')
             ok_list = repeat_dict[host]['ok']
             if not os.path.exists(ok_dir):
                 os.makedirs(ok_dir)
             with open(join(ok_dir,host + '.txt'),'a') as ok_txt:
                 ok_txt.write('\n'.join(ok_list))
         if maybe > 0:
-            maybe_dir = join(repeat_dir_checked,'maybe')
+            maybe_dir = join(repeat_dir,'maybe')
             maybe_list = repeat_dict[host]['maybe']
             if not os.path.exists(maybe_dir):
                 os.makedirs(maybe_dir)
             with open(join(maybe_dir,host + '.txt'),'a') as maybe_txt:
                 maybe_txt.write('\n'.join(maybe_list))
         if notok > 0:
-            notok_dir = join(repeat_dir_checked,'notok')
+            notok_dir = join(repeat_dir,'notok')
             notok_list = repeat_dict[host]['notok']
             if not os.path.exists(notok_dir):
                 os.makedirs(notok_dir)
@@ -344,7 +347,6 @@ def main():
         repeat_dict = find_repeat_dirs(job_dir, host_list)
         if repeat_dict:
             print "Repeating directories found! Checking the status of a random sample of repeating URLs for job {0}".format(job)
-            os.makedirs(join(job_dir,'repeating_directories_checked'))
             url_status_dict = check_repeat_url_status(repeat_dict)
             print "Processing repeating URLs and writing txt and csv reports for job {0}".format(job)
             process_repeats(job_dir, url_status_dict)
