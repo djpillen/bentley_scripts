@@ -117,7 +117,7 @@ def check_repeat_url_status(repeat_dict):
             urls.remove(url)
             try:
                 with requests.Session() as s:
-                    repeat_check = s.get(url, headers={'User-Agent':'BHL Archive-It QA'})
+                    repeat_check = s.head(url, headers={'User-Agent':'BHL Archive-It QA'})
                     if repeat_check.status_code == 200 and len(repeat_check.history) == 0:
                         repeat_dict[host]['ok'].append(url)
                     elif repeat_check.status_code == 200 and len(repeat_check.history) > 0:
