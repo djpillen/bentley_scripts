@@ -5,8 +5,8 @@ from os.path import join
 from lxml import etree
 from tqdm import tqdm
 
-input_directory = 'C:/Users/djpillen/GitHub/mmdp-workshop/EADs'
-output_directory = 'C:/Users/djpillen/GitHub/mmdp-workshop/EADs'
+input_directory = 'C:/Users/Public/Documents/aspace_exports'
+output_directory = 'C:/Users/Public/Documents/aspace_exports'
 
 def prettify_xml_in_directory(input_dir, output_dir):
     parser = etree.XMLParser(remove_blank_text=True)

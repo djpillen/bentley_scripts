@@ -3,7 +3,7 @@ import os
 
 # Only need to change this
 
-base_csv = 'C:/Users/Public/Documents/accessions/accessions_20150921.csv'
+base_csv = 'C:/Users/Public/Documents/accessions/accessions_20150928.csv'
 no_null_csv = base_csv.replace('.','-nonull.')
 no_blank_rows_csv = base_csv.replace('.','-noblankrows.')
 no_blank_ids_csv = base_csv.replace('.','-noblankids.')

@@ -1,12 +1,13 @@
-import requests
 import csv
-import re
+import HTMLParser
+from lxml import etree
 import os
 from os.path import join
-import zipfile
 import random
-from lxml import etree
+import re
+import requests
 import time
+import zipfile
 
 def make_directories(base_dir, job):
     job_dir = join(base_dir,job)
@@ -132,7 +133,7 @@ def check_repeat_url_status(repeat_dict):
 
 def process_repeats(job_dir, repeat_dict):
     repeat_dir = join(job_dir,'repeating_directories')
-    repeat_csv = join(job_dir,'repeating_directories.csv')
+    repeat_csv = join(repeat_dir,'repeating_directories.csv')
     with open(repeat_csv,'ab') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow(['Host','Count','OK','Maybe','Not OK'])
@@ -208,7 +209,36 @@ def check_seed_status(job_dir):
                 writer.writerow([url, statuses[status][url]])
     return statuses
 
+def minimal_redirect_handling(job_dir, source_list, seed_status_dict):
+    redirect_dir = join(job_dir,'redirects')
+    starting_seeds = {}
+    redirect_status = {}
+    reconciled = False
+    while not reconciled:
+        unreconciled_count = 0
+        for url in seed_status_dict['redirects']:
+            value = seed_status_dict['redirects'][url]
+            if (url in source_list) and (value in seed_status_dict['redirects']):
+                unreconciled_count += 1
+                seed_status_dict['redirects'][url] = seed_status_dict['redirects'][value]
+        if unreconciled_count == 0:
+            reconciled = True
+    for url in seed_status_dict['redirects']:
+        if url in source_list:
+            starting_seeds[url] = seed_status_dict['redirects'][url]
+    for seed in starting_seeds:
+        redirect = starting_seeds[seed]
+        for status in seed_status_dict:
+            if redirect in seed_status_dict[status]:
+                redirect_status[redirect] = status
+    for seed in starting_seeds:
+        with open(join(redirect_dir,'minimal_redirect_information.csv'),'ab') as csvfile:
+            writer = csv.writer(csvfile)
+            redirect = starting_seeds[seed]
+            writer.writerow([seed,redirect,redirect_status[redirect]])
+
 def get_redirect_metadata(job_dir, source_list, seed_status_dict):
+    redirect_dir = join(job_dir,'redirects')
     with open(join(job_dir,'seedstatus.csv'),'rb') as csvfile:
         reader = csv.reader(csvfile)
         first_row = reader.next()
@@ -240,40 +270,48 @@ def get_redirect_metadata(job_dir, source_list, seed_status_dict):
             starting_seeds[url] = tree.getpath(seed)
     redirect_metadata = []
     add_seeds = []
+    redirect_investigate = []
+    entity_parser = HTMLParser.HTMLParser()
     for seed in starting_seeds:
-        new_seed = seed_status_dict['redirects'][seed]
-        add_seeds.append(new_seed)
-        seed_metadata = {}
-        seed_path = starting_seeds[seed]
-        seed_element = tree.xpath(seed_path)[0]
-        for elem in seed_element.xpath('.//*'):
-            if elem.text is not None and not elem.tag in skip and not 'name' in elem.attrib:
-                elem_name = elem.tag
-                elem_text = elem.text
-                if elem_name not in seed_metadata:
-                    seed_metadata[elem_name] = []
-                seed_metadata[elem_name].append(elem_text)
-            elif 'name' in elem.attrib:
-                if elem.attrib['name'] not in skip:
-                    elem_name = elem.attrib['name']
-                    elem_text = elem.text
+        if len(starting_seeds[seed]) > 0:
+            new_seed = seed_status_dict['redirects'][seed]
+            add_seeds.append(new_seed)
+            seed_metadata = {}
+            seed_path = starting_seeds[seed]
+            seed_element = tree.xpath(seed_path)[0]
+            for elem in seed_element.xpath('.//*'):
+                if elem.text is not None and not elem.tag in skip and not 'name' in elem.attrib:
+                    elem_name = elem.tag
+                    elem_text = entity_parser.unescape(elem.text)
                     if elem_name not in seed_metadata:
                         seed_metadata[elem_name] = []
                     seed_metadata[elem_name].append(elem_text)
-        seed_metadata['url'] = []
-        seed_metadata['url'].append(new_seed)
-        seed_metadata['Note'] = []
-        seed_metadata['Note'].append("Seed created due to redirect from " + seed)
-        redirect_metadata.append(seed_metadata)
-    with open(join(job_dir,'deactivate.txt'),'a') as deactivate_txt:
+                elif 'name' in elem.attrib:
+                    if elem.attrib['name'] not in skip:
+                        elem_name = elem.attrib['name']
+                        elem_text = entity_parser.unescape(elem.text)
+                        if elem_name not in seed_metadata:
+                            seed_metadata[elem_name] = []
+                        seed_metadata[elem_name].append(elem_text)
+            seed_metadata['url'] = []
+            seed_metadata['url'].append(new_seed)
+            seed_metadata['Note'] = []
+            seed_metadata['Note'].append("Seed created due to redirect from " + seed)
+            redirect_metadata.append(seed_metadata)
+        else:
+            redirect_investigate.append(seed)
+    with open(join(redirect_dir,'deactivate.txt'),'a') as deactivate_txt:
         deactivate_txt.write('\n'.join([seed for seed in starting_seeds]))
-    with open(join(job_dir, 'addseeds.txt'),'a') as add_seeds_txt:
+    with open(join(redirect_dir, 'addseeds.txt'),'a') as add_seeds_txt:
         add_seeds_txt.write('\n'.join([seed for seed in add_seeds]))
+    with open(join(redirect_dir,'redirect_investigate.txt'),'a') as investigate_txt:
+        investigate_txt.write('\n'.join([seed for seed in redirect_investigate]))
     return redirect_metadata
 
 def process_redirect_metadata(job_dir, redirect_metadata):
     header_order = ['url','Title','Subject','Personal Creator','Corporate Creator','Coverage','Description','Publisher','Note']
-    redirect_csv = join(job_dir,'redirect_metadata.csv')
+    redirect_dir = join(job_dir,'redirects')
+    redirect_csv = join(redirect_dir,'redirect_metadata.csv')
     header_counts = {}
     for seed in redirect_metadata:
         for element in seed:
@@ -317,8 +355,6 @@ def process_redirect_metadata(job_dir, redirect_metadata):
             writer = csv.writer(csvfile)
             writer.writerow(row)
 
-def build_report_summary():
-    pass
 
 def main():
     job_numbers = raw_input('Enter a comma separated list of job numbers: ')
@@ -355,13 +391,15 @@ def main():
         print "Checking seed status reports for job {0}".format(job)
         seed_status_dict = check_seed_status(job_dir)
         if len(seed_status_dict['redirects']) > 0:
+            if not os.path.exists(join(job_dir,'redirects')):
+                os.makedirs(join(job_dir,'redirects'))
             print "Redirected seeds found! Getting metadata for redirected seeds for job {0}".format(job)
             redirect_metadata = get_redirect_metadata(job_dir, source_list, seed_status_dict)
             print "Writing CSV with metadata for new seeds for job {0}".format(job)
             process_redirect_metadata(job_dir, redirect_metadata)
+            minimal_redirect_handling(job_dir, source_list, seed_status_dict)
         else:
             print "No redirected seeds found for job {0}".format(job)
-        #build_report_summary()
         print "All done! Find completed reports at {0}".format(job_dir)
 
 main()

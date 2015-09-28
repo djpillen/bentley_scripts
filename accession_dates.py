@@ -4,7 +4,7 @@ import os
 
 
 
-accessions_file = 'C:/Users/Public/Documents/accessions/accessions_20150921-noblankids.csv'
+accessions_file = 'C:/Users/Public/Documents/accessions/accessions_20150928-noblankids.csv'
 date_fix = accessions_file.replace('-noblankids','-datefix')
 final_csv = accessions_file.replace('-noblankids','-final')
 
