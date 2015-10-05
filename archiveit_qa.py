@@ -230,7 +230,7 @@ def minimal_redirect_handling(job_dir, source_list, seed_status_dict):
             seed_parse = urlparse.urlparse(url)
             redirect_parse = urlparse.urlparse(redirect_url)
             # Check to see if the starting URL and redirected URL are meaningfully different
-            if (seed_parse.path != redirect_parse.path) or ((seed_parse.netloc != redirect_parse.netloc) and (('www.' + seed_parse.netloc != redirect_parse.netloc) and (seed_parse.netloc != 'www.' + redirect_parse.netloc)) or (seed_parse.params != redirect_parse.params) or (seed_parse.query != redirect_parse.query) or (seed_parse.fragment != redirect_parse.fragment))):
+            if ((seed_parse.path != redirect_parse.path) and ((seed_parse.path + '/' != redirect_parse.path) and (seed_parse.path != redirect_parse.path + '/'))) or ((seed_parse.netloc != redirect_parse.netloc) and (('www.' + seed_parse.netloc != redirect_parse.netloc) and (seed_parse.netloc != 'www.' + redirect_parse.netloc))) or (seed_parse.params != redirect_parse.params) or (seed_parse.query != redirect_parse.query) or (seed_parse.fragment != redirect_parse.fragment):
                 starting_seeds[url] = redirect_url
     for seed in starting_seeds:
         redirect = starting_seeds[seed]
@@ -268,7 +268,7 @@ def get_redirect_metadata(job_dir, source_list, seed_status_dict):
             seed_parse = urlparse.urlparse(url)
             redirect_parse = urlparse.urlparse(redirect_url)
             # Check to see if the starting URL and redirected URL are meaningfully different
-            if (seed_parse.path != redirect_parse.path) or ((seed_parse.netloc != redirect_parse.netloc) and (('www.' + seed_parse.netloc != redirect_parse.netloc) and (seed_parse.netloc != 'www.' + redirect_parse.netloc)) or (seed_parse.params != redirect_parse.params) or (seed_parse.query != redirect_parse.query) or (seed_parse.fragment != redirect_parse.fragment))):
+            if ((seed_parse.path != redirect_parse.path) and ((seed_parse.path + '/' != redirect_parse.path) and (seed_parse.path != redirect_parse.path + '/'))) or ((seed_parse.netloc != redirect_parse.netloc) and (('www.' + seed_parse.netloc != redirect_parse.netloc) and (seed_parse.netloc != 'www.' + redirect_parse.netloc))) or (seed_parse.params != redirect_parse.params) or (seed_parse.query != redirect_parse.query) or (seed_parse.fragment != redirect_parse.fragment):
                 starting_seeds[url] = ''
     with requests.Session() as s:
         collection_feed = s.get('https://partner.archive-it.org/seam/resource/collectionFeed?accountId=934&collectionId=' + collection_id)
