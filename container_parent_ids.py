@@ -30,4 +30,3 @@ for filename in os.listdir(input_directory):
     with open(join(output_directory, filename), 'w') as new_ead:
         new_ead.write(etree.tostring(ead, encoding="utf-8", xml_declaration=True))
     print filename
-    done += 1

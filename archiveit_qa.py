@@ -7,6 +7,7 @@ import random
 import re
 import requests
 import time
+import urlparse
 import zipfile
 
 def make_directories(base_dir, job):
@@ -225,7 +226,12 @@ def minimal_redirect_handling(job_dir, source_list, seed_status_dict):
             reconciled = True
     for url in seed_status_dict['redirects']:
         if url in source_list:
-            starting_seeds[url] = seed_status_dict['redirects'][url]
+            redirect_url = seed_status_dict['redirects'][url]
+            seed_parse = urlparse.urlparse(url)
+            redirect_parse = urlparse.urlparse(redirect_url)
+            # Check to see if the starting URL and redirected URL are meaningfully different
+            if (seed_parse.path != redirect_parse.path) or ((seed_parse.netloc != redirect_parse.netloc) and (('www.' + seed_parse.netloc != redirect_parse.netloc) and (seed_parse.netloc != 'www.' + redirect_parse.netloc)) or (seed_parse.params != redirect_parse.params) or (seed_parse.query != redirect_parse.query) or (seed_parse.fragment != redirect_parse.fragment))):
+                starting_seeds[url] = redirect_url
     for seed in starting_seeds:
         redirect = starting_seeds[seed]
         for status in seed_status_dict:
@@ -234,8 +240,8 @@ def minimal_redirect_handling(job_dir, source_list, seed_status_dict):
     for seed in starting_seeds:
         with open(join(redirect_dir,'minimal_redirect_information.csv'),'ab') as csvfile:
             writer = csv.writer(csvfile)
-            redirect = starting_seeds[seed]
             writer.writerow([seed,redirect,redirect_status[redirect]])
+
 
 def get_redirect_metadata(job_dir, source_list, seed_status_dict):
     redirect_dir = join(job_dir,'redirects')
@@ -258,7 +264,12 @@ def get_redirect_metadata(job_dir, source_list, seed_status_dict):
             reconciled = True
     for url in seed_status_dict['redirects']:
         if url in source_list:
-            starting_seeds[url] = ''
+            redirect_url = seed_status_dict['redirects'][url]
+            seed_parse = urlparse.urlparse(url)
+            redirect_parse = urlparse.urlparse(redirect_url)
+            # Check to see if the starting URL and redirected URL are meaningfully different
+            if (seed_parse.path != redirect_parse.path) or ((seed_parse.netloc != redirect_parse.netloc) and (('www.' + seed_parse.netloc != redirect_parse.netloc) and (seed_parse.netloc != 'www.' + redirect_parse.netloc)) or (seed_parse.params != redirect_parse.params) or (seed_parse.query != redirect_parse.query) or (seed_parse.fragment != redirect_parse.fragment))):
+                starting_seeds[url] = ''
     with requests.Session() as s:
         collection_feed = s.get('https://partner.archive-it.org/seam/resource/collectionFeed?accountId=934&collectionId=' + collection_id)
     collection_metadata = etree.fromstring(collection_feed.text.encode('utf-8'))
@@ -394,10 +405,10 @@ def main():
             if not os.path.exists(join(job_dir,'redirects')):
                 os.makedirs(join(job_dir,'redirects'))
             print "Redirected seeds found! Getting metadata for redirected seeds for job {0}".format(job)
-            redirect_metadata = get_redirect_metadata(job_dir, source_list, seed_status_dict)
+            minimal_redirect_handling(job_dir, source_list, seed_status_dict)
+            redirect_metadata = get_redirect_metadata(job_dir, source_list, seed_status_dict, starting_seeds)
             print "Writing CSV with metadata for new seeds for job {0}".format(job)
             process_redirect_metadata(job_dir, redirect_metadata)
-            minimal_redirect_handling(job_dir, source_list, seed_status_dict)
         else:
             print "No redirected seeds found for job {0}".format(job)
         print "All done! Find completed reports at {0}".format(job_dir)
