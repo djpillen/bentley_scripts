@@ -293,21 +293,21 @@ def get_redirect_metadata(job_dir, source_list, seed_status_dict):
             for elem in seed_element.xpath('.//*'):
                 if elem.text is not None and not elem.tag in skip and not 'name' in elem.attrib:
                     elem_name = elem.tag
-                    elem_text = entity_parser.unescape(elem.text)
+                    elem_text = entity_parser.unescape(elem.text.replace('&#8220;','"').replace('&#8221;','"'))
                     if elem_name not in seed_metadata:
                         seed_metadata[elem_name] = []
-                    seed_metadata[elem_name].append(elem_text)
+                    seed_metadata[elem_name].append(elem_text.encode('utf-8'))
                 elif 'name' in elem.attrib:
                     if elem.attrib['name'] not in skip:
                         elem_name = elem.attrib['name']
-                        elem_text = entity_parser.unescape(elem.text)
+                        elem_text = entity_parser.unescape(elem.text.replace('&#8220;','"').replace('&#8221;','"'))
                         if elem_name not in seed_metadata:
                             seed_metadata[elem_name] = []
-                        seed_metadata[elem_name].append(elem_text)
+                        seed_metadata[elem_name].append(elem_text.encode('utf-8'))
             seed_metadata['url'] = []
             seed_metadata['url'].append(new_seed)
             seed_metadata['Note'] = []
-            seed_metadata['Note'].append("Seed created due to redirect from " + seed)
+            seed_metadata['Note'].append("QA Note: This seed was created due to redirects from the previous seed URL. Previous captures under seed URL " + seed)
             redirect_metadata.append(seed_metadata)
         else:
             redirect_investigate.append(seed)
