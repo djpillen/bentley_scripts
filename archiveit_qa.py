@@ -406,7 +406,7 @@ def main():
                 os.makedirs(join(job_dir,'redirects'))
             print "Redirected seeds found! Getting metadata for redirected seeds for job {0}".format(job)
             minimal_redirect_handling(job_dir, source_list, seed_status_dict)
-            redirect_metadata = get_redirect_metadata(job_dir, source_list, seed_status_dict, starting_seeds)
+            redirect_metadata = get_redirect_metadata(job_dir, source_list, seed_status_dict)
             print "Writing CSV with metadata for new seeds for job {0}".format(job)
             process_redirect_metadata(job_dir, redirect_metadata)
         else:
