@@ -213,7 +213,6 @@ def check_seed_status(job_dir):
 def minimal_redirect_handling(job_dir, source_list, seed_status_dict):
     redirect_dir = join(job_dir,'redirects')
     starting_seeds = {}
-    redirect_status = {}
     reconciled = False
     while not reconciled:
         unreconciled_count = 0
@@ -232,16 +231,11 @@ def minimal_redirect_handling(job_dir, source_list, seed_status_dict):
             # Check to see if the starting URL and redirected URL are meaningfully different
             if ((seed_parse.path != redirect_parse.path) and ((seed_parse.path + '/' != redirect_parse.path) and (seed_parse.path != redirect_parse.path + '/'))) or ((seed_parse.netloc != redirect_parse.netloc) and (('www.' + seed_parse.netloc != redirect_parse.netloc) and (seed_parse.netloc != 'www.' + redirect_parse.netloc))) or (seed_parse.params != redirect_parse.params) or (seed_parse.query != redirect_parse.query) or (seed_parse.fragment != redirect_parse.fragment):
                 starting_seeds[url] = redirect_url
-    for seed in starting_seeds:
-        redirect = starting_seeds[seed]
-        for status in seed_status_dict:
-            if redirect in seed_status_dict[status]:
-                redirect_status[redirect] = status
-    for seed in starting_seeds:
-        with open(join(redirect_dir,'minimal_redirect_information.csv'),'ab') as csvfile:
-            writer = csv.writer(csvfile)
-            writer.writerow([seed,redirect,redirect_status[redirect]])
-
+    with open(join(redirect_dir,'redirect_information.csv'),'ab') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(['Seed URL','Redirect URL','Notes'])
+        for seed, redirect in starting_seeds.items():
+            writer.writerow([seed,redirect,''])
 
 def get_redirect_metadata(job_dir, source_list, seed_status_dict):
     redirect_dir = join(job_dir,'redirects')
@@ -280,13 +274,13 @@ def get_redirect_metadata(job_dir, source_list, seed_status_dict):
         if url in starting_seeds:
             starting_seeds[url] = tree.getpath(seed)
     redirect_metadata = []
-    add_seeds = []
+    add_deactivate = {}
     redirect_investigate = []
     entity_parser = HTMLParser.HTMLParser()
     for seed in starting_seeds:
         if len(starting_seeds[seed]) > 0:
             new_seed = seed_status_dict['redirects'][seed]
-            add_seeds.append(new_seed)
+            add_deactivate[seed] = new_seed
             seed_metadata = {}
             seed_path = starting_seeds[seed]
             seed_element = tree.xpath(seed_path)[0]
@@ -307,14 +301,17 @@ def get_redirect_metadata(job_dir, source_list, seed_status_dict):
             seed_metadata['url'] = []
             seed_metadata['url'].append(new_seed)
             seed_metadata['Note'] = []
-            seed_metadata['Note'].append("QA Note: This seed was created due to redirects from the previous seed URL. Previous captures under seed URL " + seed)
+            seed_metadata['Note'].append("QA Note: This seed was created as a result of the previous seed URL redirecting to this URL. Previous captures under seed URL " + seed)
             redirect_metadata.append(seed_metadata)
         else:
             redirect_investigate.append(seed)
-    with open(join(redirect_dir,'deactivate.txt'),'a') as deactivate_txt:
-        deactivate_txt.write('\n'.join([seed for seed in starting_seeds]))
-    with open(join(redirect_dir, 'addseeds.txt'),'a') as add_seeds_txt:
-        add_seeds_txt.write('\n'.join([seed for seed in add_seeds]))
+    with open(join(redirect_dir,'add_and_deactivate.csv'),'ab') as add_deactivate_csv:
+        writer = csv.writer(add_deactive_csv)
+        writer.writerow(['Add','Deactivate','Deactivation Note','Notes'])
+    with open(join(redirect_dir,'add_and_deactivate.csv'),'ab') as add_deactivate_csv:
+        writer = csv.writer(add_deactive_csv)
+        for seed, new_seed in add_deactivate.items():
+            writer.writerow([new_seed, seed, 'QA NOTE: Seed URL redirects to ' + new_seed + '. A new seed with the redirected seed URL has been added.',''])
     with open(join(redirect_dir,'redirect_investigate.txt'),'a') as investigate_txt:
         investigate_txt.write('\n'.join([seed for seed in redirect_investigate]))
     return redirect_metadata
@@ -406,9 +403,12 @@ def main():
                 os.makedirs(join(job_dir,'redirects'))
             print "Redirected seeds found! Getting metadata for redirected seeds for job {0}".format(job)
             minimal_redirect_handling(job_dir, source_list, seed_status_dict)
-            redirect_metadata = get_redirect_metadata(job_dir, source_list, seed_status_dict)
-            print "Writing CSV with metadata for new seeds for job {0}".format(job)
-            process_redirect_metadata(job_dir, redirect_metadata)
+            # Trying to do this with another script, archiveit_redirect.py, the idea being that this qa script can give you a list of
+            # seed URLs that redirect and that list can be checked before actually fetching the redirect metadata and building the final
+            # list of seeds to be deactivated and added
+            #redirect_metadata = get_redirect_metadata(job_dir, source_list, seed_status_dict)
+            #print "Writing CSV with metadata for new seeds for job {0}".format(job)
+            #process_redirect_metadata(job_dir, redirect_metadata)
         else:
             print "No redirected seeds found for job {0}".format(job)
         print "All done! Find completed reports at {0}".format(job_dir)
