@@ -287,14 +287,14 @@ def get_redirect_metadata(job_dir, source_list, seed_status_dict):
             for elem in seed_element.xpath('.//*'):
                 if elem.text is not None and not elem.tag in skip and not 'name' in elem.attrib:
                     elem_name = elem.tag
-                    elem_text = entity_parser.unescape(elem.text.replace('&#8220;','"').replace('&#8221;','"'))
+                    elem_text = entity_parser.unescape(elem.text.replace('&#8220;','"').replace('&#8221;','"').replace('&#8217;',"'"))
                     if elem_name not in seed_metadata:
                         seed_metadata[elem_name] = []
                     seed_metadata[elem_name].append(elem_text.encode('utf-8'))
                 elif 'name' in elem.attrib:
                     if elem.attrib['name'] not in skip:
                         elem_name = elem.attrib['name']
-                        elem_text = entity_parser.unescape(elem.text.replace('&#8220;','"').replace('&#8221;','"'))
+                        elem_text = entity_parser.unescape(elem.text.replace('&#8220;','"').replace('&#8221;','"').replace('&#8217;',"'"))
                         if elem_name not in seed_metadata:
                             seed_metadata[elem_name] = []
                         seed_metadata[elem_name].append(elem_text.encode('utf-8'))

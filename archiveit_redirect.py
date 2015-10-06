@@ -34,14 +34,14 @@ def get_redirect_metadata(redirect_dict, collection_id, redirect_dir):
             for elem in seed_element.xpath('.//*'):
                 if elem.text is not None and not elem.tag in skip and not 'name' in elem.attrib:
                     elem_name = elem.tag
-                    elem_text = entity_parser.unescape(elem.text.replace('&#8220;','"').replace('&#8221;','"'))
+                    elem_text = entity_parser.unescape(elem.text.replace('&#8220;','"').replace('&#8221;','"').replace('&#8217;',"'"))
                     if elem_name not in seed_metadata:
                         seed_metadata[elem_name] = []
                     seed_metadata[elem_name].append(elem_text.encode('utf-8'))
                 elif 'name' in elem.attrib:
                     if elem.attrib['name'] not in skip:
                         elem_name = elem.attrib['name']
-                        elem_text = entity_parser.unescape(elem.text.replace('&#8220;','"').replace('&#8221;','"'))
+                        elem_text = entity_parser.unescape(elem.text.replace('&#8220;','"').replace('&#8221;','"').replace('&#8217;',"'"))
                         if elem_name not in seed_metadata:
                             seed_metadata[elem_name] = []
                         seed_metadata[elem_name].append(elem_text.encode('utf-8'))
@@ -53,7 +53,7 @@ def get_redirect_metadata(redirect_dict, collection_id, redirect_dir):
         else:
             redirect_investigate[seed] = new_seed
     with open(join(redirect_dir,'add_and_deactivate.csv'),'ab') as add_deactivate_csv:
-        writer = csv.writer(add_deactive_csv)
+        writer = csv.writer(add_deactivate_csv)
         writer.writerow(['Add','Deactivate','Deactivation Note'])
         for seed, new_seed in add_deactivate.items():
             writer.writerow([new_seed, seed, 'QA NOTE: Seed deactivated. Seed URL redirects to ' + new_seed + '. A new seed with the redirected seed URL has been added.'])
