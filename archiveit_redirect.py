@@ -51,17 +51,18 @@ def get_redirect_metadata(redirect_dict, collection_id, redirect_dir):
             seed_metadata['Note'].append("QA NOTE: This seed was created as a result of the previous seed URL redirecting to this URL. Previous captures under seed URL " + seed)
             redirect_metadata.append(seed_metadata)
         else:
-            redirect_investigate[seed] = new_seed
+            redirect_investigate[seed] = redirect_dict[seed]
     with open(join(redirect_dir,'add_and_deactivate.csv'),'ab') as add_deactivate_csv:
         writer = csv.writer(add_deactivate_csv)
         writer.writerow(['Add','Deactivate','Deactivation Note'])
         for seed, new_seed in add_deactivate.items():
             writer.writerow([new_seed, seed, 'QA NOTE: Seed deactivated. Seed URL redirects to ' + new_seed + '. A new seed with the redirected seed URL has been added.'])
-    with open(join(redirect_dir,'redirect_investigate.csv'),'ab') as investigate_csv:
-        writer = csv.writer(investigate_csv)
-        writer.writerow(['Seed URL','Redirect URL'])
-        for seed, new_seed in redirect_investigate.items():
-            writer.writerow([seed, new_seed])
+    if len(redirect_investigate) > 0:
+        with open(join(redirect_dir,'redirect_investigate.csv'),'ab') as investigate_csv:
+            writer = csv.writer(investigate_csv)
+            writer.writerow(['Seed URL','Redirect URL'])
+            for seed, new_seed in redirect_investigate.items():
+                writer.writerow([seed, new_seed])
     header_order = ['url','Title','Subject','Personal Creator','Corporate Creator','Coverage','Description','Publisher','Note']
     redirect_csv = join(redirect_dir,'redirect_metadata.csv')
     header_counts = {}
@@ -126,8 +127,8 @@ def main():
             reader = csv.reader(redirect_csv)
             next(reader,None)
             for row in reader:
-                seed = row[0]
-                redirect = row[1]
+                seed = row[0].strip()
+                redirect = row[1].strip()
                 redirect_dict[seed] = redirect
         get_redirect_metadata(redirect_dict,collection_id,redirect_dir)
 
