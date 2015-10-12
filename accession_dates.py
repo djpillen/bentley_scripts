@@ -4,9 +4,9 @@ import os
 
 
 
-accessions_file = 'C:/Users/Public/Documents/accessions/accessions_20150928-noblankids.csv'
-date_fix = accessions_file.replace('-noblankids','-datefix')
-final_csv = accessions_file.replace('-noblankids','-final')
+accessions_file = 'C:/Users/Public/Documents/accessions/accessions_20151012-noblankIDs.csv'
+date_fix = accessions_file.replace('-noblankIDs','-datefix')
+final_csv = accessions_file.replace('-noblankIDs','-final')
 
 accession_dates = []
 possible_dates = 0
@@ -65,7 +65,7 @@ print 'Remaining nulls:', len(nulls) - possible_dates
 
 with open(accessions_file,'rb') as csvin, open(date_fix,'ab') as csvout:
     reader = csv.reader(csvin)
-    writer = csv.writer(csvout, dialect='excel')
+    writer = csv.writer(csvout)
     count = -1
     for row in reader:
         accession_date = row[1]
@@ -81,7 +81,7 @@ with open(accessions_file,'rb') as csvin, open(date_fix,'ab') as csvout:
 
 with open(date_fix,'rb') as csvin, open(final_csv,'ab') as csvout:
     reader = csv.reader(csvin)
-    writer = csv.writer(csvout, dialect='excel')
+    writer = csv.writer(csvout)
     removed = 0
     for row in reader:
         accession_date = row[1]
@@ -96,5 +96,5 @@ with open(date_fix,'rb') as csvin, open(final_csv,'ab') as csvout:
             writer.writerow(row)
     print 'Removed:', removed
 
-#os.remove(accessions_file)
+os.remove(accessions_file)
 os.remove(date_fix)
