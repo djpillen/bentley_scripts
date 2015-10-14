@@ -6,29 +6,55 @@ import re
 
 path = 'C:/Users/djpillen/GitHub/test_dir'
 
+special_cases = ['kelseymu.xml']
+
 for filename in os.listdir(path):
     print filename
-    container_ids = {}
     tree = etree.parse(join(path,filename))
-    components = tree.xpath("//dsc//*[starts-with(local-name(), 'c0')]")
-    for r in components:
-        containers = r.xpath('./did/container')
-        for c in containers:
-            if 'type' in c.attrib:
-                container_type_num = c.attrib['type'] + c.text
-                if container_type_num not in container_ids:
-                    container_ids[container_type_num] = str(uuid.uuid4())
+    if filename not in special_cases:
+        container_ids = {}
+        components = tree.xpath("//dsc//*[starts-with(local-name(), 'c0')]")
+        for component in components:
+            c_containers = component.xpath('./did/container')
+            if c_containers:
+                container = c_containers[0]
+                if 'type' in container.attrib:
+                    container_type_label_num = container.attrib['type'] + container.attrib['label'] + container.text
+                    if container_type_label_num not in container_ids:
+                        container_ids[container_type_label_num] = str(uuid.uuid4())
 
-    for container_type_num in container_ids:
-        container_ids[container_type_num] = re.sub(r'[A-Za-z\-]','',container_ids[container_type_num])
+        for container_type_label_num in container_ids:
+            container_ids[container_type_label_num] = re.sub(r'[A-Za-z\-]','',container_ids[container_type_label_num])
 
-    containers = tree.xpath('//did/container')
-    for c in containers:
-        if 'type' in c.attrib:
-            container_type_num = c.attrib['type'] + c.text
-            if container_type_num in container_ids:
-                c.attrib['label'] = c.attrib['label'] + ' ['+str(container_ids[container_type_num])+']'
+        containers = tree.xpath('//did/container')
+        for container in containers:
+            if 'type' in container.attrib:
+                container_type_label_num = container.attrib['type'] + container.attrib['label'] + container.text
+                if container_type_label_num in container_ids:
+                    container.attrib['label'] = container.attrib['label'] + ' ['+str(container_ids[container_type_label_num])+']'
+    else:
+        subgrps = tree.xpath('//c01')
+        for subgrp in subgrps:
+            container_ids = {}
+            sub_components = subgrp.xpath(".//*[starts-with(local-name(), 'c0')]")
+            for sub_component in sub_components:
+                c_containers = sub_component.xpath('./did/container')
+                if c_containers:
+                    container = c_containers[0]
+                    if 'type' in container.attrib:
+                        container_type_label_num = container.attrib['type'] + container.attrib['label'] + container.text
+                        if container_type_label_num not in container_ids:
+                            container_ids[container_type_label_num] = str(uuid.uuid4())
 
-    fout = open(join(path,filename), 'w')
-    fout.write(etree.tostring(tree,xml_declaration=True,encoding="utf-8"))
-    fout.close()
+            for container_type_label_num in container_ids:
+                container_ids[container_type_label_num] = re.sub(r'[A-Za-z\-]','',container_ids[container_type_label_num])
+
+            containers = subgrp.xpath('.//did/container')
+            for container in containers:
+                if 'type' in container.attrib:
+                    container_type_label_num = container.attrib['type'] + container.attrib['label'] + container.text
+                    if container_type_label_num in container_ids:
+                        container.attrib['label'] = container.attrib['label'] + ' ['+str(container_ids[container_type_label_num])+']'
+
+    with open(join(path,filename),'w') as eadout:
+        eadout.write(etree.tostring(tree,xml_declaration=True,encoding="utf-8"))

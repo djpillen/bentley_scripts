@@ -38,7 +38,6 @@ print 'Container Types'
 print container_types
 print 'Container Labels'
 print container_labels
-print "Type label dictionary"
 with open(type_label_csv,'ab') as csvfile:
     writer = csv.writer(csvfile)
     for k in subcontainer_type_label:
