@@ -75,6 +75,6 @@ for filename in os.listdir(path):
 total_dates = normalized_dates + not_normalized_dates
 
 # Print the results of our normalization attempt
-print "Normalization attempted on " + str(total_dates) + " dates"
-print "Number of dates normalized: " + str(normalized_dates)
-print "Number of dates not normalized: " + str(not_normalized_dates)
+print "Normalization attempted on", total_dates, "dates"
+print "Number of dates normalized:", normalized_dates
+print "Number of dates not normalized:", not_normalized_dates

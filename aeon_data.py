@@ -27,7 +27,7 @@ tags = ['subject','geogname']
 
 minimum_requests = 25
 
-aeon_data = 'C:/Users/Public/Documents/aeon/circulation_20151015.xml'
+aeon_data = 'C:/Users/Public/Documents/aeon/circulation_20151016.xml'
 ead_file = open('C:/Users/Public/Documents/aeon/eads.txt','r').read()
 ead_list = []
 for ead in ead_file.splitlines():
@@ -38,7 +38,7 @@ for ead in ead_file.splitlines():
 eads = {}
 titles = {}
 
-ns = {'aeon':'Transaction_x0020_Report_x0020_-_x0020_Frequency_x0020_of_x0020_Circulation'}
+ns = {'aeon':'Transaction_x0020_Report_x0020_-_x0020_Frequency_x0020_of_x0020_Circulation_x0020__x0028_no_x0020_staff_x0029_'}
 tree = etree.parse(aeon_data)
 transactions = tree.xpath('//aeon:TransactionsGroup',namespaces=ns)
 
@@ -105,12 +105,27 @@ for subject in appended:
 with open('C:/Users/djpillen/GitHub/test_dir/aeon_data/relationships.json','w') as outfile:
     outfile.write(json.dumps(data))
 
+
 '''
-with open('C:/Users/Public/Documents/aeon/most_popular.csv','ab') as csvfile:
+with open('C:/Users/Public/Documents/aeon/aeon_most_popular_subjects.csv','ab') as csvfile:
     writer = csv.writer(csvfile)
-    writer.writerow(['Subject','Total Collections','Total Requests','Weighted'])
+    writer.writerow(['Subject','Total Requested Collections','Total Requests','Score','Requested Collections'])
 for subject in subjects:
-    with open('C:/Users/Public/Documents/aeon/most_popular.csv','ab') as csvfile:
+
+    with open('C:/Users/Public/Documents/aeon/aeon_most_popular_subjects.csv','ab') as csvfile:
         writer = csv.writer(csvfile)
-        writer.writerow([subject, len(subjects[subject]['eads']), subjects[subject]['count'],subjects[subject]['weight']])
+        row = []
+        row.append(subject)
+        row.append(len(subjects[subject]['eads']))
+        row.append(subjects[subject]['count'])
+        row.append(subjects[subject]['weight'])
+        subject_eads = {}
+        for ead in subjects[subject]['eads']:
+            subject_eads[titles[ead]] = eads[ead]['frequency']
+        sorted_eads = sorted(subject_eads,key=subject_eads.get,reverse=True)
+        for ead in sorted_eads:
+            row.append(ead)
+            row.append(subject_eads[ead])
+        writer.writerow(row)
+            #writer.writerow([subject, len(subjects[subject]['eads']), subjects[subject]['count'],subjects[subject]['weight']])
 '''
