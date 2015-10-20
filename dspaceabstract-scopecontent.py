@@ -6,12 +6,12 @@ from os.path import join
 import re
 
 
-path = 'C:/Users/djpillen/GitHub/test_dir'
+path = 'C:/Users/djpillen/GitHub/test_dir/eads'
 
 for filename in os.listdir(path):
     tree = etree.parse(join(path, filename))
     for dao in tree.xpath('.//dao'):
-        href = dao.get('href')
+        href = dao.get('href').strip()
         handle = re.compile('^http://hdl.handle.net/')
         if handle.match(href):
             print href
@@ -27,7 +27,7 @@ for filename in os.listdir(path):
                 ptag.text = abstract
                 did = dao.getparent()
                 c = did.getparent()
-                c.append(odd)
+                c.insert(c.index(did)+1, odd)
     outFile = open((join(path, filename)), 'w')
     outFile.write(etree.tostring(tree, encoding="utf-8", xml_declaration=True))
     outFile.close()

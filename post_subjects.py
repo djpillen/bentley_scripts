@@ -8,7 +8,7 @@ from aspace_utils import ArchivesSpace
 
 start_time = datetime.now()
 
-subjects_csv = 'C:/Users/Public/Documents/aspace_subjects.csv'
+subjects_csv = 'C:/Users/Public/Documents/subjects_agents/aspace_subjects.csv'
 
 baseURL = 'http://localhost:8089'
 user='admin'
@@ -41,7 +41,7 @@ with open(subjects_csv,'rb') as csvfile:
             if subjects['status'] == 'Created':
                 subject_uri = subjects['uri']
                 row.append(subject_uri)
-                with open('C:/Users/Public/Documents/posted_subjects.csv','ab') as csv_out:
+                with open('C:/Users/Public/Documents/subjects_agents/posted_subjects.csv','ab') as csv_out:
                     writer = csv.writer(csv_out)
                     writer.writerow(row)
         print subjects

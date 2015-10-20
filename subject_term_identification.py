@@ -1,17 +1,17 @@
 from lxml import etree
 import csv
 
-ead_agents = 'C:/Users/Public/Documents/compound_agents_20150916.csv'
-ead_subjects = 'C:/Users/Public/Documents/ead_unique_subjects_20150916.csv'
+ead_agents = 'C:/Users/Public/Documents/subjects_agents/compound_agents_20151020.csv'
+ead_subjects = 'C:/Users/Public/Documents/subjects_agents/ead_unique_subjects_20151020.csv'
 
-marc_agents = 'C:/Users/Public/Documents/marc_xml-agents_20150812.csv'
-marc_subjects = 'C:/Users/Public/Documents/marc_xml-subjects_20150806.csv'
+marc_agents = 'C:/Users/Public/Documents/subjects_agents/marc_xml-agents_20150812.csv'
+marc_subjects = 'C:/Users/Public/Documents/subjects_agents/marc_xml-subjects_20150806.csv'
 
-multiple_term_types = 'C:/Users/Public/Documents/multiple_type_terms_fix.csv'
-unidentified_term_types = 'C:/Users/Public/Documents/unidentified_terms_fix.csv'
+multiple_term_types = 'C:/Users/Public/Documents/subjects_agents/multiple_type_terms_fix.csv'
+unidentified_term_types = 'C:/Users/Public/Documents/subjects_agents/unidentified_terms_fix.csv'
 
-aspace_subjects = 'C:/Users/Public/Documents/aspace_subjects.csv'
-compound_agents_fix = 'C:/Users/Public/Documents/compound_agents_terms.csv'
+aspace_subjects = 'C:/Users/Public/Documents/subjects_agents/aspace_subjects.csv'
+compound_agents_fix = 'C:/Users/Public/Documents/subjects_agents/compound_agents_terms.csv'
 
 type_dict = {'t':'uniform_title','v':'genre_form','b':'topical','x':'topical','d':'temporal','y':'temporal','z':'geographic','subject':'topical','geogname':'geographic','genreform':'genre_form','655':'genre_form','650':'topical','651':'geographic'}
 
@@ -131,14 +131,14 @@ for term in terms_dict:
     if len(terms_dict[term]) == 0:
         if term not in fixed_term_types:
             unid += 1
-            with open('C:/Users/Public/Documents/unidentified_terms.csv','ab') as unid_csv:
+            with open('C:/Users/Public/Documents/subjects_agents/unidentified_terms.csv','ab') as unid_csv:
                 writer = csv.writer(unid_csv)
                 writer.writerow([term])
     if len(terms_dict[term]) > 1:
         if term not in fixed_term_types:
             print term, terms_dict[term]
             multi += 1
-            with open('C:/Users/Public/Documents/multiple_type_terms.csv','ab') as multi_csv:
+            with open('C:/Users/Public/Documents/subjects_agents/multiple_type_terms.csv','ab') as multi_csv:
                 writer = csv.writer(multi_csv)
                 writer.writerow([term,terms_dict[term]])
 print unid

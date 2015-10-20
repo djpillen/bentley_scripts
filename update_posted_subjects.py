@@ -3,9 +3,10 @@ import os
 from os.path import join
 import csv
 
-posted_subjects_csv = 'C:/Users/Public/Documents/posted_subjects.csv'
+posted_subjects_csv = 'C:/Users/Public/Documents/subjects_agents/posted_subjects.csv'
 path = 'C:/Users/djpillen/GitHub/vandura/Real_Masters_all'
-test_dir = 'C:/Users/Public/Documents/test_eads'
+test_dir_in = 'C:/Users/Public/Documents/aspace_migration/retry_eads'
+test_dir_out = 'C:/Users/Public/Documents/aspace_migration/retry_eads'
 
 posted_subjects = {'geogname':{},'genreform':{},'subject':{}}
 
@@ -22,8 +23,9 @@ with open(posted_subjects_csv,'rb') as csvfile:
             posted_subjects[tag][source] = {}
         posted_subjects[tag][source][subject] = uri
 
-for filename in os.listdir(test_dir):
-    tree = etree.parse(join(test_dir,filename))
+for filename in os.listdir(test_dir_in):
+    print "Adding subject uris to {0}".format(filename)
+    tree = etree.parse(join(test_dir_in,filename))
     for sub in tree.xpath('//controlaccess/*'):
         if sub.tag in tags and sub.text is not None:
             tag = sub.tag
@@ -32,6 +34,5 @@ for filename in os.listdir(test_dir):
             if subject in posted_subjects[tag][source]:
                 sub.attrib['ref'] = posted_subjects[tag][source][subject]
 
-    with open(join(test_dir,filename),'w') as ead_out:
-        ead_out.write(etree.tostring(tree,encoding='utf-8',xml_declaration=True))
-    print filename
+    with open(join(test_dir_out,filename),'w') as ead_out:
+        ead_out.write(etree.tostring(tree,encoding='utf-8',xml_declaration=True,pretty_print=True))

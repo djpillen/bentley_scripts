@@ -22,8 +22,8 @@ errors = []
 successes = []
 
 
-path = 'C:/Users/Public/Documents/test_json'
-outfilepath = 'C:/Users/Public/Documents/test_resource'
+path = 'C:/Users/Public/Documents/aspace_migration/test_json'
+outfilepath = 'C:/Users/Public/Documents/aspace_migration/test_resource'
 
 for filename in os.listdir(path):
     headers = authenticate()
@@ -42,13 +42,13 @@ for filename in os.listdir(path):
     print filename
 
 for filename in errors:
-    fout = open('C:/Users/Public/Documents/jsontoaspaceerrors.txt', 'a')
+    fout = open('C:/Users/Public/Documents/aspace_migration/jsontoaspaceerrors.txt', 'a')
     fout.write(filename + '\n')
     fout.close()
 
 for filename in successes:
-    fout = open('C:/Users/Public/Documents/jsontoaspacesuccess.txt', 'a')
-    fout.write(filename + '\n' + json.dumps(result) + '\n\n')
+    fout = open('C:/Users/Public/Documents/aspace_migration/jsontoaspacesuccess.txt', 'a')
+    fout.write(filename + '\n')
     fout.close()
 
 end_time = datetime.now()
@@ -59,3 +59,8 @@ print "Errors encountered in", str(len(errors)), "files"
 print "Script start time:", start_time.strftime("%Y-%m-%d %H:%M:%S %p")
 print "Script end time:", end_time.strftime("%Y-%m-%d %H:%M:%S %p")
 print "Script running time:", end_time - start_time
+
+importer_stats = "Script start time: " + start_time.strftime("%Y-%m-%d %H:%M:%S %p") + "\n" + "Script end time: " +  end_time.strftime("%Y-%m-%d %H:%M:%S %p") + "\n" + "Script running time: " + str(end_time - start_time)
+stats_file = open('C:/Users/Public/Documents/aspace_migration/importer_stats.txt','w')
+stats_file.write(importer_stats)
+stats_file.close()
