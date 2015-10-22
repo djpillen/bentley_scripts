@@ -12,8 +12,8 @@ repository = '2'
 user = 'admin'
 password = 'admin'
 
-path = 'C:/Users/Public/Documents/aspace_migration/retry_eads'
-outfilepath = 'C:/Users/Public/Documents/aspace_migration/retry_json'
+path = 'C:/Users/Public/Documents/aspace_migration/test_eads'
+outfilepath = 'C:/Users/Public/Documents/aspace_migration/test_json'
 
 attempts = 0
 errors = 0

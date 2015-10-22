@@ -1,8 +1,8 @@
 import os
 from os.path import join
 
-path = 'C:/Users/Public/Documents/aspace_migration/retry_eads'
-outFilePath = 'C:/Users/Public/Documents/aspace_migration/retry_eads'
+path = 'C:/Users/djpillen/GitHub/vandura/Real_Masters_all'
+outFilePath = 'C:/Users/Public/Documents/aspace_migration/test_eads'
 for filename in os.listdir(path):
     start = open(join(path, filename), 'r')
     finish = open(join(outFilePath, filename), 'w')
