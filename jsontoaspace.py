@@ -33,7 +33,6 @@ for filename in os.listdir(path):
         if 'saved' in result and not 'errors' in result:
             if filename not in successes:
                 successes.append(filename)
-
         elif 'errors' in result:
             if filename not in errors:
                 errors.append(filename)
