@@ -20,9 +20,16 @@ headers = {'X-ArchivesSpace-Session':session}
 
 all_ids = requests.get(aspace_url+'/repositories/2/resources?all_ids=true', headers=headers).json()
 
+def pad_id(resource_id):
+    file_id = str(resource_id)
+    while len(file_id) < 4:
+        file_id = '0' + file_id
+    return file_id
+
 for resource_id in all_ids:
+    file_id = pad_id(resource_id)
     ead = requests.get(aspace_url+'/repositories/2/resource_descriptions/'+str(resource_id)+'.xml?include_unpublished=true&include_daos=true&numbered_cs=true',headers=headers, stream=True)
-    with open(join(ead_directory,str(resource_id)+'.xml'),'wb') as ead_out:
+    with open(join(ead_directory, file_id +'.xml'),'wb') as ead_out:
          for chunk in ead.iter_content(10240):
                 ead_out.write(chunk)
     print "Wrote {0}".format(resource_id)

@@ -2,7 +2,7 @@ from lxml import etree
 import os
 from os.path import join
 
-path = 'C:/Users/Public/Documents/vandura'
+path = 'C:/Users/Public/Documents/s_master'
 for filename in os.listdir(path):
     tree = etree.parse(join(path, filename))
     didodd = tree.xpath("//dsc//*[starts-with(local-name(), 'c0')]//did/odd")

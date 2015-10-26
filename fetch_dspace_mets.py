@@ -17,6 +17,7 @@ for filename in os.listdir(path):
         if href.startswith('http://hdl.handle.net/2027.42'):
             print href
             handlepath = urlparse.urlparse(href).path
+            the_id = handlepath.split('/')[-1]
             mets = "http://deepblue.lib.umich.edu/metadata/handle" + handlepath + "/mets.xml"
             page = urllib2.urlopen(mets)
             metstree = etree.parse(page)

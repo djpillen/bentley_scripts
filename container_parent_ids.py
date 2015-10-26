@@ -5,12 +5,12 @@ import uuid
 import random
 
 # Enter the path to your starting EAD directory
-input_directory = 'C:/Users/djpillen/GitHub/vandura/Real_Masters_all'
+input_directory = 'C:/Users/Public/Documents/aspace_migration/test_eads'
 
 # Enter the path to the output directory for the modified EADs
 # Warning! If you set the output_directory to the same path as the input_directory,
 # all of your original EADs will be overwritten
-output_directory = 'C:/Users/djpillen/GitHub/test_dir'
+output_directory = 'C:/Users/Public/Documents/aspace_migration/test_eads'
 
 # Loop through each file in the input directory
 
@@ -28,5 +28,5 @@ for filename in os.listdir(input_directory):
             parent.attrib['id'] = parent_id
             child.attrib['parent'] = parent_id
     with open(join(output_directory, filename), 'w') as new_ead:
-        new_ead.write(etree.tostring(ead, encoding="utf-8", xml_declaration=True))
+        new_ead.write(etree.tostring(ead, encoding="utf-8", xml_declaration=True,pretty_print=True))
     print filename

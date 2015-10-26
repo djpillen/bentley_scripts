@@ -3,7 +3,7 @@ import os
 from os.path import join
 
 
-path = 'C:/Users/djpillen/GitHub/test_dir/eads'
+path = 'C:/Users/Public/Documents/aspace_migration/test_eads'
 
 
 callnumbers = {}
