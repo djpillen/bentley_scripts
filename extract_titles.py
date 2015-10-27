@@ -22,7 +22,6 @@ headers = {'X-ArchivesSpace-Session':session}
 # Fetch the resource tree
 resource_tree = requests.get(aspace_url+'/repositories/' + repository + '/resources/' + resource_id +'/tree', headers=headers).json()
 
-
 # Function to loop through all children in the resource tree and grab the title
 def find_titles(child,titles):
     title = child['title']
