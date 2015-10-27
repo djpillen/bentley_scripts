@@ -33,7 +33,6 @@ with open(input_csv,'rb') as csvfile:
 
         # Build the agent json
         # You may want to modify 'source', add an 'authority_id', include both 'primary_name' and 'rest_of_name', etc.
-
         agent_json = {'names':[{'primary_name':name,'name_order':'inverted','sort_name_auto_generate':True,'source':'local'}]}
 
         # Post the agent
