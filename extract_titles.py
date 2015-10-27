@@ -31,7 +31,7 @@ def find_titles(child,titles):
             find_titles(child,titles)
     return titles
 
-# Loop through all the children in the resource tree and pass them to the find_titles function
+# Loop through all the children in the resource tree (presumably series, subgroups, etc) and pass them to the find_titles function
 for child in resource_tree['children']:
     titles = find_titles(child,titles=[])
 
@@ -42,4 +42,4 @@ with open(output_csv,'a') as csvfile:
         title = re.sub(r'<(.*?)>','',title)
         writer.writerow([title])
 
-# Then, do the clean up, parsing, NER, reconciliation, etc.
+# Then, do the clean up, parsing, NER, reconciliation, etc. and send that result to post_agents_from_titles.py

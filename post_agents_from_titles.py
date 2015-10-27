@@ -56,3 +56,6 @@ for uri in uris:
 
 # Post the updated resource
 update_resource = requests.post(aspace_url+'/repositories/' + repositories + '/resources/' + resource_id,headers=headers,data=json.dumps(resource)).json()
+
+# Print the results to make sure it went okay
+print update_resource
