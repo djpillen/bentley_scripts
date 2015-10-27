@@ -3,17 +3,26 @@ import json
 import csv
 import re
 
-aspace_url = 'http://141.211.39.87:8089'
+# Given an ArchivesSpace resource id, this will grab the tree for that resource and
+# output the titles of all children archival objects to a csv for clean up, named entity
+# recognition, and reconciliation using your favorite method for doing those things
+
+output_csv = 'path/to/output.csv'
+
+aspace_url = 'http://localhost:8089'
+respository = '2'
 username = 'admin'
 password = 'admin'
+resource_id = '1'
 
 auth = requests.post(aspace_url+'/users/'+username+'/login?password='+password).json()
 session = auth['session']
 headers = {'X-ArchivesSpace-Session':session}
 
-resource_id = '1864'
+# Fetch the resource tree
+resource_tree = requests.get(aspace_url+'/repositories/' + repository + '/resources/' + resource_id +'/tree', headers=headers).json()
 
-
+# Function to loop through all children in the resource tree and grab the title
 def find_titles(child,titles):
     title = child['title']
     titles.append(title)
@@ -22,21 +31,15 @@ def find_titles(child,titles):
             find_titles(child,titles)
     return titles
 
-
-resource = requests.get(aspace_url+'/repositories/2/resources/' + resource_id, headers=headers).json()
-resource_tree = requests.get(aspace_url+'/repositories/2/resources/' + resource_id +'/tree', headers=headers).json()
-
-with open('C:/Users/Public/Documents/agents_from_titles.json','w') as json_out:
-    json_out.write(json.dumps(resource, indent=4))
-
-with open('C:/Users/Public/Documents/agents_from_titles_tree.json','w') as json_out:
-    json_out.write(json.dumps(resource_tree,indent=4))
-
+# Loop through all the children in the resource tree and pass them to the find_titles function
 for child in resource_tree['children']:
     titles = find_titles(child,titles=[])
 
-with open('C:/Users/Public/Documents/titles_csv.txt','a') as csvfile:
-    #writer = csv.writer(csvfile)
+# Write the titles to a csv
+with open(output_csv,'a') as csvfile:
+    writer = csv.writer(csvfile)
     for title in titles:
         title = re.sub(r'<(.*?)>','',title)
-        csvfile.write(title + '\n')
+        writer.writerow([title])
+
+# Then, do the clean up, parsing, NER, reconciliation, etc.
