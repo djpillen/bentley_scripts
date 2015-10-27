@@ -7,8 +7,10 @@ import csv
 # if you also want to include corporate entities and family names
 # It also sets the source for everything to 'local'. If you've done some reconciliation and have a source and authority id, those will also need to be added/modified
 
+input_csv = '/path/to/input.csv'
+
 aspace_url = 'http://localhost:8089'
-respository = '2'
+repository = '2'
 username = 'admin'
 password = 'admin'
 resource_id = '1'
@@ -55,7 +57,7 @@ for uri in uris:
     resource['linked_agents'].append(linked_agent)
 
 # Post the updated resource
-update_resource = requests.post(aspace_url+'/repositories/' + repositories + '/resources/' + resource_id,headers=headers,data=json.dumps(resource)).json()
+update_resource = requests.post(aspace_url+'/repositories/' + repository + '/resources/' + resource_id,headers=headers,data=json.dumps(resource)).json()
 
 # Print the results to make sure it went okay
 print update_resource
