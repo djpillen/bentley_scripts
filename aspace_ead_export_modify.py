@@ -7,9 +7,9 @@ import pickle
 ns = {'ead':'urn:isbn:1-931666-22-9'}
 
 originals = 'C:/Users/djpillen/GitHub/vandura/Real_Masters_all'
-new = 'C:/Users/Public/Documents/aspace_migration/aspace_exports'
+new = 'C:/Users/Public/Documents/aspace_migration/dlxs_eads/new'
 
-container_types_file = 'C:/Users/Public/Documents/aspace_migration/container_types'
+container_types_file = 'C:/Users/Public/Documents/aspace_migration/container_types.p'
 
 
 if not os.path.exists(container_types_file):
@@ -35,7 +35,7 @@ else:
 for filename in os.listdir(new):
     print 'Replacing types in {0}'.format(filename)
     tree = etree.parse(join(new,filename))
-    containers = tree.xpath('//ead:did/ead:container', namespaces=ns)
+    containers = tree.xpath('//did/container')
     for container in containers:
         if 'label' in container.attrib:
             label = container.attrib['label'].lower()
