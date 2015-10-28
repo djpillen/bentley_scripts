@@ -28,7 +28,6 @@ if not os.path.exists(container_types_file):
     file_out = open(container_types_file,'wb')
     pickle.dump(label_type,file_out)
     file_out.close()
-
 else:
     label_type = pickle.load(open(container_types_file,'rb'))
 

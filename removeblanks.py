@@ -62,7 +62,7 @@ with open(no_blank_rows_csv,'rb') as csvfile:
     rows[0] = headers
     count = 1
     for row in reader:
-        location_indexes = {44:'Box Range: ',45:'Disk Site: ',46:'Full Path: ',47:'Shelf Range: ',48:'Site: ',49:'Temporary Location Note: '}
+        location_indexes = {19:'Old Location/Note Field: ', 44:'Box Range: ',45:'Disk Site: ',46:'Full Path: ',47:'Shelf Range: ',48:'Site: ',49:'Temporary Location Note: '}
         location_info = []
         for i in location_indexes:
             if len(row[i]) > 0:
