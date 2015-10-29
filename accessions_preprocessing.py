@@ -1,8 +1,10 @@
 import csv
 import os
 
-# Only need to change this
+# Include the path to the starting, freshly exported csv
 base_csv = '/path/to/starting.csv'
+
+# Set up the filenames for the additional csvs that will be created
 no_null_csv = base_csv.replace('.','-nonull.')
 no_blank_rows_csv = base_csv.replace('.','-noblankrows.')
 no_blank_ids_csv = base_csv.replace('.','-noblankIDs.')
