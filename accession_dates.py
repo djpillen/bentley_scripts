@@ -5,7 +5,7 @@ import os
 
 
 # Replace this with the path to the preprocesed csv created by accessions_preprocessing.py
-accessions_file = '/path/to/pre-processed.csv'
+accessions_file = 'C:/Users/Public/Documents/accessions/accessions_20151030-noblankIDs.csv'
 date_fix = accessions_file.replace('-noblankIDs','-datefix')
 final_csv = accessions_file.replace('-noblankIDs','-final')
 
