@@ -7,7 +7,7 @@ from os.path import join
 import re
 
 
-path = 'C:/Users/Public/Documents/s_master' #<-- Change this to your EAD directory path
+path = 'C:/Users/djpillen/GitHub/vandura/Real_Masters_all' #<-- Change this to your EAD directory path
 
 # Make some regular expressions
 yyyy = re.compile(r'^\d{4}$') # Ex: 1920
@@ -31,6 +31,7 @@ for filename in os.listdir(path):
     # loop through each <unitdate>
     for i in dates:
         if not 'normal' in i.attrib and not undated.match(i.text):
+        #if not undated.match(i.text):
             if i.text and len(i.text) > 0:
                 # check if the content of <unitdate> matches any of those regular expressions
                 if yyyy.match(i.text) and len(i.text) == 4: # We also verify that the length is what we would expect based on the regular expression for an added level of certainty that these really are the kinds of dates we're looking for
@@ -66,7 +67,7 @@ for filename in os.listdir(path):
                 not_normalized_dates += 1
                 continue
 
-    outfilepath = 'C:/Users/Public/Documents/s_master' #<-- Change this to a different directory than the one you started with in case anything goes wrong. You don't want to overwrite your original EADs.
+    outfilepath = 'C:/Users/djpillen/GitHub/vandura/Real_Masters_all' #<-- Change this to a different directory than the one you started with in case anything goes wrong. You don't want to overwrite your original EADs.
     outfile = open((join(outfilepath, filename)), 'w')
     outfile.write(etree.tostring(tree, encoding="utf-8", xml_declaration=True, pretty_print=True)) # Write the new version of the EAD with normalized dates!
     outfile.close()

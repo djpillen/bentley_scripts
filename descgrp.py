@@ -7,7 +7,7 @@ path = 'C:/Users/djpillen/GitHub/vandura/Real_Masters_all'
 types = []
 first_level_admin = []
 first_level_add = []
-huh = {'p':[],'head':[],'descgrp':[]}
+huh = {'p':[],'table':[]}
 
 for filename in os.listdir(path):
     tree = etree.parse(join(path,filename))
