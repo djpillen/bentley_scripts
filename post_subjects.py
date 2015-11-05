@@ -3,14 +3,13 @@ from datetime import datetime
 import json
 import requests
 import time
-from aspace_utils import ArchivesSpace
 
 
 start_time = datetime.now()
 
 subjects_csv = 'C:/Users/Public/Documents/subjects_agents/aspace_subjects.csv'
 
-baseURL = 'http://localhost:8089'
+baseURL = 'http://141.211.39.53:8089'
 user='admin'
 password='admin'
 
@@ -18,7 +17,6 @@ auth = requests.post(baseURL + '/users/'+user+'/login?password='+password).json(
 session = auth["session"]
 headers = {'X-ArchivesSpace-Session':session}
 
-api = ArchivesSpace()
 
 with open(subjects_csv,'rb') as csvfile:
     reader = csv.reader(csvfile)
