@@ -8,9 +8,9 @@ path = 'C:/Users/djpillen/GitHub/vandura/Real_Masters_all'
 test_dir_in = 'C:/Users/Public/Documents/aspace_migration/test_eads'
 test_dir_out = 'C:/Users/Public/Documents/aspace_migration/test_eads'
 
-posted_subjects = {'geogname':{},'genreform':{},'subject':{}}
+posted_subjects = {'geogname':{},'genreform':{},'subject':{},'title':{}}
 
-tags = ['geogname','genreform','subject']
+tags = ['geogname','genreform','subject','title']
 
 with open(posted_subjects_csv,'rb') as csvfile:
     reader = csv.reader(csvfile)

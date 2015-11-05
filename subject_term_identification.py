@@ -1,8 +1,8 @@
 from lxml import etree
 import csv
 
-ead_agents = 'C:/Users/Public/Documents/subjects_agents/compound_agents_20151020.csv'
-ead_subjects = 'C:/Users/Public/Documents/subjects_agents/ead_unique_subjects_20151020.csv'
+ead_agents = 'C:/Users/Public/Documents/subjects_agents/compound_agents_20151104.csv'
+ead_subjects = 'C:/Users/Public/Documents/subjects_agents/ead_unique_subjects_20151104.csv'
 
 marc_agents = 'C:/Users/Public/Documents/subjects_agents/marc_xml-agents_20150812.csv'
 marc_subjects = 'C:/Users/Public/Documents/subjects_agents/marc_xml-subjects_20150806.csv'
@@ -13,10 +13,12 @@ unidentified_term_types = 'C:/Users/Public/Documents/subjects_agents/unidentifie
 aspace_subjects = 'C:/Users/Public/Documents/subjects_agents/aspace_subjects.csv'
 compound_agents_fix = 'C:/Users/Public/Documents/subjects_agents/compound_agents_terms.csv'
 
-type_dict = {'t':'uniform_title','v':'genre_form','b':'topical','x':'topical','d':'temporal','y':'temporal','z':'geographic','subject':'topical','geogname':'geographic','genreform':'genre_form','655':'genre_form','650':'topical','651':'geographic'}
+type_dict = {'title':'uniform_title','t':'uniform_title','v':'genre_form','b':'topical','x':'topical','d':'temporal','y':'temporal','z':'geographic','subject':'topical','geogname':'geographic','genreform':'genre_form','655':'genre_form','650':'topical','651':'geographic'}
 
 fixed_term_types = {}
 terms_dict = {}
+
+multiple_justified = ['Trains','Water','Detroit news']
 
 with open(ead_agents,'rb') as agent_csv:
     reader = csv.reader(agent_csv)
@@ -135,7 +137,7 @@ for term in terms_dict:
                 writer = csv.writer(unid_csv)
                 writer.writerow([term])
     if len(terms_dict[term]) > 1:
-        if term not in fixed_term_types:
+        if term not in fixed_term_types and term not in multiple_justified:
             print term, terms_dict[term]
             multi += 1
             with open('C:/Users/Public/Documents/subjects_agents/multiple_type_terms.csv','ab') as multi_csv:

@@ -5,7 +5,7 @@ from os.path import join
 
 tags = ['persname','corpname','famname']
 
-output = 'C:/Users/Public/Documents/subjects_agents/compound_agents_20151020.csv'
+output = 'C:/Users/Public/Documents/subjects_agents/compound_agents_20151104.csv'
 
 path = 'C:/Users/djpillen/GitHub/vandura/Real_Masters_all'
 
