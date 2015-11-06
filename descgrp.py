@@ -7,7 +7,7 @@ path = 'C:/Users/djpillen/GitHub/vandura/Real_Masters_all'
 types = []
 first_level_admin = []
 first_level_add = []
-huh = {'descgrp':[]}
+huh = {'list':[]}
 
 # check to make sure that descgrp/descgrp is always followed by odd or index
 
@@ -28,9 +28,13 @@ for filename in os.listdir(path):
                         first_level_add.append(elem.tag)
 
                     if elem.tag in huh:
+                        if filename not in huh[elem.tag]:
+                            huh[elem.tag].append(filename)
+                            '''
                         for subelem in elem.xpath('./*'):
                             if subelem.tag not in ['odd','index','relatedmaterial']:
                                 print filename, subelem.tag
+                                '''
                     if elem.tag == 'otherfindaid':
                         print 'otherfindaid:',filename
 
