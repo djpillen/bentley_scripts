@@ -12,8 +12,10 @@ for filename in os.listdir(path):
 	publisher = tree.xpath('//titlepage/publisher')[0]
 	statement = etree.tostring(publisher)
 	if statement not in publishers:
-		publishers[statement] = 0
-	publishers[statement] += 1
+		publishers[statement] = []
+	publishers[statement].append(filename)
 
 for publisher in publishers:
-	print publisher, publishers[publisher]
+	file_count = len(publishers[publisher])
+	files = publishers[publisher]
+	print publisher, file_count
