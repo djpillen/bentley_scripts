@@ -1,8 +1,8 @@
 from lxml import etree
 import csv
 
-ead_agents = 'C:/Users/Public/Documents/subjects_agents/compound_agents_20151104.csv'
-ead_subjects = 'C:/Users/Public/Documents/subjects_agents/ead_unique_subjects_20151104.csv'
+ead_agents = 'C:/Users/Public/Documents/subjects_agents/compound_agents_20151111.csv'
+ead_subjects = 'C:/Users/Public/Documents/subjects_agents/ead_unique_subjects_20151111.csv'
 
 marc_agents = 'C:/Users/Public/Documents/subjects_agents/marc_xml-agents_20150812.csv'
 marc_subjects = 'C:/Users/Public/Documents/subjects_agents/marc_xml-subjects_20150806.csv'

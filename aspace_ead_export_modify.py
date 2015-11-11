@@ -7,7 +7,7 @@ import pickle
 ns = {'ead':'urn:isbn:1-931666-22-9'}
 
 originals = 'C:/Users/djpillen/GitHub/vandura/Real_Masters_all'
-new = 'C:/Users/Public/Documents/aspace_migration/dlxs_eads/new'
+new = 'C:/Users/Public/vbox_shared/new_exports'
 
 container_types_file = 'C:/Users/Public/Documents/aspace_migration/container_types.p'
 

@@ -4,26 +4,34 @@ import urlparse
 import os
 from os.path import join
 
-
+ead_path = 'C:/Users/djpillen/GitHub/vandura/Real_Masters_all'
 out_path = 'C:/Users/djpillen/GitHub/test_dir/eads'
+
+mets_path = 'C:/Users/djpillen/GitHub/dspace_mets'
 
 skip = ['nispodcast.xml','bamdocs.xml','actonh.xml','stewartmary.xml','mullinsr.xml','pollackp.xml','saxj.xml','caen.xml','shurtleffm.xml','ticecarol.xml','ootbmpm.xml']
 add_odd = ['schoening.xml','nsfnet.xml','gonzalesjess.xml']
 
-for filename in os.listdir(path):
+for filename in os.listdir(ead_path):
     if filename not in skip:
-        tree = etree.parse(join(path, filename))
+        tree = etree.parse(join(ead_path, filename))
         for dao in tree.xpath('.//dao'):
             href = dao.get('href').strip()
             did = dao.getparent()
             c = did.getparent()
             if href.startswith('http://hdl.handle.net/2027.42'):
                 if not did.xpath('./odd') and not c.xpath('./odd') or (filename in add_odd):
-                    print href
                     handlepath = urlparse.urlparse(href).path
-                    mets = "http://deepblue.lib.umich.edu/metadata/handle" + handlepath + "/mets.xml"
-                    page = urllib2.urlopen(mets)
-                    metstree = etree.parse(page)
+                    the_id = handlepath.split('/')[-1]
+                    if the_id + '.xml' not in os.listdir(mets_path):
+                        print "Downloading", href
+                        dspace_mets = "http://deepblue.lib.umich.edu/metadata/handle" + handlepath + "/mets.xml"
+                        page = urllib2.urlopen(dspace_mets)
+                        dspace_metstree = etree.parse(page)
+                        with open(join(mets_path, the_id + '.xml'),'w') as mets_out:
+                            mets_out.write(etree.tostring(dspace_metstree))
+                    print "Parsing DSpace METS for", href
+                    metstree = etree.parse(join(mets_path,the_id + '.xml'))
                     abstract = metstree.xpath("//dim:field[@element='description'][@qualifier='abstract']", namespaces={'dim': 'http://www.dspace.org/xmlns/dspace/dim'})
                     if abstract:
                         abstract = abstract[0].text

@@ -25,7 +25,7 @@ print 'Writing unique subject csv'
 for subject_type in subjects:
     for source in subjects[subject_type]:
         for subject in subjects[subject_type][source]:
-            with open('C:/Users/Public/Documents/subjects_agents/ead_unique_subjects_20151104.csv', 'ab') as csvfile:
+            with open('C:/Users/Public/Documents/subjects_agents/ead_unique_subjects_20151111.csv', 'ab') as csvfile:
                 row = []
                 row.append(subject_type)
                 row.append(source)
