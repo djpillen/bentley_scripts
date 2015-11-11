@@ -6,7 +6,7 @@ from os.path import join
 access_file = 'C:/Users/Public/Documents/accessrestrict_expired-1.csv'
 path = 'C:/Users/djpillen/GitHub/vandura/Real_Masters_all'
 
-
+'''
 with open(access_file, 'rb') as csvfile:
     reader = csv.reader(csvfile)
     for row in reader:
@@ -23,7 +23,7 @@ with open(access_file, 'rb') as csvfile:
 
 
 '''
-date_file = 'C:/Users/Public/Documents/accessrestrictdate-8.csv'
+date_file = 'C:/Users/Public/Documents/accessrestrictdate-9.csv'
 
 expired = 0
 with open(date_file, 'rb') as csvfile:
@@ -33,12 +33,11 @@ with open(date_file, 'rb') as csvfile:
         path = row[1]
         normal = row[3]
         to_string = row[4]
-        if normal < '2015-07-02':
-            print normal
+        if normal < '2015-11-11':
+            print filename, normal
             expired += 1
-            with open('C:/Users/Public/Documents/accessrestrict_expired-1.csv','ab') as csvout:
+            with open('C:/Users/Public/Documents/accessrestrict_expired.csv','ab') as csvout:
                 writer = csv.writer(csvout, dialect='excel')
                 writer.writerow([filename, path, normal, to_string])
 
-print expired
-'''
+print "Expired:",expired
