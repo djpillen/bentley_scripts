@@ -71,6 +71,8 @@ headers = {'X-ArchivesSpace-Session':session}
  # First, post the digital object
  # Then, grab the uri from the posted digital object to set as the parent for each component and post those
 
+ posted_dig_objs = {}
+
 for filename in os.listdir(ead_path):
     print filename
     tree = etree.parse(join(ead_path,filename))
@@ -78,6 +80,7 @@ for filename in os.listdir(ead_path):
     for dao in daos:
         did = dao.getparent()
         href = dao.attrib['href'].strip()
+        # TO DO -- Account for the same href showing up in different places
         show = dao.attrib['show']
         actuate = dao.attrib['actuate']
         xlink_actuate = actuate.replace('request','Request').replace('load','Load')
@@ -99,15 +102,23 @@ for filename in os.listdir(ead_path):
             ns = {'mets':'http://www.loc.gov/METS/','dim': 'http://www.dspace.org/xmlns/dspace/dim','xlink':'http://www.w3.org/TR/xlink/'}
             XLINK = 'http://www.w3.org/TR/xlink/'
 
+            daodesc = dao.xpath('./daodesc/p')
+            if daodesc:
+                digital_object_note = daodesc[0].text
+            else:
+                digital_object_note = False
+
             component_title = etree.tostring(did.xpath('./unittitle')[0])
             digital_object_title = re.sub(r'<(.*?)>','',component_title)
+
             digital_object = {}
             digital_object_components = []
             digital_object['title'] = digital_object_title
             digital_object['digital_object_id'] = str(uuid.uuid4())
             digital_object['publish'] = True
             digital_object['file_versions'] = [{'file_uri':href,'xlink_show_attribute':show,'xlink_actuate_attribute':xlink_actuate}]
-
+            if digital_object_note:
+                digital_object['notes'] = [{'type':'note','content':[digital_object_note],'jsonmodel_type':'note_digital_object'}]
             digital_object_post = requests.post(aspace_url+'/repositories/2/digital_objects',headers=headers,data=json.dumps(digital_object)).json()
 
             print digital_object_post
@@ -117,6 +128,8 @@ for filename in os.listdir(ead_path):
             with open(posted_objects,'ab') as csvfile:
                 writer = csv.writer(csvfile)
                 writer.writerow([href,digital_object_uri])
+
+            posted_dig_objs[href] = digital_object_uri
 
             fileGrp = metstree.xpath("//mets:fileGrp[@USE='CONTENT']",namespaces=ns)[0]
             bitstreams = fileGrp.xpath('.//mets:file',namespaces=ns)
@@ -143,4 +156,34 @@ for filename in os.listdir(ead_path):
             for component in digital_object_components:
                 digital_object_component_post = requests.post(aspace_url+'/repositories/2/digital_object_components',headers=headers,data=json.dumps(component)).json()
                 print digital_object_component_post
+
+        else:
+
+            daodesc = dao.xpath('./daodesc/p')
+            if daodesc:
+                digital_object_note = daodesc[0].text
+            else:
+                digital_object_note = False
+
+            component_title = etree.tostring(did.xpath('./unittitle')[0])
+            digital_object_title = re.sub(r'<(.*?)>','',component_title)
+
+            digital_object = {}
+            digital_object['title'] = digital_object_title
+            digital_object['digital_object_id'] = str(uuid.uuid4())
+            digital_object['publish'] = True
+            digital_object['file_versions'] = [{'file_uri':href,'xlink_show_attribute':show,'xlink_actuate_attribute':xlink_actuate}]
+            if digital_object_note:
+                digital_object['notes'] = [{'type':'note','content':[digital_object_note],'jsonmodel_type':'note_digital_object'}]
+            digital_object_post = requests.post(aspace_url+'/repositories/2/digital_objects',headers=headers,data=json.dumps(digital_object)).json()
+
+            print digital_object_post
+
+            digital_object_uri = digital_object_post['uri']
+
+            posted_dig_objs[href] = digital_object_uri
+
+            with open(posted_objects,'ab') as csvfile:
+                writer = csv.writer(csvfile)
+                writer.writerow([href,digital_object_uri])
 
