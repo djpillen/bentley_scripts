@@ -4,8 +4,8 @@ import urlparse
 import os
 from os.path import join
 
-ead_path = 'C:/Users/djpillen/GitHub/vandura/Real_Masters_all'
-out_path = 'C:/Users/djpillen/GitHub/test_dir/eads'
+ead_path = 'C:/Users/djpillen/GitHub/without-reservations/Real_Masters_all'
+out_path = 'C:/Users/djpillen/GitHub/without-reservations/Real_Masters_all'
 
 mets_path = 'C:/Users/djpillen/GitHub/dspace_mets'
 

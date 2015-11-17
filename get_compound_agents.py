@@ -5,9 +5,9 @@ from os.path import join
 
 tags = ['persname','corpname','famname']
 
-output = 'C:/Users/Public/Documents/subjects_agents/compound_agents_201511.csv'
+output = 'C:/Users/djpillen/GitHub/test_run/subjects/compound_agents_20151116.csv'
 
-path = 'C:/Users/djpillen/GitHub/vandura/Real_Masters_all'
+path = 'C:/Users/djpillen/GitHub/without-reservations/Real_Masters_all'
 
 uniques = []
 
@@ -15,7 +15,11 @@ for filename in os.listdir(path):
     tree = etree.parse(join(path,filename))
     for sub in tree.xpath('//controlaccess/*'):
         if sub.tag in tags and sub.text is not None:
-            if '--' in sub.text:
+            if '---' in sub.text:
+                modified = sub.text.replace('---','- --')
+                if modified not in uniques:
+                    uniques.append(modified)
+            elif '--' in sub.text:
                 if sub.text not in uniques:
                     uniques.append(sub.text)
     print filename

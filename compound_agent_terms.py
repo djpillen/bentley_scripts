@@ -3,9 +3,9 @@ from lxml import etree
 import os
 from os.path import join
 
-path = 'C:/Users/djpillen/GitHub/test_dir'
+path = 'C:/Users/djpillen/GitHub/without-reservations/Real_Masters_all'
 
-compound_agent_terms = 'C:/Users/Public/Documents/compound_agents_terms.csv'
+compound_agent_terms = 'C:/Users/djpillen/GitHub/test_run/subjects/compound_agents_terms.csv'
 
 term_type_dict = {}
 
@@ -30,6 +30,8 @@ for filename in os.listdir(path):
     for agent in tree.xpath('//controlaccess/*'):
         if agent.tag in tags:
             agent_text = agent.text
+            if '---' in agent_text:
+                agent_text = agent_text.replace('---','- --')
             if agent_text in term_type_dict:
                 for term in term_type_dict[agent_text]:
                     new_term = etree.Element('term')

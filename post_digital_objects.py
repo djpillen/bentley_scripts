@@ -49,12 +49,21 @@ u'external_ids': [], u'suppressed': False, u'dates': [], u'notes': [], u'uri': u
  u'position': 0}
  """
 
-ead_path = 'C:/Users/djpillen/GitHub/vandura/Real_Masters_all'
+ead_path = 'C:/Users/djpillen/GitHub/without-reservations/Real_Masters_all'
 mets_path = 'C:/Users/djpillen/GitHub/dspace_mets'
 
-posted_objects = 'C:/Users/Public/Documents/posted_digital_objects.csv'
+posted_objects = 'C:/Users/djpillen/GitHub/test_run/digital_objects/posted_digital_objects.csv'
 
-aspace_url = 'http://localhost:8089'
+already_posted = []
+
+with open(posted_objects,'rb') as csvfile:
+    reader = csv.reader(csvfile)
+    for row in reader:
+        href = row[0]
+        if href not in already_posted:
+            already_posted.append(href)
+
+aspace_url = 'http://141.211.39.87:8089'
 username = 'admin'
 password = 'admin'
 
@@ -71,7 +80,7 @@ headers = {'X-ArchivesSpace-Session':session}
  # First, post the digital object
  # Then, grab the uri from the posted digital object to set as the parent for each component and post those
 
- posted_dig_objs = {}
+posted_dig_objs = {}
 
 for filename in os.listdir(ead_path):
     print filename
@@ -81,10 +90,16 @@ for filename in os.listdir(ead_path):
         did = dao.getparent()
         href = dao.attrib['href'].strip()
         # TO DO -- Account for the same href showing up in different places
-        show = dao.attrib['show']
-        actuate = dao.attrib['actuate']
+        if 'show' in dao.attrib:
+            show = dao.attrib['show']
+        else:
+            show = 'new'
+        if 'actuate' in dao.attrib:
+            actuate = dao.attrib['actuate']
+        else:
+            actuate = 'onRequest'
         xlink_actuate = actuate.replace('request','Request').replace('load','Load')
-        if href.startswith('http://hdl.handle.net/2027.42'):
+        if href.startswith('http://hdl.handle.net/2027.42') and href not in already_posted:
             handlepath = urlparse.urlparse(href).path
             the_id = handlepath.split('/')[-1]
             if the_id + '.xml' not in os.listdir(mets_path):
@@ -107,8 +122,10 @@ for filename in os.listdir(ead_path):
                 digital_object_note = daodesc[0].text
             else:
                 digital_object_note = False
-
-            component_title = etree.tostring(did.xpath('./unittitle')[0])
+            if did.xpath('./unittitle'):
+                component_title = etree.tostring(did.xpath('./unittitle')[0])
+            else:
+                component_title = 'OOPS THERES NO TITLE HERE'
             digital_object_title = re.sub(r'<(.*?)>','',component_title)
 
             digital_object = {}
@@ -157,7 +174,7 @@ for filename in os.listdir(ead_path):
                 digital_object_component_post = requests.post(aspace_url+'/repositories/2/digital_object_components',headers=headers,data=json.dumps(component)).json()
                 print digital_object_component_post
 
-        else:
+        elif href not in already_posted:
 
             daodesc = dao.xpath('./daodesc/p')
             if daodesc:

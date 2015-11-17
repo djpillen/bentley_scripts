@@ -7,11 +7,12 @@ path = 'C:/Users/djpillen/GitHub/vandura/Real_Masters_all'
 types = []
 first_level_admin = []
 first_level_add = []
-huh = {'list':[]}
+huh = {'list':[],'p':[]}
 
 # check to make sure that descgrp/descgrp is always followed by odd or index
 
 for filename in os.listdir(path):
+    print filename
     tree = etree.parse(join(path,filename))
     descgrps = tree.xpath('//descgrp')
     for descgrp in descgrps:

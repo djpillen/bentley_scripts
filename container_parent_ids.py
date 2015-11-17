@@ -5,12 +5,12 @@ import uuid
 import random
 
 # Enter the path to your starting EAD directory
-input_directory = 'C:/Users/Public/Documents/aspace_migration/test_eads'
+input_directory = 'C:/Users/djpillen/GitHub/without-reservations/Real_Masters_all'
 
 # Enter the path to the output directory for the modified EADs
 # Warning! If you set the output_directory to the same path as the input_directory,
 # all of your original EADs will be overwritten
-output_directory = 'C:/Users/Public/Documents/aspace_migration/test_eads'
+output_directory = 'C:/Users/djpillen/GitHub/without-reservations/Real_Masters_all'
 
 # Loop through each file in the input directory
 

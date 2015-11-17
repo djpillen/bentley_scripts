@@ -2,15 +2,13 @@ from lxml import etree
 import os
 from os.path import join
 
-path = 'C:/Users/Public/vbox_shared'
-outpath = 'C:/Users/Public/vbox_shared'
+path = 'C:/Users/djpillen/GitHub/without-reservations/Real_Masters_all'
+outpath = 'C:/Users/djpillen/GitHub/without-reservations/Real_Masters_all'
 
 for filename in os.listdir(path):
 	tree = etree.parse(join(path,filename))
 	items = tree.xpath('//item')
 	for item in items:
-		if 'skip' in item.attrib:
-			del item.attrib['skip']
 		subitems = item.xpath('.//item')
 		for subitem in subitems:
 			if 'altrender' not in subitem.attrib:

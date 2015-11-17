@@ -4,10 +4,10 @@ from os.path import join
 
 # Add an id attribute to titlepage/publisher for the appropriate classification (mhc or uarp)
 
-
+path = 'C:/Users/djpillen/GitHub/without-reservations/Real_Masters_all'
 classification_base = '/repositories/2/classifications/'
-mhc_classification = classification_base + 'MHCNUMBER'
-uarp_classification = classification_base + 'UARPNUMBER'
+mhc_classification = classification_base + '1'
+uarp_classification = classification_base + '2'
 
 for filename in os.listdir(path):
 	print filename

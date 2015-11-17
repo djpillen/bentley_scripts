@@ -4,7 +4,7 @@ from os.path import join
 import uuid
 import re
 
-path = 'C:/Users/Public/Documents/aspace_migration/test_eads'
+path = 'C:/Users/djpillen/GitHub/without-reservations/Real_Masters_all'
 
 special_cases = ['kelseymu.xml']
 

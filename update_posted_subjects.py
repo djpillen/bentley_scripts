@@ -3,10 +3,10 @@ import os
 from os.path import join
 import csv
 
-posted_subjects_csv = 'C:/Users/Public/Documents/subjects_agents/posted_subjects.csv'
+posted_subjects_csv = 'C:/Users/djpillen/GitHub/test_run/subjects/posted_subjects.csv'
 path = 'C:/Users/djpillen/GitHub/vandura/Real_Masters_all'
-test_dir_in = 'C:/Users/Public/Documents/aspace_migration/test_eads'
-test_dir_out = 'C:/Users/Public/Documents/aspace_migration/test_eads'
+test_dir_in = 'C:/Users/djpillen/GitHub/without-reservations/Real_Masters_all'
+test_dir_out = 'C:/Users/djpillen/GitHub/without-reservations/Real_Masters_all'
 
 posted_subjects = {'geogname':{},'genreform':{},'subject':{},'title':{}}
 

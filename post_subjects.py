@@ -7,9 +7,10 @@ import time
 
 start_time = datetime.now()
 
-subjects_csv = 'C:/Users/Public/Documents/subjects_agents/aspace_subjects.csv'
+subjects_csv = 'C:/Users/djpillen/GitHub/test_run/subjects/aspace_subjects.csv'
+posted_csv = 'C:/Users/djpillen/GitHub/test_run/subjects/posted_subjects.csv'
 
-baseURL = 'http://141.211.39.53:8089'
+baseURL = 'http://141.211.39.87:8089'
 user='admin'
 password='admin'
 
@@ -39,7 +40,7 @@ with open(subjects_csv,'rb') as csvfile:
             if subjects['status'] == 'Created':
                 subject_uri = subjects['uri']
                 row.append(subject_uri)
-                with open('C:/Users/Public/Documents/subjects_agents/posted_subjects.csv','ab') as csv_out:
+                with open(posted_csv,'ab') as csv_out:
                     writer = csv.writer(csv_out)
                     writer.writerow(row)
         print subjects

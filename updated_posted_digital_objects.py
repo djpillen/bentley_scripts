@@ -3,8 +3,8 @@ import os
 from os.path import join
 import csv
 
-path = 'C:/Users/djpillen/GitHub/vandura/Real_Masters_all'
-digital_object_csv = 'C:/Users/Public/Documents/posted_digital_objects.csv'
+path = 'C:/Users/djpillen/GitHub/without-reservations/Real_Masters_all'
+digital_object_csv = 'C:/Users/djpillen/GitHub/test_run/digital_objects/posted_digital_objects.csv'
 
 digital_object_refs = {}
 
