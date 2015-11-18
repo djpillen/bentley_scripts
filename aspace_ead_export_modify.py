@@ -7,7 +7,7 @@ import pickle
 ns = {'ead':'urn:isbn:1-931666-22-9'}
 
 originals = 'C:/Users/djpillen/GitHub/vandura/Real_Masters_all'
-new = 'C:/Users/Public/vbox_shared/new_exports'
+new = 'C:/Users/Public/Documents/another_migration_test/exports'
 
 container_types_file = 'C:/Users/Public/Documents/aspace_migration/container_types.p'
 
@@ -42,5 +42,7 @@ for filename in os.listdir(new):
             label = label.strip()
             container.attrib['label'] = label
             container.attrib['type'] = label_type[label]
+        if 'altrender' in container.attrib:
+            del container.attrib['altrender']
     with open(join(new,filename),'w') as ead_out:
         ead_out.write(etree.tostring(tree,encoding="utf-8", xml_declaration=True, pretty_print=True))

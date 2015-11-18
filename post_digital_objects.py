@@ -130,7 +130,7 @@ for filename in os.listdir(ead_path):
 
             digital_object = {}
             digital_object_components = []
-            digital_object['title'] = digital_object_title
+            digital_object['title'] = digital_object_title.strip()
             digital_object['digital_object_id'] = str(uuid.uuid4())
             digital_object['publish'] = True
             digital_object['file_versions'] = [{'file_uri':href,'xlink_show_attribute':show,'xlink_actuate_attribute':xlink_actuate}]
@@ -155,11 +155,11 @@ for filename in os.listdir(ead_path):
                 FLocat = bitstream.xpath('./mets:FLocat',namespaces=ns)[0]
                 component_size = bitstream.attrib['SIZE']
                 if '{%s}label' % (XLINK) in FLocat.attrib:
-                    component_label = FLocat.attrib['{%s}label' % (XLINK)]
+                    component_label = FLocat.attrib['{%s}label' % (XLINK)].strip()
                 else:
                     component_label = None
                 component_href = 'http://deepblue.lib.umich.edu' + FLocat.attrib['{%s}href' % (XLINK)] 
-                component_title = FLocat.attrib['{%s}title' % (XLINK)]
+                component_title = FLocat.attrib['{%s}title' % (XLINK)].strip()
                 digital_object_component = {
                     'digital_object':{'ref':digital_object_uri},
                     'title':component_title,
@@ -186,7 +186,7 @@ for filename in os.listdir(ead_path):
             digital_object_title = re.sub(r'<(.*?)>','',component_title)
 
             digital_object = {}
-            digital_object['title'] = digital_object_title
+            digital_object['title'] = digital_object_title.strip()
             digital_object['digital_object_id'] = str(uuid.uuid4())
             digital_object['publish'] = True
             digital_object['file_versions'] = [{'file_uri':href,'xlink_show_attribute':show,'xlink_actuate_attribute':xlink_actuate}]
