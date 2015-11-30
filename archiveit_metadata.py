@@ -7,7 +7,6 @@ import os.path
 all_collections = 'https://partner.archive-it.org/seam/resource/collectionFeed?accountId=934'
 
 last_exported_doc = 'last_exported_date.txt'
-last_updated_date = datetime.strptime(lastUpdatedDate, '%Y-%m-%d %H:%M:%S')
 if os.path.exists(last_exported_doc):
     with open('last_exported_date.txt','r').read() as last_exported:
         last_exported_date = datetime.strptime(last_exported,'%Y-%m-%d %H:%M:%S')
