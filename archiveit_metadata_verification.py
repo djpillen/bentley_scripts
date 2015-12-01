@@ -38,25 +38,35 @@ def fetch_metadata(archiveit_dir, saved_metadata_base, today):
 	return archiveit_metadata_file
 
 def find_missing_metadata(archiveit_dir, metadata):
+	missing_metadata_dict = {}
 	print "Checking for missing metadata"
-	missing_metadata_csv = join(archiveit_dir,'missing_metadata.csv')
+	collections = metadata.xpath('//collection')
+	for collection in collections:
+		collection_name = collection.xpath('./name')[0].text
+		seeds = collection.xpath('./seeds/seed')
+		for seed in seeds:
+			public = seed.xpath('./public')[0].text
+			metadata = seed.xpath('./metadata')[0]
+			url = seed.xpath('./url')[0].text
+			metadata_elements = metadata.xpath('./*')
+			metadata_element_names = [metadata_element.tag for metadata_element in metadata_elements]
+			if len(metadata_elements) < 2:
+				if collection_name not in missing_metadata_dict:
+					missing_metadata_dict[collection_name] = []
+				missing_metadata_dict[collection_name].append(url)
+				print collection_name, url
+	return missing_metadata_dict
+
+def write_missing_metadata_csv(archiveit_dir, missing_metadata_dict):
+	print "Writing missing metadata csv"
+	missing_metadata_csv = join(archiveit_dir, "missing_metadata.csv")
 	if os.path.exists(missing_metadata_csv):
 		os.remove(missing_metadata_csv)
-	collections = metadata.xpath('//collection')
 	with open(missing_metadata_csv,'ab') as csvfile:
 		writer = csv.writer(csvfile)
-		for collection in collections:
-			collection_name = collection.xpath('./name')[0].text
-			seeds = metadata.xpath('//collection/seeds/seed')
-			for seed in seeds:
-				public = seed.xpath('./public')[0].text
-				metadata = seed.xpath('./metadata')[0]
-				url = seed.xpath('./url')[0].text
-				metadata_elements = metadata.xpath('./*')
-				metadata_element_names = [metadata_element.tag for metadata_element in metadata_elements]
-				if len(metadata_elements) < 2:
-					writer.writerow([collection_name,url])
-					print collection_name, url
+		for collection in missing_metadata_dict:
+			for url in missing_metadata_dict[collection]:
+				writer.writerow([collection,url])
 
 def main():
 	archiveit_dir = 'C:/Users/djpillen/GitHub/test_dir/archive-it'
@@ -71,6 +81,7 @@ def main():
 		metadata = etree.parse(metadata_file)
 	else:
 		metadata = etree.parse(collectionFeed)
-	find_missing_metadata(archiveit_dir, metadata)
+	missing_metadata_dict = find_missing_metadata(archiveit_dir, metadata)
+	write_missing_metadata_csv(archiveit_dir, missing_metadata_dict)
 
 main()

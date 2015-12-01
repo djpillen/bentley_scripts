@@ -56,12 +56,13 @@ posted_objects = 'C:/Users/djpillen/GitHub/test_run/digital_objects/posted_digit
 
 already_posted = []
 
-with open(posted_objects,'rb') as csvfile:
-    reader = csv.reader(csvfile)
-    for row in reader:
-        href = row[0]
-        if href not in already_posted:
-            already_posted.append(href)
+if os.path.exists(posted_objects):
+    with open(posted_objects,'rb') as csvfile:
+        reader = csv.reader(csvfile)
+        for row in reader:
+            href = row[0]
+            if href not in already_posted:
+                already_posted.append(href)
 
 aspace_url = 'http://141.211.39.87:8089'
 username = 'admin'
@@ -153,6 +154,8 @@ for filename in os.listdir(ead_path):
             position = 0
             for bitstream in bitstreams:
                 FLocat = bitstream.xpath('./mets:FLocat',namespaces=ns)[0]
+                # This was originally being added to each file_version as file_size_bytes, but the max integer allowed is 2,147,483,647
+                # Still storing this for now in case we want to turn it into something else (like an extent) later
                 component_size = bitstream.attrib['SIZE']
                 if '{%s}label' % (XLINK) in FLocat.attrib:
                     component_label = FLocat.attrib['{%s}label' % (XLINK)].strip()
@@ -165,7 +168,7 @@ for filename in os.listdir(ead_path):
                     'title':component_title,
                     'label':component_label,
                     'position':position,
-                    'file_versions':[{'file_uri':component_href,'file_size_bytes':int(component_size)}],
+                    'file_versions':[{'file_uri':component_href}],
                     }
                 digital_object_components.append(digital_object_component)
                 position += 1
@@ -203,4 +206,3 @@ for filename in os.listdir(ead_path):
             with open(posted_objects,'ab') as csvfile:
                 writer = csv.writer(csvfile)
                 writer.writerow([href,digital_object_uri])
-
