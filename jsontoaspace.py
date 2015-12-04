@@ -7,7 +7,7 @@ from datetime import datetime
 
 start_time = datetime.now()
 
-baseURL = 'http://localhost:8089'
+baseURL = 'http://141.211.39.87:8089'
 repository = '2'
 user = 'admin'
 password = 'admin'
@@ -21,7 +21,7 @@ def authenticate():
 errors = []
 successes = []
 
-base_dir = 'C:/Users/Public/Documents/another_migration_test'
+base_dir = 'C:/Users/djpillen/GitHub/test_run'
 path = join(base_dir,'json')
 outfilepath = join(base_dir,'resources')
 
