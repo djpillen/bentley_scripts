@@ -24,7 +24,7 @@ for filename in os.listdir(path):
 	components = tree.xpath("//dsc//*[starts-with(local-name(), 'c0')]")
 	for component in components:
 		physdescs = component.xpath('./did/physdesc')
-		if len(physdescs) == 2:
+		if len(physdescs) > 1:
 			extent = False
 			no_extent = False
 			for physdesc in physdescs:
@@ -33,18 +33,20 @@ for filename in os.listdir(path):
 				else:
 					extent = True
 			if no_extent and extent:
+				'''
 				first = physdescs[0]
 				second = physdescs[1]
 				for elem in second.xpath('./*'):
 					first.append(elem)
 				second.getparent().remove(second)
+				'''
 				with open(save_file,'ab') as csvfile:
 					writer = csv.writer(csvfile)
 					writer.writerow([filename,tree.getpath(component)])
 				print filename, tree.getpath(component)
 				count += 1
-	with open(join(path,filename),'w') as ead_out:
-		ead_out.write(etree.tostring(tree,encoding='utf-8',xml_declaration=True,pretty_print=True))
-	print filename
+	#with open(join(path,filename),'w') as ead_out:
+		#ead_out.write(etree.tostring(tree,encoding='utf-8',xml_declaration=True,pretty_print=True))
+	#print filename
 print count
 
