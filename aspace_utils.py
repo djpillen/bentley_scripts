@@ -2,22 +2,27 @@ import requests
 import json
 import getpass
 
-global_aspace_url = 'http://localhost:8089'
+#global_aspace_url = 'http://localhost:8089'
 #repository = '2'
 #user = 'admin'
 #password = 'admin'
 
 class ArchivesSpace(object):
     def __init__(self):
-        username = 'admin' #raw_input('Username:')
-        password = 'admin' # getpass.getpass('Password:')
+        username = raw_input('Username:')
+        password = getpass.getpass('Password:')
         try:
             aspace_url = global_aspace_url
         except:
             aspace_url = raw_input('ArchivesSpace Backend URL:')
         self.aspace_url = aspace_url
-        auth = requests.post(aspace_url + '/users/'+username+'/login?password='+password).json()
-        self.session = auth["session"]
+        auth = requests.post(aspace_url + '/users/'+username+'/login?password='+password)
+        try:
+            auth = auth.json()
+            self.session = auth["session"]
+        except:
+            print auth.content
+        
 
     def ead_to_json(self, filepath):
         headers = {'Content-type': 'text/xml; charset=utf-8', 'X-ArchivesSpace-Session': self.session}
