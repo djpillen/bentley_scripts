@@ -39,4 +39,4 @@ for filename in os.listdir(path):
                     new_term.attrib['type'] = term_type_dict[agent_text][term]
                     agent.append(new_term)
     with open(join(path,filename),'w') as ead_out:
-        ead_out.write(etree.tostring(tree,xml_declaration=True,encoding='utf-8'))
+        ead_out.write(etree.tostring(tree,xml_declaration=True,encoding='utf-8',pretty_print=True))
