@@ -25,22 +25,22 @@ base_dir = 'C:/Users/djpillen/GitHub/test_run'
 path = join(base_dir,'json')
 outfilepath = join(base_dir,'resources')
 
-while os.listdir(path) != os.listdir(outfilepath):
-    for filename in os.listdir(path):
-        if filename not in os.listdir(outfilepath):
-            headers = authenticate()
-            data = open(join(path, filename), 'rb')
-            jsontoresource = requests.post(baseURL + '/repositories/2/batch_imports', headers=headers, data=data).json()
-            for result in jsontoresource:
-                if 'saved' in result and not 'errors' in result:
-                    if filename not in successes:
-                        successes.append(filename)
-                elif 'errors' in result:
-                    if filename not in errors:
-                        errors.append(filename)
-            with open(join(outfilepath,filename),'w') as json_out:
-                json_out.write(json.dumps(jsontoresource))
-            print filename
+
+for filename in os.listdir(path):
+    if filename not in os.listdir(outfilepath):
+        headers = authenticate()
+        data = open(join(path, filename), 'rb')
+        jsontoresource = requests.post(baseURL + '/repositories/2/batch_imports', headers=headers, data=data).json()
+        for result in jsontoresource:
+            if 'saved' in result and not 'errors' in result:
+                if filename not in successes:
+                    successes.append(filename)
+            elif 'errors' in result:
+                if filename not in errors:
+                    errors.append(filename)
+        with open(join(outfilepath,filename),'w') as json_out:
+            json_out.write(json.dumps(jsontoresource))
+        print filename
 
 for filename in errors:
     fout = open(join(base_dir,'jsontoaspaceerrors.txt'), 'a')

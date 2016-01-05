@@ -22,22 +22,23 @@ errors = 0
 
 
 for filename in os.listdir(ead_path):
-    attempts += 1
-    auth = requests.post(baseURL + '/users/'+user+'/login?password='+password).json()
-    session = auth["session"]
+    if filename + '.json' not in os.listdir(json_path):
+        attempts += 1
+        auth = requests.post(baseURL + '/users/'+user+'/login?password='+password).json()
+        session = auth["session"]
 
-    headers = {'Content-type': 'text/xml; charset=utf-8', 'X-ArchivesSpace-Session':session}
-    data = open(join(ead_path, filename), 'rb')
-    eadtojson = requests.post(baseURL + '/plugins/jsonmodel_from_format/resource/ead', headers=headers, data=data).json()
-    for result in eadtojson:
-        if 'invalid_object' in result:
-            fout = open(join(base_dir,'eadtojsonerrors.txt'), 'a')
-            fout.write(filename + '\n')
-            fout.close()
-            errors += 1
-    with open(join(json_path,filename+'.json'),'w') as json_out:
-        json_out.write(json.dumps(eadtojson))
-    print filename
+        headers = {'Content-type': 'text/xml; charset=utf-8', 'X-ArchivesSpace-Session':session}
+        data = open(join(ead_path, filename), 'rb')
+        eadtojson = requests.post(baseURL + '/plugins/jsonmodel_from_format/resource/ead', headers=headers, data=data).json()
+        for result in eadtojson:
+            if 'invalid_object' in result:
+                fout = open(join(base_dir,'eadtojsonerrors.txt'), 'a')
+                fout.write(filename + '\n')
+                fout.close()
+                errors += 1
+        with open(join(json_path,filename+'.json'),'w') as json_out:
+            json_out.write(json.dumps(eadtojson))
+        print filename
 
 end_time = datetime.now()
 

@@ -1,9 +1,10 @@
 import requests
 import json
+import getpass
 
 aspace_url = 'http://141.211.39.87:8089'
 username = 'admin'
-password = 'admin'
+password = getpass.getpass('Password:')
 
 auth = requests.post(aspace_url+'/users/'+username+'/login?password='+password).json()
 session = auth['session']

@@ -8,6 +8,27 @@ path = 'C:/Users/djpillen/GitHub/without-reservations/Real_Masters_all'
 
 special_cases = ['kelseymu.xml']
 
+av_boxes = {}
+dvd_boxes = {}
+cd_boxes = {}
+
+# The same AV boxes and DVD boxes may appear in multiple collections -- they should all have the same barcode
+for filename in os.listdir(path):
+    print "Checking for AV Boxes in {0}".format(filename)
+    tree = etree.parse(join(path,filename))
+    containers = tree.xpath('//container')
+    for container in containers:
+        if 'type' in container.attrib:
+            if container.attrib['type'] == 'avbox':
+                if container.text not in av_boxes:
+                    av_boxes[container.text] = re.sub(r'[A-Za-z\-]','',str(uuid.uuid4()))
+            if container.attrib['label'] == 'DVD Box':
+                if container.text not in dvd_boxes:
+                    dvd_boxes[container.text] = re.sub(r'[A-Za-z\-]','',str(uuid.uuid4()))
+            if container.attrib['label'] == 'CD Box':
+                if container.text not in cd_boxes:
+                    cd_boxes[container.text] = re.sub(r'[A-Za-z\-]','',str(uuid.uuid4()))
+
 for filename in os.listdir(path):
     print filename
     tree = etree.parse(join(path,filename))
@@ -20,11 +41,15 @@ for filename in os.listdir(path):
                 container = c_containers[0]
                 if 'type' in container.attrib:
                     container_type_label_num = container.attrib['type'] + container.attrib['label'] + container.text
-                    if container_type_label_num not in container_ids:
-                        container_ids[container_type_label_num] = str(uuid.uuid4())
+                    if container.attrib['type'] == 'avbox':
+                        container_ids[container_type_label_num] = av_boxes[container.text]
+                    elif contaniner.attrib['label'] == 'DVD Box':
+                        container_ids[container_type_label_num] = dvd_boxes[container.text]
+                    elif container.attrib['label'] == 'CD Box':
+                        container_ids[container_type_label_num] = cd_boxes[container.text]
+                    elif container_type_label_num not in container_ids:
+                        container_ids[container_type_label_num] = re.sub(r'[A-Za-z\-]','',str(uuid.uuid4()))
 
-        for container_type_label_num in container_ids:
-            container_ids[container_type_label_num] = re.sub(r'[A-Za-z\-]','',container_ids[container_type_label_num])
 
         containers = tree.xpath('//did/container')
         for container in containers:

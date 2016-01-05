@@ -8,6 +8,7 @@ import csv
 import urlparse
 import urllib2
 import uuid
+import getpass
 
 # Digital Objects and Digtal Object Components need to be posted separately
 # For reference:
@@ -49,10 +50,10 @@ u'external_ids': [], u'suppressed': False, u'dates': [], u'notes': [], u'uri': u
  u'position': 0}
  """
 
-ead_path = 'C:/Users/djpillen/GitHub/without-reservations/Real_Masters_all'
+ead_path = 'C:/Users/djpillen/GitHub/test_dir/archivematicaspace/eads'
 mets_path = 'C:/Users/djpillen/GitHub/dspace_mets'
 
-posted_objects = 'C:/Users/djpillen/GitHub/test_run/digital_objects/posted_digital_objects.csv'
+posted_objects = 'C:/Users/djpillen/GitHub/test_dir/archivematicaspace/posted_digital_objects.csv'
 
 already_posted = []
 
@@ -64,9 +65,9 @@ if os.path.exists(posted_objects):
             if href not in already_posted:
                 already_posted.append(href)
 
-aspace_url = 'http://141.211.39.87:8089'
-username = 'admin'
-password = 'admin'
+aspace_url = 'http://aspace2.test.archivematica.org:8089'
+username = 'djpillen'
+password = getpass.getpass('Password:')
 
 auth = requests.post(aspace_url+'/users/'+username+'/login?password='+password+'&expiring=false').json()
 session = auth['session']
