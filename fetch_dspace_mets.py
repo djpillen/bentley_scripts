@@ -3,6 +3,7 @@ from lxml import etree
 import urlparse
 import os
 from os.path import join
+import time
 
 
 ead_path = 'C:/Users/djpillen/GitHub/vandura/Real_Masters_all'
@@ -25,3 +26,4 @@ for filename in os.listdir(ead_path):
                 metstree = etree.parse(page)
                 with open(join(mets_path, the_id + '.xml'),'w') as mets_out:
                     mets_out.write(etree.tostring(metstree))
+                time.sleep(15)
