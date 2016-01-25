@@ -12,7 +12,7 @@ repository = '2'
 user = 'admin'
 password = 'admin'
 
-base_dir = 'C:/Users/Public/Documents/test_odd_parens'
+base_dir = 'C:/Users/djpillen/GitHub/test_run'
 
 ead_path = join(base_dir,'ead')
 json_path = join(base_dir,'json')

@@ -21,7 +21,7 @@ def authenticate():
 errors = []
 successes = []
 
-base_dir = 'C:/Users/Public/Documents/test_odd_parens'
+base_dir = 'C:/Users/djpillen/GitHub/test_run'
 path = join(base_dir,'json')
 outfilepath = join(base_dir,'resources')
 

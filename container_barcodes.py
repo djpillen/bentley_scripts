@@ -4,7 +4,7 @@ from os.path import join
 import uuid
 import re
 
-path = 'C:/Users/djpillen/GitHub/without-reservations/Real_Masters_all'
+path = 'C:/Users/djpillen/GitHub/test_run/ead'
 
 special_cases = ['kelseymu.xml']
 
@@ -43,7 +43,7 @@ for filename in os.listdir(path):
                     container_type_label_num = container.attrib['type'] + container.attrib['label'] + container.text
                     if container.attrib['type'] == 'avbox':
                         container_ids[container_type_label_num] = av_boxes[container.text]
-                    elif contaniner.attrib['label'] == 'DVD Box':
+                    elif container.attrib['label'] == 'DVD Box':
                         container_ids[container_type_label_num] = dvd_boxes[container.text]
                     elif container.attrib['label'] == 'CD Box':
                         container_ids[container_type_label_num] = cd_boxes[container.text]

@@ -4,7 +4,7 @@ from os.path import join
 
 # Add an id attribute to titlepage/publisher for the appropriate classification (mhc or uarp)
 
-path = 'C:/Users/djpillen/GitHub/without-reservations/Real_Masters_all'
+path = 'C:/Users/djpillen/GitHub/test_run/ead'
 classification_base = '/repositories/2/classifications/'
 mhc_classification = classification_base + '1'
 uarp_classification = classification_base + '2'

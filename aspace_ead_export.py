@@ -12,7 +12,7 @@ aspace_url = 'http://localhost:8089'
 username = 'admin'
 password = 'admin'
 
-ead_directory = 'C:/Users/Public/Documents/aspace_migration/aspace_exports'
+ead_directory = 'C:/Users/djpillen/GitHub/test_run/exports'
 
 auth = requests.post(aspace_url+'/users/admin/login?password=' + password + '&expired=false').json()
 session = auth['session']
@@ -43,6 +43,6 @@ print "Script end time:", end_time.strftime("%Y-%m-%d %H:%M:%S %p")
 print "Script running time:", end_time - start_time
 
 exporter_stats = "Script start time: " + start_time.strftime("%Y-%m-%d %H:%M:%S %p") + "\n" + "Script end time: " +  end_time.strftime("%Y-%m-%d %H:%M:%S %p") + "\n" + "Script running time: " + str(end_time - start_time)
-stats_file = open('C:/Users/Public/Documents/aspace_migration/exporter_stats.txt','w')
+stats_file = open('C:/Users/djpillen/GitHub/test_run/exporter_stats.txt','w')
 stats_file.write(exporter_stats)
 stats_file.close()

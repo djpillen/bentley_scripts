@@ -50,10 +50,10 @@ u'external_ids': [], u'suppressed': False, u'dates': [], u'notes': [], u'uri': u
  u'position': 0}
  """
 
-ead_path = 'C:/Users/djpillen/GitHub/test_dir/archivematicaspace/eads'
+ead_path = 'C:/Users/djpillen/GitHub/test_run/ead'
 mets_path = 'C:/Users/djpillen/GitHub/dspace_mets'
 
-posted_objects = 'C:/Users/djpillen/GitHub/test_dir/archivematicaspace/posted_digital_objects.csv'
+posted_objects = 'C:/Users/djpillen/GitHub/test_run/posted_digital_objects.csv'
 
 already_posted = []
 
@@ -65,8 +65,8 @@ if os.path.exists(posted_objects):
             if href not in already_posted:
                 already_posted.append(href)
 
-aspace_url = 'http://aspace2.test.archivematica.org:8089'
-username = 'djpillen'
+aspace_url = 'http://localhost:8089'
+username = 'admin'
 password = getpass.getpass('Password:')
 
 auth = requests.post(aspace_url+'/users/'+username+'/login?password='+password+'&expiring=false').json()

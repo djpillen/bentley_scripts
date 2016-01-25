@@ -3,8 +3,8 @@ import os
 from os.path import join
 import csv
 
-path = 'C:/Users/djpillen/GitHub/test_dir/archivematicaspace/eads'
-digital_object_csv = 'C:/Users/djpillen/GitHub/test_dir/archivematicaspace/posted_digital_objects.csv'
+path = 'C:/Users/djpillen/GitHub/test_run/ead'
+digital_object_csv = 'C:/Users/djpillen/GitHub/test_run/posted_digital_objects.csv'
 
 digital_object_refs = {}
 
