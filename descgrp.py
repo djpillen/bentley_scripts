@@ -7,7 +7,8 @@ path = 'C:/Users/djpillen/GitHub/vandura/Real_Masters_all'
 types = []
 first_level_admin = []
 first_level_add = []
-huh = {'list':[],'p':[]}
+huh = {'list':[],'p':[],'descgrp':[]}
+non_typed = []
 
 # check to make sure that descgrp/descgrp is always followed by odd or index
 
@@ -38,11 +39,18 @@ for filename in os.listdir(path):
                                 '''
                     if elem.tag == 'otherfindaid':
                         print 'otherfindaid:',filename
+        else:
+            for elem in descgrp.xpath('./*'):
+                if elem.tag not in non_typed:
+                    non_typed.append(elem.tag)
+
 
 print types
 print 'ADMIN',first_level_admin
 print '\n\n\n'
 print 'ADD',first_level_add
+print '\n\n\n'
+print 'NONTYPED', non_typed
 print '\n\n\n'
 
 for tag in first_level_admin:

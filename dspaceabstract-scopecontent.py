@@ -3,9 +3,10 @@ from lxml import etree
 import urlparse
 import os
 from os.path import join
+import time
 
-ead_path = 'C:/Users/djpillen/GitHub/test_dir/archivematicaspace/eads'
-out_path = 'C:/Users/djpillen/GitHub/test_dir/archivematicaspace/eads'
+ead_path = 'C:/Users/djpillen/GitHub/without-reservations/Real_Masters_all'
+out_path = 'C:/Users/djpillen/GitHub/without-reservations/Real_Masters_all'
 
 mets_path = 'C:/Users/djpillen/GitHub/dspace_mets'
 
@@ -30,10 +31,11 @@ for filename in os.listdir(ead_path):
                         dspace_metstree = etree.parse(page)
                         with open(join(mets_path, the_id + '.xml'),'w') as mets_out:
                             mets_out.write(etree.tostring(dspace_metstree))
+                        time.sleep(15)
                     print "Parsing DSpace METS for", href
                     metstree = etree.parse(join(mets_path,the_id + '.xml'))
                     abstract = metstree.xpath("//dim:field[@element='description'][@qualifier='abstract']", namespaces={'dim': 'http://www.dspace.org/xmlns/dspace/dim'})
-                    if abstract:
+                    if abstract and abstract is not None:
                         abstract = abstract[0].text
                         odd = etree.Element('odd')
                         ptag = etree.SubElement(odd,'p')

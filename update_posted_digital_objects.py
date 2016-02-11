@@ -3,7 +3,7 @@ import os
 from os.path import join
 import csv
 
-path = 'C:/Users/djpillen/GitHub/test_run/ead'
+path = 'C:/Users/djpillen/GitHub/without-reservations/Real_Masters_all'
 digital_object_csv = 'C:/Users/djpillen/GitHub/test_run/posted_digital_objects.csv'
 
 digital_object_refs = {}
@@ -21,9 +21,10 @@ for filename in os.listdir(path):
 	tree = etree.parse(join(path,filename))
 	daos = tree.xpath('//dao')
 	for dao in daos:
-		dao_href = dao.attrib['href']
-		if dao_href in digital_object_refs:
-			dao.attrib['ref'] = digital_object_refs[dao_href]
+		if not 'ref' in dao.attrib:
+			dao_href = dao.attrib['href'].strip()
+			if dao_href in digital_object_refs:
+				dao.attrib['ref'] = digital_object_refs[dao_href]
 
 	with open(join(path,filename),'w') as ead_out:
 		ead_out.write(etree.tostring(tree,encoding='utf-8',xml_declaration=True,pretty_print=True))

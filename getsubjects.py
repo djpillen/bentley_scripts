@@ -8,7 +8,7 @@ tags = ['subject', 'geogname','genreform','title']
 subjects = {'subject':{},'geogname':{},'genreform':{},'title':{}}
 
 # Get a csv with only unique subjects
-path = 'C:/Users/djpillen/GitHub/vandura/Real_Masters_all'
+path = 'C:/Users/djpillen/GitHub/without-reservations/Real_Masters_all'
 for filename in os.listdir(path):
     tree = etree.parse(join(path, filename))
     for sub in tree.xpath('//controlaccess/*'):
@@ -25,7 +25,7 @@ print 'Writing unique subject csv'
 for subject_type in subjects:
     for source in subjects[subject_type]:
         for subject in subjects[subject_type][source]:
-            with open('C:/Users/djpillen/GitHub/test_run/subjects/ead_unique_subjects_20160120.csv', 'ab') as csvfile:
+            with open('C:/Users/djpillen/GitHub/test_run/subjects/ead_unique_subjects_20160208.csv', 'ab') as csvfile:
                 row = []
                 row.append(subject_type)
                 row.append(source)

@@ -7,7 +7,7 @@ tags = ['persname','corpname','famname']
 
 output = 'C:/Users/djpillen/GitHub/test_run/subjects/compound_agents_20160120.csv'
 
-path = 'C:/Users/djpillen/GitHub/vandura/Real_Masters_all'
+path = 'C:/Users/djpillen/GitHub/without-reservations/Real_Masters_all'
 
 uniques = []
 

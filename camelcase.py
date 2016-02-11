@@ -2,8 +2,8 @@ from lxml import etree
 import os
 from os.path import join
 
-path = 'C:/Users/djpillen/GitHub/test_run/ead'
-outFilePath = 'C:/Users/djpillen/GitHub/test_run/ead'
+path = 'C:/Users/djpillen/GitHub/without-reservations/Real_Masters_all'
+outFilePath = 'C:/Users/djpillen/GitHub/without-reservations/Real_Masters_all'
 for filename in os.listdir(path):
 	tree = etree.parse(join(path,filename))
 	daos = tree.xpath('//dao')

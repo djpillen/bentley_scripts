@@ -2,15 +2,21 @@ from lxml import etree
 import os
 from os.path import join
 
-path = 'C:/Users/djpillen/GitHub/vandura/Real_Masters_all'
+path = 'C:/Users/djpillen/GitHub/without-reservations/Real_Masters_all'
 
 test_dir = 'C:/Users/djpillen/GitHub/test_dir'
 
-tags = ['subject','geogname','genreform']
+subject_tags = ['subject','geogname','genreform','title']
+agent_tags = ['persname','corpname','famname']
 
-for filename in os.listdir(test_dir):
-    tree = etree.parse(join(test_dir,filename))
+for filename in os.listdir(path):
+    tree = etree.parse(join(path,filename))
     for sub in tree.xpath('//controlaccess/*'):
-        if sub.tag in tags and sub.text is not None:
+        if sub.tag in agent_tags and sub.text is not None:
             if not 'ref' in sub.attrib:
                 print filename, sub.text.encode('utf-8')
+    """
+    for dao in tree.xpath('.//did/dao'):
+    	if not 'ref' in dao.attrib:
+    		print filename, dao.attrib['href']
+	"""

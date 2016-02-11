@@ -3,7 +3,7 @@ import os
 from os.path import join
 
 path = 'C:/Users/djpillen/GitHub/vandura/Real_Masters_all'
-outpath = 'C:/Users/djpillen/GitHub/test_dir/eads'
+outpath = 'C:/Users/djpillen/GitHub/vandura/Real_Masters_all'
 
 for filename in os.listdir(path):
     tree = etree.parse(join(path,filename))

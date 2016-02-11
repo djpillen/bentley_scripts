@@ -4,9 +4,14 @@ from os.path import join
 import uuid
 import re
 
-path = 'C:/Users/djpillen/GitHub/test_run/ead'
+path = 'C:/Users/djpillen/GitHub/without-reservations/Real_Masters_all'
 
-special_cases = ['kelseymu.xml']
+# EADs for which box numbering restarts with each subgroup
+subgrp_filenames = ['kelseymu.xml']
+
+# Alumni Association EADs. Several of the same containers show up in both EADs.
+alumni_filenames = ['alumasso.xml','alumphot.xml']
+alumni_barcodes = {}
 
 av_boxes = {}
 dvd_boxes = {}
@@ -32,32 +37,33 @@ for filename in os.listdir(path):
 for filename in os.listdir(path):
     print filename
     tree = etree.parse(join(path,filename))
-    if filename not in special_cases:
+    if filename not in subgrp_filenames and filename not in alumni_filenames:
         container_ids = {}
         components = tree.xpath("//dsc//*[starts-with(local-name(), 'c0')]")
         for component in components:
             c_containers = component.xpath('./did/container')
             if c_containers:
                 container = c_containers[0]
-                if 'type' in container.attrib:
+                if 'type' in container.attrib and container.text:
                     container_type_label_num = container.attrib['type'] + container.attrib['label'] + container.text
-                    if container.attrib['type'] == 'avbox':
-                        container_ids[container_type_label_num] = av_boxes[container.text]
-                    elif container.attrib['label'] == 'DVD Box':
-                        container_ids[container_type_label_num] = dvd_boxes[container.text]
-                    elif container.attrib['label'] == 'CD Box':
-                        container_ids[container_type_label_num] = cd_boxes[container.text]
-                    elif container_type_label_num not in container_ids:
-                        container_ids[container_type_label_num] = re.sub(r'[A-Za-z\-]','',str(uuid.uuid4()))
+                    if container_type_label_num not in container_ids:
+                        if container.attrib['type'] == 'avbox':
+                            container_ids[container_type_label_num] = av_boxes[container.text]
+                        elif container.attrib['label'] == 'DVD Box':
+                            container_ids[container_type_label_num] = dvd_boxes[container.text]
+                        elif container.attrib['label'] == 'CD Box':
+                            container_ids[container_type_label_num] = cd_boxes[container.text]
+                        elif container_type_label_num not in container_ids:
+                            container_ids[container_type_label_num] = re.sub(r'[A-Za-z\-]','',str(uuid.uuid4()))
 
 
         containers = tree.xpath('//did/container')
         for container in containers:
-            if 'type' in container.attrib:
+            if 'type' in container.attrib and container.text:
                 container_type_label_num = container.attrib['type'] + container.attrib['label'] + container.text
                 if container_type_label_num in container_ids:
                     container.attrib['label'] = container.attrib['label'] + ' ['+str(container_ids[container_type_label_num])+']'
-    else:
+    elif filename in subgrp_filenames:
         subgrps = tree.xpath('//c01')
         for subgrp in subgrps:
             container_ids = {}
@@ -69,10 +75,7 @@ for filename in os.listdir(path):
                     if 'type' in container.attrib:
                         container_type_label_num = container.attrib['type'] + container.attrib['label'] + container.text
                         if container_type_label_num not in container_ids:
-                            container_ids[container_type_label_num] = str(uuid.uuid4())
-
-            for container_type_label_num in container_ids:
-                container_ids[container_type_label_num] = re.sub(r'[A-Za-z\-]','',container_ids[container_type_label_num])
+                            container_ids[container_type_label_num] = re.sub(r'[A-Za-z\-]','',str(uuid.uuid4()))
 
             containers = subgrp.xpath('.//did/container')
             for container in containers:
@@ -80,6 +83,23 @@ for filename in os.listdir(path):
                     container_type_label_num = container.attrib['type'] + container.attrib['label'] + container.text
                     if container_type_label_num in container_ids:
                         container.attrib['label'] = container.attrib['label'] + ' ['+str(container_ids[container_type_label_num])+']'
+    elif filename in alumni_filenames:
+        container_ids = {}
+        components = tree.xpath("//dsc//*[starts-with(local-name(), 'c0')]")
+        for component in components:
+            c_containers = component.xpath('./did/container')
+            if c_containers:
+                container = c_containers[0]
+                if 'type' in container.attrib:
+                    container_type_label_num = container.attrib['type'] + container.attrib['label'] + container.text
+                    if container_type_label_num not in alumni_barcodes:
+                        alumni_barcodes[container_type_label_num] = re.sub(r'[A-Za-z\-]','',str(uuid.uuid4()))
+        containers = tree.xpath('//did/container')
+        for container in containers:
+            if 'type' in container.attrib:
+                container_type_label_num = container.attrib['type'] + container.attrib['label'] + container.text
+                if container_type_label_num in alumni_barcodes:
+                    container.attrib['label'] = container.attrib['label'] + ' ['+str(alumni_barcodes[container_type_label_num])+']'
 
     with open(join(path,filename),'w') as eadout:
-        eadout.write(etree.tostring(tree,xml_declaration=True,encoding="utf-8"))
+        eadout.write(etree.tostring(tree,xml_declaration=True,encoding="utf-8",pretty_print=True))

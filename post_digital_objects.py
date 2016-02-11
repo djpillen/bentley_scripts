@@ -9,6 +9,7 @@ import urlparse
 import urllib2
 import uuid
 import getpass
+import time
 
 # Digital Objects and Digtal Object Components need to be posted separately
 # For reference:
@@ -50,10 +51,11 @@ u'external_ids': [], u'suppressed': False, u'dates': [], u'notes': [], u'uri': u
  u'position': 0}
  """
 
-ead_path = 'C:/Users/djpillen/GitHub/test_run/ead'
+ead_path = 'C:/Users/djpillen/GitHub/without-reservations/Real_Masters_all'
 mets_path = 'C:/Users/djpillen/GitHub/dspace_mets'
 
 posted_objects = 'C:/Users/djpillen/GitHub/test_run/posted_digital_objects.csv'
+error_file = 'C:/Users/djpillen/GitHub/test_run/digital_object_errors.txt'
 
 already_posted = []
 
@@ -65,7 +67,7 @@ if os.path.exists(posted_objects):
             if href not in already_posted:
                 already_posted.append(href)
 
-aspace_url = 'http://localhost:8089'
+aspace_url = 'http://141.211.39.87:8089'
 username = 'admin'
 password = getpass.getpass('Password:')
 
@@ -113,6 +115,8 @@ for filename in os.listdir(ead_path):
                 with open(join(mets_path,the_id+'.xml'),'w') as mets_out:
                     mets_out.write(etree.tostring(dspace_metstree))
 
+                time.sleep(15)
+
 
             print "Parsing DSpace METS for", href
             metstree = etree.parse(join(mets_path, the_id + '.xml'))
@@ -121,7 +125,7 @@ for filename in os.listdir(ead_path):
 
             daodesc = dao.xpath('./daodesc/p')
             if daodesc:
-                digital_object_note = daodesc[0].text
+                digital_object_note = re.sub(r'^\[|\]$','',daodesc[0].text)
             else:
                 digital_object_note = False
             if did.xpath('./unittitle'):
@@ -142,6 +146,10 @@ for filename in os.listdir(ead_path):
 
             print digital_object_post
 
+            if 'error' in digital_object_post:
+                with open(error_file,'a') as f:
+                    f.write(digital_object_post)
+
             digital_object_uri = digital_object_post['uri']
 
             with open(posted_objects,'ab') as csvfile:
@@ -159,7 +167,7 @@ for filename in os.listdir(ead_path):
                 # Still storing this for now in case we want to turn it into something else (like an extent) later
                 component_size = bitstream.attrib['SIZE']
                 if '{%s}label' % (XLINK) in FLocat.attrib:
-                    component_label = FLocat.attrib['{%s}label' % (XLINK)].strip()
+                    component_label = FLocat.attrib['{%s}label' % (XLINK)].strip()[:255]
                 else:
                     component_label = None
                 component_href = 'http://deepblue.lib.umich.edu' + FLocat.attrib['{%s}href' % (XLINK)] 
@@ -178,11 +186,15 @@ for filename in os.listdir(ead_path):
                 digital_object_component_post = requests.post(aspace_url+'/repositories/2/digital_object_components',headers=headers,data=json.dumps(component)).json()
                 print digital_object_component_post
 
+                if 'error' in digital_object_component_post:
+                    with open(error_file,'a') as f:
+                        f.write(digital_object_component_post)
+
         elif href not in already_posted:
 
             daodesc = dao.xpath('./daodesc/p')
             if daodesc:
-                digital_object_note = daodesc[0].text
+                digital_object_note = re.sub(r'^\[|\]$','',daodesc[0].text)
             else:
                 digital_object_note = False
 
@@ -199,6 +211,10 @@ for filename in os.listdir(ead_path):
             digital_object_post = requests.post(aspace_url+'/repositories/2/digital_objects',headers=headers,data=json.dumps(digital_object)).json()
 
             print digital_object_post
+
+            if 'error' in digital_object_post:
+                with open(error_file,'a') as f:
+                    f.write(digital_object_post)
 
             digital_object_uri = digital_object_post['uri']
 

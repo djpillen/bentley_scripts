@@ -2,7 +2,7 @@ import csv
 import os
 
 # Include the path to the starting, freshly exported csv
-base_csv = 'C:/Users/Public/Documents/accessions/accessions_20151030.csv'
+base_csv = 'C:/Users/djpillen/GitHub/accessions/accessions_20160208.csv'
 
 # Set up the filenames for the additional csvs that will be created
 no_null_csv = base_csv.replace('.','-nonull.')

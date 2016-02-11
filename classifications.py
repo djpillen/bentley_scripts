@@ -4,7 +4,7 @@ from os.path import join
 
 # Add an id attribute to titlepage/publisher for the appropriate classification (mhc or uarp)
 
-path = 'C:/Users/djpillen/GitHub/test_run/ead'
+path = 'C:/Users/djpillen/GitHub/without-reservations/Real_Masters_all'
 classification_base = '/repositories/2/classifications/'
 mhc_classification = classification_base + '1'
 uarp_classification = classification_base + '2'
@@ -14,12 +14,13 @@ for filename in os.listdir(path):
 	tree = etree.parse(join(path,filename))
 	eadheader = tree.xpath('//eadheader')[0]
 	publisher = tree.xpath('//titlepage/publisher')[0]
+	classifications = tree.xpath('//classification')
 	classification_id = False
 	if 'Michigan Historical Collections' in etree.tostring(publisher):
 		classification_id = mhc_classification
 	elif 'University Archives' in etree.tostring(publisher):
 		classification_id = uarp_classification
-	if classification_id:
+	if classification_id and not classifications:
 		classification = etree.Element('classification')
 		classification.attrib['ref'] = classification_id
 		eadheader.append(classification)

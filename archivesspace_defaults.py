@@ -38,6 +38,7 @@ def post_defaults(aspace_url, headers):
 	post_repo = requests.post(aspace_url + '/repositories',headers=headers,data=json.dumps(bhl_repo)).json()
 	print post_repo
 
+	'''
 	base_profile = {
 		'name':'',
 		'extent_dimension':'height',
@@ -54,11 +55,13 @@ def post_defaults(aspace_url, headers):
 		container_profile['name'] = profile_name
 		profile_post = requests.post(aspace_url + '/container_profiles',headers=headers,data=json.dumps(container_profile)).json()
 		print profile_post
+	'''
 
 	mhc_classification = {'title':'Michigan Historical Collections','identifier':'MHC'}
 	uarp_classification = {'title':'University Archives and Records Program','identifier':'UARP'}
+	rcs_classification = {'title':'Records Center Storage','identifier':'RCS'}
 
-	for classification in [mhc_classification, uarp_classification]:
+	for classification in [mhc_classification, uarp_classification, rcs_classification]:
 		classification_post = requests.post(aspace_url + '/repositories/2/classifications',headers=headers,data=json.dumps(classification)).json()
 		print classification_post
 
@@ -83,7 +86,7 @@ def post_defaults(aspace_url, headers):
 
 
 def main():
-	pre_configured_info = {'aspace_url':'https://aspace-bentley-api.quod.lib.umich.edu', 'username':'djpillen'}
+	pre_configured_info = {'aspace_url':'http://141.211.39.87:8089', 'username':'admin'}
 	aspace_url, username = confirm_information(pre_configured_info)
 	password = getpass.getpass("Password:")
 	status, auth_info = authenticate(aspace_url, username, password)
