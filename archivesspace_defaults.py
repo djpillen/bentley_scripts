@@ -2,6 +2,7 @@ import requests
 import time
 import json
 import getpass
+from pprint import pprint
 
 def confirm_information(information):
 	aspace_url = information['aspace_url']
@@ -27,6 +28,12 @@ def authenticate(aspace_url, username, password):
 	else:
 		return False, auth
 
+def add_enum_values(aspace_url, headers, enum_set_id, new_values_to_add):
+		enum_address = aspace_url + '/config/enumerations/{}'.format(enum_set_id)
+		existing_enums_json = requests.get(enum_address, headers=headers).json()
+		existing_enums_json["values"].extend(new_values_to_add)
+		pprint(requests.post(enum_address, headers=headers, data=json.dumps(existing_enums_json)).json())
+
 def post_defaults(aspace_url, headers):
 	bhl_repo = {
 			'name':'Bentley Historical Library',
@@ -35,8 +42,8 @@ def post_defaults(aspace_url, headers):
 			'parent_institution_name':'University of Michigan'
 			}
 
-	post_repo = requests.post(aspace_url + '/repositories',headers=headers,data=json.dumps(bhl_repo)).json()
-	print post_repo
+	#post_repo = requests.post(aspace_url + '/repositories',headers=headers,data=json.dumps(bhl_repo)).json()
+	#print post_repo
 
 	'''
 	base_profile = {
@@ -61,19 +68,13 @@ def post_defaults(aspace_url, headers):
 	uarp_classification = {'title':'University Archives and Records Program','identifier':'UARP'}
 	rcs_classification = {'title':'Records Center Storage','identifier':'RCS'}
 
-	for classification in [mhc_classification, uarp_classification, rcs_classification]:
-		classification_post = requests.post(aspace_url + '/repositories/2/classifications',headers=headers,data=json.dumps(classification)).json()
-		print classification_post
-
-	subject_sources = requests.get(aspace_url + '/config/enumerations/23',headers=headers).json()
-	subject_sources['values'].extend(['lcnaf','lctgm','aacr2'])
-	update_subject_sources = requests.post(aspace_url + '/config/enumerations/23',headers=headers,data=json.dumps(subject_sources)).json()
-	print update_subject_sources
-
-	name_sources = requests.get(aspace_url + '/config/enumerations/4',headers=headers).json()
-	name_sources['values'].append('lcnaf')
-	update_name_sources = requests.post(aspace_url + '/config/enumerations/4',headers=headers,data=json.dumps(name_sources)).json()
-	print update_name_sources
+	#for classification in [mhc_classification, uarp_classification, rcs_classification]:
+		#classification_post = requests.post(aspace_url + '/repositories/2/classifications',headers=headers,data=json.dumps(classification)).json()
+		#print classification_post
+		
+	add_enum_values(aspace_url, headers, 23, ['lcnaf', 'lctgm', 'aacr2'])  # subject sources
+	add_enum_values(aspace_url, headers, 4, ['lcnaf'])  # name sources
+	add_enum_values(aspace_url, headers, 55, ["on file", "pending", "sent", "n/a", "other"])  # user defined enum 1 values (gift agreement status)
 
 
 	repo_preferences = {
@@ -86,7 +87,7 @@ def post_defaults(aspace_url, headers):
 
 
 def main():
-	pre_configured_info = {'aspace_url':'http://141.211.39.87:8089', 'username':'admin'}
+	pre_configured_info = {'aspace_url':'http://localhost:8089', 'username':'admin'}
 	aspace_url, username = confirm_information(pre_configured_info)
 	password = getpass.getpass("Password:")
 	status, auth_info = authenticate(aspace_url, username, password)

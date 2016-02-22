@@ -9,6 +9,15 @@ start_time = datetime.now()
 
 subjects_csv = 'C:/Users/djpillen/GitHub/test_run/subjects/aspace_subjects.csv'
 posted_csv = 'C:/Users/djpillen/GitHub/test_run/subjects/posted_subjects.csv'
+text_to_authfilenumber_csv = 'C:/Users/djpillen/GitHub/test_run/subjects/text_to_authfilenumber.csv'
+
+text_to_authfilenumber = {}
+with open(text_to_authfilenumber_csv,'rb') as csvfile:
+    reader = csv.reader(csvfile)
+    for row in reader:
+        sub_text = row[0]
+        authfilenumber = row[1]
+        text_to_authfilenumber[sub_text] = authfilenumber]
 
 baseURL = 'http://141.211.39.87:8089'
 user='admin'
@@ -24,6 +33,11 @@ with open(subjects_csv,'rb') as csvfile:
     for row in reader:
         row_indexes = len(row) - 1
         source = row[1]
+        full_text = row[2]
+        if full_text in text_to_authfilenumber:
+            authfilenumber = text_to_authfilenumber[full_text]
+        else:
+            authfilenumber = ''
         terms_list = []
         for row_num in range(3,row_indexes + 1, 2):
             term = row[row_num]
@@ -34,7 +48,7 @@ with open(subjects_csv,'rb') as csvfile:
             terms_dict["vocabulary"] = "/vocabularies/1"
             terms_list.append(terms_dict)
 
-        data = json.dumps({"source":source,"vocabulary":"/vocabularies/1","terms":[i for i in terms_list]})
+        data = json.dumps({"authority_id":authfilenumber,"source":source,"vocabulary":"/vocabularies/1","terms":[i for i in terms_list]})
         subjects = requests.post(baseURL+'/subjects', headers=headers, data=data).json()
         if 'status' in subjects:
             if subjects['status'] == 'Created':

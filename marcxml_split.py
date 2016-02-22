@@ -4,23 +4,27 @@ import xml.etree.cElementTree as cElementTree
 import os
 from os.path import join
 
+base_dir = 'C:/Users/djpillen/GitHub/marc_xml-all/mlibrary_exports'
+output_dir = 'C:/Users/djpillen/GitHub/marc_xml-all/marc_xml-all-split'
 counter = 0
-file = "C:/Users/Public/Documents/marc_xml/bent_856.xml"
-context = etree.iterparse(file)
-context = iter(context)
-event, root = context.next()
+has_ead_all = join(base_dir,'bent_marc_has_ead.xml')
+no_ead_all = join(base_dir,'bent_marc_no_ead.xml')
 
-for event, elem in context:
-    if event == "end":
-        if elem.tag == '{http://www.loc.gov/MARC21/slim}record':
-            elem.tail = None
-            counter += 1
-            outFilePath = 'C:/Users/Public/Documents/marc_xml-has_ead-split'
-            outFile = open((join(outFilePath, str(counter) + '.xml')), 'w')
-            doc = etree.tostring(elem, encoding="utf-8", xml_declaration=True, pretty_print=True)
-            outFile.write(doc)
-            outFile.close()
-            print counter
+for batch in [has_ead_all, no_ead_all]:
+    tree = etree.iterparse(batch)
+    context = iter(tree)
+    event, root = context.next()
+    for event, elem in context:
+        if event == "end":
+            if elem.tag == '{http://www.loc.gov/MARC21/slim}record':
+                elem.tail = None
+                counter += 1
+                filename = str(counter)
+                while len(filename) < 4:
+                    filename = '0' + filename
+                with open(join(output_dir, filename+'.xml'),'w') as marc_out:
+                    marc_out.write(etree.tostring(elem, encoding="utf-8", xml_declaration=True, pretty_print=True))
+                print filename
 # for filename in os.listdir(path):
     # tree = etree.parse(join(path, filename))
     # root = tree.getroot()
