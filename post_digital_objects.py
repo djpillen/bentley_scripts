@@ -67,7 +67,7 @@ if os.path.exists(posted_objects):
             if href not in already_posted:
                 already_posted.append(href)
 
-aspace_url = 'http://141.211.39.87:8089'
+aspace_url = 'http://localhost:8089'
 username = 'admin'
 password = getpass.getpass('Password:')
 

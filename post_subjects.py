@@ -19,7 +19,7 @@ with open(text_to_authfilenumber_csv,'rb') as csvfile:
         authfilenumber = row[1]
         text_to_authfilenumber[sub_text] = authfilenumber]
 
-baseURL = 'http://141.211.39.87:8089'
+baseURL = 'http://localhost:8089'
 user='admin'
 password='admin'
 

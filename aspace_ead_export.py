@@ -4,6 +4,7 @@ from os.path import join
 import time
 from datetime import datetime
 import random
+import os
 
 start_time = datetime.now()
 
@@ -12,9 +13,12 @@ aspace_url = 'http://localhost:8089'
 username = 'admin'
 password = 'admin'
 
-ead_directory = 'C:/Users/djpillen/GitHub/test_run/exports'
+ead_directory = 'C:/Users/djpillen/GitHub/archivesspace_migration/exports'
 
-auth = requests.post(aspace_url+'/users/admin/login?password=' + password + '&expired=false').json()
+if not os.path.exists(ead_directory):
+    os.makedirs(ead_directory)
+
+auth = requests.post(aspace_url+'/users/admin/login?password=' + password + '&expiring=false').json()
 session = auth['session']
 headers = {'X-ArchivesSpace-Session':session}
 
@@ -43,6 +47,6 @@ print "Script end time:", end_time.strftime("%Y-%m-%d %H:%M:%S %p")
 print "Script running time:", end_time - start_time
 
 exporter_stats = "Script start time: " + start_time.strftime("%Y-%m-%d %H:%M:%S %p") + "\n" + "Script end time: " +  end_time.strftime("%Y-%m-%d %H:%M:%S %p") + "\n" + "Script running time: " + str(end_time - start_time)
-stats_file = open('C:/Users/djpillen/GitHub/test_run/exporter_stats.txt','w')
+stats_file = open('C:/Users/djpillen/GitHub/archivesspace_migration/migration_stats/exporter_stats.txt','w')
 stats_file.write(exporter_stats)
 stats_file.close()

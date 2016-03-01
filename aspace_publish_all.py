@@ -2,7 +2,7 @@ import requests
 import json
 import getpass
 
-aspace_url = 'http://141.211.39.87:8089'
+aspace_url = 'http://localhost:8089'
 username = 'admin'
 password = getpass.getpass('Password:')
 
