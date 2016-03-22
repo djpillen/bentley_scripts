@@ -35,12 +35,20 @@ for filename in os.listdir(path):
 		ead_out.write(etree.tostring(tree,encoding='utf-8',xml_declaration=True,pretty_print=True))
 '''
 
+special_cases = ['University of Michigan--Dearborn','University of Michigan--Flint','University of Michigan--Dearborn. Department of History','University of Wisconsin--Milwaukee','Lutheran Church--Missouri Synod']
 
 for filename in os.listdir(path):
 	tree = etree.parse(join(path,filename))
 	for subject in tree.xpath('//controlaccess/*'):
 		if subject.tag in tags and subject.text:
-			subject_text = subject.text.encode('utf-8')
+			subject_text = subject.text.strip().rstrip(".").encode('utf-8')
+			if subject.tag in ['corpname','persname','famname'] and '--' in subject_text:
+				subject_texts = subject_text.split('--')
+				joined = '--'.join(subject_texts[0:2]).rstrip(".")
+				if joined in special_cases:
+					subject_text = joined
+				else:
+					subject_text = subject_texts[0]
 			if 'authfilenumber' in subject.attrib:
 				authfilenumber = subject.attrib['authfilenumber']
 				if authfilenumber not in authfilenumber_to_text_dict:

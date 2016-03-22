@@ -1,10 +1,9 @@
 from lxml import etree
 import os
 from os.path import join
-import re
 
-master_eads = 'C:/Users/djpillen/GitHub/vandura/Real_Masters_all'
-dlxs_eads = 'C:/Users/djpillen/GitHub/test_dir/dlxs_eads'
+master_eads = 'C:/Users/Public/Documents/test_in'
+dlxs_eads = 'C:/Users/Public/Documents/test_out'
 
 for filename in os.listdir(master_eads):
 	print filename
@@ -25,8 +24,7 @@ for filename in os.listdir(master_eads):
 			container_summary = extents[1].text.strip().encode('utf-8')
 			physical_details.append(container_summary)
 		if physfacets:
-			physfacet_string = etree.tostring(physfacets[0])
-			physfacet = re.sub(r'<(.*?)>','',physfacet_string).strip().encode('utf-8')
+			physfacet = physfacets[0].text.strip().encode('utf-8')
 			physical_details.append(physfacet)
 		if dimensions:
 			dimension = dimensions[0].text.strip().encode('utf-8')
