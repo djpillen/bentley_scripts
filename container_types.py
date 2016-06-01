@@ -1,10 +1,12 @@
+from vandura.config import real_masters_all 
+
 from lxml import etree
 import os
 from os.path import join
 import csv
 
 type_label_csv = 'C:/Users/Public/Documents/container_type_label.csv'
-path = 'C:/Users/djpillen/GitHub/vandura/Real_Masters_all'
+path = real_masters_all
 
 container_types = []
 container_labels = []

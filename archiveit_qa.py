@@ -17,15 +17,18 @@ def make_directories(base_dir, job):
     os.makedirs(join(job_dir,'statuses'))
 
 def get_base_reports(job, job_dir):
-    hosts_report = requests.get('https://partner.archive-it.org/seam/resource/report?crawlJobId=' + job + '&type=host')
-    with open(join(job_dir,'hosts.csv'),'wb') as host_csv:
-        host_csv.write(hosts_report.content)
-    status_report = requests.get('https://partner.archive-it.org/seam/resource/report?crawlJobId=' + job + '&type=seed')
-    with open(join(job_dir,'seedstatus.csv'),'wb') as status_csv:
-        status_csv.write(status_report.content)
-    source_report = requests.get('https://partner.archive-it.org/seam/resource/report?crawlJobId=' + job + '&type=source')
-    with open(join(job_dir,'seedsource.csv'),'wb') as source_csv:
-        source_csv.write(source_report.content)
+    session = requests.session()
+    with requests.session() as session:
+        session.headers["User-Agent"] = "BHL Archive-It QA"
+        hosts_report = session.get('https://partner.archive-it.org/seam/resource/report?crawlJobId=' + job + '&type=host')
+        with open(join(job_dir,'hosts.csv'),'wb') as host_csv:
+            host_csv.write(hosts_report.content)
+        status_report = session.get('https://partner.archive-it.org/seam/resource/report?crawlJobId=' + job + '&type=seed')
+        with open(join(job_dir,'seedstatus.csv'),'wb') as status_csv:
+            status_csv.write(status_report.content)
+        source_report = session.get('https://partner.archive-it.org/seam/resource/report?crawlJobId=' + job + '&type=source')
+        with open(join(job_dir,'seedsource.csv'),'wb') as source_csv:
+            source_csv.write(source_report.content)
 
 def get_host_info(job_dir):
     host_dict = {}
@@ -54,6 +57,7 @@ def get_crawl_reports(job_dir, job, host, report_type):
     if url.endswith(':'):
         re.sub(r':$',r'%3A',url)
     with requests.Session() as s:
+        s.headers["User-Agent"] = "BHL Archive-It QA"
         crawl_report = s.get(url)
         content_type = crawl_report.headers['content-type']
         if content_type == 'application/zip':
@@ -81,7 +85,8 @@ def find_repeat_dirs(job_dir, host_list):
     for filename in os.listdir(crawl_txts):
         host = [host for host in host_list if host in filename]
         host = max(host, key=len)
-        report = open(join(crawl_txts,filename)).read()
+        with open(join(crawl_txts, filename)) as f:
+            report = f.read()
         for url in report.splitlines():
             if repeated_dirs.match(url):
                 if host not in repeat_dict:
@@ -119,7 +124,8 @@ def check_repeat_url_status(repeat_dict):
             urls.remove(url)
             try:
                 with requests.Session() as s:
-                    repeat_check = s.head(url, headers={'User-Agent':'BHL Archive-It QA'})
+                    s.headers["User-Agent"] = "BHL Archive-It QA"
+                    repeat_check = s.head(url)
                     if repeat_check.status_code == 200 and len(repeat_check.history) == 0:
                         repeat_dict[host]['ok'].append(url)
                     elif repeat_check.status_code == 200 and len(repeat_check.history) > 0:
@@ -265,6 +271,7 @@ def get_redirect_metadata(job_dir, source_list, seed_status_dict):
             if ((seed_parse.path != redirect_parse.path) and ((seed_parse.path + '/' != redirect_parse.path) and (seed_parse.path != redirect_parse.path + '/'))) or ((seed_parse.netloc != redirect_parse.netloc) and (('www.' + seed_parse.netloc != redirect_parse.netloc) and (seed_parse.netloc != 'www.' + redirect_parse.netloc))) or (seed_parse.params != redirect_parse.params) or (seed_parse.query != redirect_parse.query) or (seed_parse.fragment != redirect_parse.fragment):
                 starting_seeds[url] = ''
     with requests.Session() as s:
+        s.headers["User-Agent"] = "BHL Archive-It QA"
         collection_feed = s.get('https://partner.archive-it.org/seam/resource/collectionFeed?accountId=934&collectionId=' + collection_id)
     collection_metadata = etree.fromstring(collection_feed.text.encode('utf-8'))
     tree = etree.ElementTree(collection_metadata)

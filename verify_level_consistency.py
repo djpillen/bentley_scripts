@@ -9,7 +9,15 @@ inconsistency_csv = 'C:/Users/Public/Documents/component_level_inconsistency.csv
 data = []
 for filename in os.listdir(path):
 	tree = etree.parse(join(path,filename))
+	level_ones = tree.xpath('//dsc//c01')
 	components = tree.xpath("//dsc//*[starts-with(local-name(), 'c0')]")
+	level_one_levels = {}
+	for level_one in level_ones:
+		level_one_level = level_one.attrib["level"]
+		level_one_levels[level_one_level] = level_one_levels.get(level_one_level, 0) + 1
+	if len(level_one_levels) > 1:
+		data.append([filename, "<c01>", level_one_levels])
+		print filename, "<c01>", level_one_levels
 	for component in components:
 		subcomponents = component.xpath("./*[starts-with(local-name(), 'c0')]")
 		subcomponent_levels = {}

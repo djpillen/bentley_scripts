@@ -5,7 +5,7 @@ import csv
 # This script will create a new digital object and link it as an instance to an existing archival object
 # This was written under the assumption that you might have a csv (or similar), exported from ASpace or
 # compiled from an ASpace exported EAD, with an existing archival object's ref_id. Using only the ref_id,
-# this will use the ASpace API to search for the existing archival object, retrieve its URI, store the archival
+# this will use the ASpace API to lookup the existing archival object, retrieve its URI, store the archival
 # object's JSON, create a new digital object using the title from the archival object and an identifier (also from the CSV),
 # grab the URI for the newly created digital object, add the link as an instance to the archival object JSON,
 # and repost the archival object to ASpace using the update archival object endpoint
@@ -45,16 +45,18 @@ with open(archival_object_csv,'rb') as csvfile:
         # Grab the archival object's ArchivesSpace ref_id from the csv
         ref_id = row[2]
 
-        # Search ASpace for the ref_id
-        search = requests.get(aspace_url+'/repositories/2/search?page=1&q='+ref_id,headers=headers).json()
+        # Use the find_by_id endpoint to retrieve the archival objects URI
+        params {"ref_id[]":ref_id}
+        lookup = requests.get(aspace_url+'/repositories/2/find_by_id/archival_objects'+ref_id,headers=headers, params=params).json()
 
         # Grab the archival object uri from the search results
-        archival_object_uri = search['results'][0]['uri']
+        archival_object_uri = lookup['archival_objects'][0]['ref']
 
         # Submit a get request for the archival object and store the JSON
         archival_object_json = requests.get(aspace_url+archival_object_uri,headers=headers).json()
 
         # Continue only if the search-returned archival object's ref_id matches our starting ref_id, just to be safe
+        # Note: probably no longer necessary when using the find_by_id endpoint
         if archival_object_json['ref_id'] == ref_id:
 
             # Add the archival object uri to the row from the csv to write it out at the end

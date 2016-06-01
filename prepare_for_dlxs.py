@@ -1,9 +1,10 @@
 from lxml import etree
 import os
 from os.path import join
+import re
 
-master_eads = 'C:/Users/Public/Documents/test_in'
-dlxs_eads = 'C:/Users/Public/Documents/test_out'
+master_eads = 'C:/Users/djpillen/GitHub/vandura/Real_Masters_all'
+dlxs_eads = 'C:/Users/Public/Documents/DLXS_UPDATE_20160330'
 
 for filename in os.listdir(master_eads):
 	print filename
@@ -46,6 +47,10 @@ for filename in os.listdir(master_eads):
 		new_extent.text = new_text.decode('utf-8')
 		did.append(new_physdesc)
 		did.remove(physdesc)
+	descgrp_odds = tree.xpath('//descgrp[@type="add"]//odd')
+	for descgrp_odd in descgrp_odds:
+		descgrp_odd.tag = 'descgrp'
+
 	with open(join(dlxs_eads,filename),'w') as f:
 		f.write(etree.tostring(tree,encoding='utf-8',xml_declaration=True,pretty_print=True))
 
