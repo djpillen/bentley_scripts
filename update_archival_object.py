@@ -17,11 +17,11 @@ import csv
 # The archival_object_csv will be your starting csv with the ASpace ref_id of the archival object's to be updated,
 # the identifier to be used in the newly created digital object (could be a barcode, a random string, etc) and the uri
 # to the digital object that will be added as a file_uri in the ArchivesSpace digital object record
-archival_object_csv = 'path/to/starting.csv'
+archival_object_csv = 'C:/Users/Public/Documents/update_aos/start.csv'
 
 # The updated_archival_object_csv will be an updated csv that will be created at the end of this script, containing all of the same
 # information as the starting csv, plus the ArchivesSpace uris for the archival and digital objects
-updated__archival_object_csv = 'path/to/updated.csv'
+updated__archival_object_csv = 'C:/Users/Public/Documents/update_aos/updated.csv'
 
 # Modify your ArchivesSpace backend url, username, and password as necessary
 aspace_url = 'http://localhost:8089'
@@ -46,8 +46,8 @@ with open(archival_object_csv,'rb') as csvfile:
         ref_id = row[2]
 
         # Use the find_by_id endpoint to retrieve the archival objects URI
-        params {"ref_id[]":ref_id}
-        lookup = requests.get(aspace_url+'/repositories/2/find_by_id/archival_objects'+ref_id,headers=headers, params=params).json()
+        params = {"ref_id[]":ref_id}
+        lookup = requests.get(aspace_url+'/repositories/2/find_by_id/archival_objects',headers=headers, params=params).json()
 
         # Grab the archival object uri from the search results
         archival_object_uri = lookup['archival_objects'][0]['ref']
