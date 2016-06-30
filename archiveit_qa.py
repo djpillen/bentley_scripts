@@ -63,13 +63,14 @@ def get_crawl_reports(job_dir, job, host, report_type):
         if content_type == 'application/zip':
             if not os.path.exists(join(job_dir,'zips')):
                 os.makedirs(join(job_dir,'zips'))
-            output = open(job_dir + '/zips/' + report_type + '-' + host + '.zip','wb')
-            output.write(crawl_report.content)
-            output.close()
+            output = join(job_dir, "zips", "{0}-{1}.zip".format(report_type, host))
+            with open(output, "wb") as f:
+                f.write(crawl_report.content)
         elif content_type.startswith('text/plain'):
-            output = open(job_dir + '/crawled_queued/' + report_type + '-' + host + '.txt','w')
-            output.write(crawl_report.content)
-            output.close()
+            output = join(job_dir, "crawled_queued", "{0}-{1}.txt".format(report_type, host))
+            with open(output, "w") as f:
+                f.write(crawl_report.content)
+    time.sleep(1)
 
 def extract_reports(job_dir):
     zip_dir = join(job_dir,'zips')
@@ -141,17 +142,14 @@ def check_repeat_url_status(repeat_dict):
 def process_repeats(job_dir, repeat_dict):
     repeat_dir = join(job_dir,'repeating_directories')
     repeat_csv = join(repeat_dir,'repeating_directories.csv')
-    with open(repeat_csv,'ab') as csvfile:
-        writer = csv.writer(csvfile)
-        writer.writerow(['Host','Count','OK','Maybe','Not OK'])
+
+    repeat_csv_data = []
     for host in repeat_dict:
         count = repeat_dict[host]['count']
         ok = len(repeat_dict[host]['ok'])
         maybe = len(repeat_dict[host]['maybe'])
         notok = len(repeat_dict[host]['notok'])
-        with open(repeat_csv,'ab') as csvfile:
-            writer = csv.writer(csvfile)
-            writer.writerow([host,count,ok,maybe,notok])
+        repeat_csv_data.append([host, count, ok, maybe, notok])
         if ok > 0:
             ok_dir = join(repeat_dir,'ok')
             ok_list = repeat_dict[host]['ok']
@@ -173,6 +171,11 @@ def process_repeats(job_dir, repeat_dict):
                 os.makedirs(notok_dir)
             with open(join(notok_dir,host + '.txt'),'a') as notok_txt:
                 notok_txt.write('\n'.join(notok_list))
+
+    with open(repeat_csv, "wb") as f:
+        writer = csv.writer(f)
+        writer.writerow(['Host','Count','OK','Maybe','Not OK'])
+        writer.writerows(repeat_csv_data)
 
 def get_seed_source(job_dir):
     source_csv = join(job_dir,'seedsource.csv')
@@ -208,12 +211,16 @@ def check_seed_status(job_dir):
                     statuses['unknown'][url] = code
             else:
                 statuses['ok'][url] = code
+
     for status in statuses:
         status_csv = join(status_dir, status + '.csv')
-        with open(status_csv,'ab') as status_csv:
-            writer = csv.writer(status_csv)
-            for url in statuses[status]:
-                writer.writerow([url, statuses[status][url]])
+        status_data = []
+        for url in statuses[status]:
+            status_data.append([url, statuses[status][url]])
+        with open(status_csv, "wb") as f:
+            writer = csv.writer(f)
+            writer.writerows(status_data)
+
     return statuses
 
 def minimal_redirect_handling(job_dir, source_list, seed_status_dict):
@@ -237,11 +244,15 @@ def minimal_redirect_handling(job_dir, source_list, seed_status_dict):
             # Check to see if the starting URL and redirected URL are meaningfully different
             if ((seed_parse.path != redirect_parse.path) and ((seed_parse.path + '/' != redirect_parse.path) and (seed_parse.path != redirect_parse.path + '/'))) or ((seed_parse.netloc != redirect_parse.netloc) and (('www.' + seed_parse.netloc != redirect_parse.netloc) and (seed_parse.netloc != 'www.' + redirect_parse.netloc))) or (seed_parse.params != redirect_parse.params) or (seed_parse.query != redirect_parse.query) or (seed_parse.fragment != redirect_parse.fragment):
                 starting_seeds[url] = redirect_url
-    with open(join(redirect_dir,'redirect_information.csv'),'ab') as csvfile:
+
+    redirect_data = []
+    for seed, redirect in starting_seeds.items():
+        redirect_data.append([seed, redirect, ''])
+
+    with open(join(redirect_dir,'redirect_information.csv'),'wb') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow(['Seed URL','Redirect URL','Notes'])
-        for seed, redirect in starting_seeds.items():
-            writer.writerow([seed,redirect,''])
+        writer.writerows(redirect_data)
 
 def get_redirect_metadata(job_dir, source_list, seed_status_dict):
     redirect_dir = join(job_dir,'redirects')
@@ -312,13 +323,16 @@ def get_redirect_metadata(job_dir, source_list, seed_status_dict):
             redirect_metadata.append(seed_metadata)
         else:
             redirect_investigate.append(seed)
-    with open(join(redirect_dir,'add_and_deactivate.csv'),'ab') as add_deactivate_csv:
+
+    add_and_deactivate_data = []
+    for seed, new_seed in add_deactivate.items():
+        add_and_deactivate_data.append([new_seed, seed, 'QA NOTE: Seed URL redirects to ' + new_seed + '. A new seed with the redirected seed URL has been added.',''])
+    
+    with open(join(redirect_dir,'add_and_deactivate.csv'),'wb') as add_deactivate_csv:
         writer = csv.writer(add_deactive_csv)
         writer.writerow(['Add','Deactivate','Deactivation Note','Notes'])
-    with open(join(redirect_dir,'add_and_deactivate.csv'),'ab') as add_deactivate_csv:
-        writer = csv.writer(add_deactive_csv)
-        for seed, new_seed in add_deactivate.items():
-            writer.writerow([new_seed, seed, 'QA NOTE: Seed URL redirects to ' + new_seed + '. A new seed with the redirected seed URL has been added.',''])
+        writer.writerows(add_and_deactivate_data)
+    
     with open(join(redirect_dir,'redirect_investigate.txt'),'a') as investigate_txt:
         investigate_txt.write('\n'.join([seed for seed in redirect_investigate]))
     return redirect_metadata
@@ -355,9 +369,9 @@ def process_redirect_metadata(job_dir, redirect_metadata):
     for element in header_order:
         elem_lower = element.lower()
         header_row.extend([element] * header_counts_lower[elem_lower])
-    with open(redirect_csv,'ab') as csvfile:
-        writer = csv.writer(csvfile)
-        writer.writerow(header_row)
+
+
+    redirect_csv_data = []
     for seed in redirect_metadata:
         row = []
         for element in header_order:
@@ -366,9 +380,12 @@ def process_redirect_metadata(job_dir, redirect_metadata):
                 row.extend([item for item in seed[element]])
             elif elem_lower in seed:
                 row.extend([item for item in seed[elem_lower]])
-        with open(redirect_csv,'ab') as csvfile:
-            writer = csv.writer(csvfile)
-            writer.writerow(row)
+        redirect_csv_data.append(row)
+
+    with open(redirect_csv,'wb') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(head_row)
+        writer.writerows(redirect_csv_data)
 
 
 def main():
